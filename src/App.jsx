@@ -1,10 +1,14 @@
-import './App.css'
-
+import { Header, Login, SignUp } from './components'
+import { Route, Routes } from 'react-router-dom';
 function App() {
 
   return (
     <div className="App">
-      <h1 className="text-3xl text-blue-500 font-bold border-2 cursor-pointer border-red-100 underline text-center shadow-md bg-yellow-50 hover:shadow-inner">ΤΕΔΙ Project</h1> 
+      <Header/>
+      <Routes>
+        <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<SignUp/>} />
+      </Routes>
     </div>
   )
 }
