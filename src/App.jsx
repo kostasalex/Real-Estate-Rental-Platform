@@ -1,4 +1,4 @@
-import { Header, Login, SignUp } from './components'
+import { Header, Login, SignUp, Cards } from './components'
 import { Route, Routes } from 'react-router-dom';
 function App() {
 
@@ -6,6 +6,7 @@ function App() {
     <div className="App">
       <Header/>
       <Routes>
+        <Route path="/" element={<Cards/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} />
       </Routes>
