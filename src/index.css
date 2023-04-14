@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.square {
+    @apply w-40 h-64 mx-4 my-10 bg-white overflow-hidden ;
+  }
+  
+  .square__image {
+    @apply w-full h-3/4 object-cover shadow-lg rounded-lg;
+  }
+  
+  .square__title {
+    @apply text-xl font-bold px-6;
+  }
+
+  .square__price {
+    @apply text-lg font-bold px-6;
+  }
+
+  .square__dates {
+    @apply text-sm text-slate-500 px-6;
+  }
+  
+  @media (min-width: 768px) {
+    .square {
+      @apply w-80 h-80;
+    }
+  }
