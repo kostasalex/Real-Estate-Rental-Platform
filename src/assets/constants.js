@@ -25,3 +25,16 @@ export const signup = {
 
   submitButtonLabel: 'Sign up',
 };
+
+export const login = {
+  title: 'Welcome to Airbnb',
+  description:
+    "Let’s get you all set up so you can verify your personal account and begin setting up your profile.",
+  emailLabel: 'Email address',
+  password: 'Password',
+  emailPlaceholder: 'johnsnow@example.com',
+  passwordPlaceholder: 'Enter your password',
+  
+  loginButtonLabel: 'Log in',
+  submitButtonLabel: 'Don\'t have an account? Sign up',
+};
