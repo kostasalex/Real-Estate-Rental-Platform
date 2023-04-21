@@ -8,11 +8,20 @@ import Swal from "sweetalert2";
 
 const SignUp = () => {
 
+    const [rentingPlace, setRentingPlace] = React.useState(false);
+  
+    const handleRentingPlaceToggle = () => {
+        setRentingPlace(!rentingPlace);
+    };
+  
+
   const onSubmit = (values, actions) =>{
 
-
+    let title = "\n"
+    if (rentingPlace === true)
+        title = "\nThank you for your interest in renting a place. Your application will be reviewed."
     Swal.fire({
-        title: 'Welcome to Airbnb',
+        title: 'Welcome '+values.Username +'!' + title,
         text: '',
         icon: 'success',
         confirmButtonText: 'OK'
@@ -28,6 +37,11 @@ const SignUp = () => {
         email:"",
         password:"",
         passwordConfirmation:"",
+        Username:"",
+        FirstName:"",
+        LastName:"",
+        PhoneNumber:"",
+        Address:"",
     },
     validationSchema: registerSchema,
     onSubmit,
@@ -64,11 +78,14 @@ const SignUp = () => {
                         </span>
                     </label>
 
-                    <label className="flex justify-center items-center w-full px-6 py-3 mt-4 text-blue-500 border border-blue-500 rounded-md md:mt-0 md:w-auto md:mx-2 dark:border-blue-400 dark:text-blue-400 focus:outline-none">
-                        <input type="checkbox" name="accountType" value="rentingOutPlace" className="hidden"/>
+                    <label 
+                        className={( rentingPlace === true ?   "text-white bg-blue-500 hover:bg-blue-400 " : "text-blue-500 border border-blue-500 hover:border-blue-400 hover:text-blue-400 ")+ 
+                        " flex justify-center items-center w-full   px-6 py-3 mt-4rounded-md md:mt-0 md:w-auto md:mx-2 dark:border-blue-400 dark:text-blue-400 focus:outline-none"}
+                            >
+                        <input type="checkbox" name="accountType" value="rentingOutPlace" className="hidden" onClick={() => handleRentingPlaceToggle()}/>
                           <GoHome/>
                         <span className="mx-2">
-                        {signup.rentingOutPlace}
+                            {signup.rentingOutPlace}
                         </span>
                     </label>
                 </div>
@@ -77,7 +94,15 @@ const SignUp = () => {
                     <form className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2" onSubmit={handleSubmit}>
                         <div>
                             <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.usernameLabel}</label>
-                            <input type="text" placeholder={signup.usernamePlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                            <input 
+                                id = "Username"
+                                value={values.Username}
+                                onChange = {handleChange}
+                                onBlur = {handleBlur}
+                                type="text" 
+                                placeholder={signup.usernamePlaceholder} 
+                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                {errors.Username && touched.Username && <p className = "text-red-700 text-sm">{errors.Username}</p>}
                         </div>
     
                         <div>
@@ -93,22 +118,54 @@ const SignUp = () => {
 
                         <div>
                             <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.firstNameLabel}</label>
-                            <input type="text" placeholder={signup.firstNamePlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                            <input 
+                                id = "FirstName"
+                                value={values.FirstName}
+                                onChange = {handleChange}
+                                onBlur = {handleBlur}
+                                type="text" 
+                                placeholder={signup.firstNamePlaceholder} 
+                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                {errors.FirstName && touched.FirstName && <p className = "text-red-700 text-sm">{errors.FirstName}</p>}
                         </div>
     
                         <div>
                             <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.lastNameLabel}</label>
-                            <input type="text" placeholder={signup.lastNameLabelPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                            <input  
+                                id = "LastName"
+                                value={values.LastName}
+                                onChange = {handleChange}
+                                onBlur = {handleBlur}
+                                type="text" 
+                                placeholder={signup.lastNameLabelPlaceholder} 
+                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                {errors.LastName && touched.LastName && <p className = "text-red-700 text-sm">{errors.LastName}</p>}
                         </div>
     
                         <div>
                             <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.phoneNumber}</label>
-                            <input type="text" placeholder={signup.phoneNumberPlaceholder}  className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                            <input 
+                                id = "PhoneNumber"
+                                value={values.PhoneNumber}
+                                onChange = {handleChange}
+                                onBlur = {handleBlur}
+                                type="text" 
+                                placeholder={signup.phoneNumberPlaceholder}  
+                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                 {errors.PhoneNumber && touched.PhoneNumber && <p className = "text-red-700 text-sm">{errors.PhoneNumber}</p>}
                         </div>
     
                         <div>
                             <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.address}</label>
-                            <input type="text" placeholder={signup.addressPlaceholder}  className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                            <input 
+                                id = "Address"
+                                value={values.Address}
+                                onChange = {handleChange}
+                                onBlur = {handleBlur}
+                                type="text" 
+                                placeholder={signup.addressPlaceholder}  
+                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                {errors.Address && touched.Address && <p className = "text-red-700 text-sm">{errors.Address}</p>}
                         </div>
     
                         <div>
@@ -124,7 +181,7 @@ const SignUp = () => {
                         </div>
     
                         <div>
-                            <label className={"block mb-2 text-sm text-gray-600 dark:text-gray-200" +
+                            <label className={"block mb-2 text-sm text-gray-600 dark:text-gray-200 " +
                               (errors.passwordConfirmation && touched.passwordConfirmation? "border-red-700":"border-gray-300")}>
                                 {signup.confirmPassword}
                             </label>
@@ -135,6 +192,7 @@ const SignUp = () => {
                               onBlur = {handleBlur}
                               type="password"
                               placeholder={signup.confirmPasswordPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                              {errors.passwordConfirmation && touched.passwordConfirmation && <p className = "text-red-700 text-sm">{errors.passwordConfirmation}</p>}
                         </div>
     
                         <button

@@ -41,6 +41,16 @@ const registerSchema = yup.object().shape({
     passwordConfirmation: yup.string()
         .oneOf([yup.ref('password'), null], 'Passwords do not match')
         .required("This field is required"),
+    Username: yup.string()
+        .required("This field is required"),
+    FirstName: yup.string()
+        .required("This field is required"),
+    LastName: yup.string()
+        .required("This field is required"),
+    PhoneNumber: yup.string()
+        .required("This field is required"),
+    Address: yup.string()
+        .required("This field is required"),
 });
 
 export { loginSchema, registerSchema };
