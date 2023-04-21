@@ -3,14 +3,29 @@ import {Link} from "react-router-dom"
 const UserMenu = () => {
 
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
+    const menuRef = React.useRef(null);
+  
     const handleMenuToggle = () => {
-        setIsMenuOpen(!isMenuOpen);
+      setIsMenuOpen(!isMenuOpen);
     };
+  
+    const handleDocumentClick = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+  
+    React.useEffect(() => {
+      document.addEventListener('click', handleDocumentClick);
+      return () => {
+        document.removeEventListener('click', handleDocumentClick);
+      };
+
+    }, []);
         
     return (
             <div className="block lg:mr-12">
-                <div className="inline relative">
+                <div className="inline relative" ref={menuRef}>
                     <button className="inline-flex items-center relative px-2 border rounded-full hover:shadow-lg"
                             onClick={() => handleMenuToggle()}
                     >
@@ -47,7 +62,9 @@ const UserMenu = () => {
 
                    {isMenuOpen === true && (
 
-                        <nav className=" flex flex-col text-left mt-3 shadow-lg w-32 bg-white absolute duration-500  ">
+                        <nav 
+                            onClick={handleMenuToggle}
+                            className=" flex flex-col text-left mt-3 shadow-lg w-32 bg-white absolute duration-500  ">
                             <Link to ="/signup">
                                 <div className="flex  rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
                                     <span className="mr-3 text-sm font-medium"> Sign Up </span>
