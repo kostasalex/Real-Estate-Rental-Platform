@@ -3,21 +3,18 @@ import { login } from '/src/assets/constants'
 import {useFormik} from "formik"
 import {loginSchema} from "/src/schemas"
 import Swal from "sweetalert2";  
-
+import {useNavigate} from 'react-router-dom';
 
 const Login = () => {
 
-  function MyButton() {
-    const history = useHistory();
-  
-    const handleClick = () => {
-      history.push('/signup');
-    };
-  
-    return (
-      <button onClick={handleClick}>Go to New Page</button>
-    );
-  }
+  const navigate = useNavigate();
+
+  const navigateToSignUp = () => {
+    
+    navigate('/signup');
+  };
+
+
   
   const onSubmit = (values, actions) =>{
 
@@ -48,18 +45,18 @@ const Login = () => {
 
 
     
-    <section className="bg-white dark:bg-gray-900">
+    <section className="bg-white ">
         <div className="flex justify-center min-h-screen">
             <div className="hidden bg-cover lg:block lg:w-2/5" style={{backgroundImage: `url('https://images.unsplash.com/photo-1494621930069-4fd4b2e24a11?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=715&q=80')`}}>
             </div>
     
             <div className="flex items-center w-full max-w-3xl p-8 mx-auto lg:px-12 lg:w-3/5">
                 <div className="w-full">
-                    <h1 className="txt-2xl font-semibold tracking-wider text-gray-800 capitalize dark:text-white">
+                    <h1 className="txt-2xl font-semibold tracking-wider text-gray-800 capitalize ">
                         {login.title}
                     </h1>
     
-                    <p className="mt-4 text-gray-500 dark:text-gray-400">
+                    <p className="mt-4 text-gray-500 ">
                         {login.description}
                     </p>
     
@@ -67,25 +64,25 @@ const Login = () => {
                     <form className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2" onSubmit={handleSubmit}>
     
                         <div>
-                            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{login.emailLabel}</label>
+                            <label className="block mb-2 text-sm text-gray-600 ">{login.emailLabel}</label>
                             <input 
                               id = "email"
                               value={values.email}
                               onChange = {handleChange}
                               onBlur = {handleBlur}
-                              type="email" placeholder={login.emailPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                              type="email" placeholder={login.emailPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                               {errors.email && touched.email && <p className = "text-red-700 text-sm">{errors.email}</p>}
                         </div>
     
                         <div>
-                            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{login.password}</label>
+                            <label className="block mb-2 text-sm text-gray-600 ">{login.password}</label>
                             <input 
                               value={values.password}
                               onChange = {handleChange}
                               onBlur = {handleBlur}
                               type="password"
                               id="password"
-                              placeholder={login.passwordPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                              placeholder={login.passwordPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                               {errors.password && touched.password && <p className = "text-red-700 text-sm">{errors.password}</p>}
                         </div>
                             <button
@@ -99,6 +96,9 @@ const Login = () => {
                                     clipRule="evenodd" />
                             </svg>
                         </button>
+                        <p className='pt-3'>Don't have an account? &nbsp;
+                        <button className='underline text-blue-500' onClick={navigateToSignUp}><span >{login.signupButtonLabel}</span></button>
+                        </p>
                     </form>
                 </div>
             </div>

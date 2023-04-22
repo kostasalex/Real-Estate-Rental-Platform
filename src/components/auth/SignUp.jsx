@@ -5,8 +5,17 @@ import {GoHome} from 'react-icons/go';
 import {useFormik} from "formik"
 import {registerSchema} from "/src/schemas"
 import Swal from "sweetalert2";  
+import {useNavigate} from 'react-router-dom';
 
 const SignUp = () => {
+
+    const navigate = useNavigate();
+
+    const navigateToLogIn = () => {
+      
+      navigate('/login');
+    };
+  
 
     const [rentingPlace, setRentingPlace] = React.useState(false);
   
@@ -51,23 +60,23 @@ const SignUp = () => {
 
 
     
-    <section className="bg-white dark:bg-gray-900">
+    <section className="bg-white ">
         <div className="flex justify-center min-h-screen">
             <div className="hidden bg-cover lg:block lg:w-2/5" style={{backgroundImage: `url('https://images.unsplash.com/photo-1494621930069-4fd4b2e24a11?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=715&q=80')`}}>
             </div>
     
             <div className="flex items-center w-full max-w-3xl p-8 mx-auto lg:px-12 lg:w-3/5">
                 <div className="w-full">
-                    <h1 className="txt-2xl font-semibold tracking-wider text-gray-800 capitalize dark:text-white">
+                    <h1 className="txt-2xl font-semibold tracking-wider text-gray-800 capitalize ">
                         {signup.title}
                     </h1>
     
-                    <p className="mt-4 text-gray-500 dark:text-gray-400">
+                    <p className="mt-4 text-gray-500 ">
                         {signup.description}
                     </p>
     
                     <div className="mt-6">
-                    <h1 className="text-gray-500 dark:text-gray-300">{signup.selectAccountType}</h1>
+                    <h1 className="text-gray-500 ">{signup.selectAccountType}</h1>
 
                 <div className="mt-3 md:flex md:items-center md:-mx-2">
                     <label className="flex justify-center items-center w-full px-6 py-3 text-white bg-blue-500 rounded-md md:w-auto md:mx-2 focus:outline-none">
@@ -80,7 +89,7 @@ const SignUp = () => {
 
                     <label 
                         className={( rentingPlace === true ?   "text-white bg-blue-500 hover:bg-blue-400 " : "text-blue-500 border border-blue-500 hover:border-blue-400 hover:text-blue-400 ")+ 
-                        " flex justify-center items-center w-full   px-6 py-3 mt-4rounded-md md:mt-0 md:w-auto md:mx-2 dark:border-blue-400 dark:text-blue-400 focus:outline-none"}
+                        " flex justify-center items-center w-full   px-6 py-3 mt-4rounded-md md:mt-0 md:w-auto md:mx-2 focus:outline-none"}
                             >
                         <input type="checkbox" name="accountType" value="rentingOutPlace" className="hidden" onClick={() => handleRentingPlaceToggle()}/>
                           <GoHome/>
@@ -93,7 +102,7 @@ const SignUp = () => {
     
                     <form className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2" onSubmit={handleSubmit}>
                         <div>
-                            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.usernameLabel}</label>
+                            <label className="block mb-2 text-sm text-gray-600 ">{signup.usernameLabel}</label>
                             <input 
                                 id = "Username"
                                 value={values.Username}
@@ -101,23 +110,23 @@ const SignUp = () => {
                                 onBlur = {handleBlur}
                                 type="text" 
                                 placeholder={signup.usernamePlaceholder} 
-                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                                 {errors.Username && touched.Username && <p className = "text-red-700 text-sm">{errors.Username}</p>}
                         </div>
     
                         <div>
-                            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.emailLabel}</label>
+                            <label className="block mb-2 text-sm text-gray-600 ">{signup.emailLabel}</label>
                             <input 
                               id = "email"
                               value={values.email}
                               onChange = {handleChange}
                               onBlur = {handleBlur}
-                              type="email" placeholder={signup.emailPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                              type="email" placeholder={signup.emailPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                               {errors.email && touched.email && <p className = "text-red-700 text-sm">{errors.email}</p>}
                         </div>
 
                         <div>
-                            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.firstNameLabel}</label>
+                            <label className="block mb-2 text-sm text-gray-600 ">{signup.firstNameLabel}</label>
                             <input 
                                 id = "FirstName"
                                 value={values.FirstName}
@@ -125,12 +134,12 @@ const SignUp = () => {
                                 onBlur = {handleBlur}
                                 type="text" 
                                 placeholder={signup.firstNamePlaceholder} 
-                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md  focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                                 {errors.FirstName && touched.FirstName && <p className = "text-red-700 text-sm">{errors.FirstName}</p>}
                         </div>
     
                         <div>
-                            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.lastNameLabel}</label>
+                            <label className="block mb-2 text-sm text-gray-600 ">{signup.lastNameLabel}</label>
                             <input  
                                 id = "LastName"
                                 value={values.LastName}
@@ -138,12 +147,12 @@ const SignUp = () => {
                                 onBlur = {handleBlur}
                                 type="text" 
                                 placeholder={signup.lastNameLabelPlaceholder} 
-                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md  focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                                 {errors.LastName && touched.LastName && <p className = "text-red-700 text-sm">{errors.LastName}</p>}
                         </div>
     
                         <div>
-                            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.phoneNumber}</label>
+                            <label className="block mb-2 text-sm text-gray-600 ">{signup.phoneNumber}</label>
                             <input 
                                 id = "PhoneNumber"
                                 value={values.PhoneNumber}
@@ -151,12 +160,12 @@ const SignUp = () => {
                                 onBlur = {handleBlur}
                                 type="text" 
                                 placeholder={signup.phoneNumberPlaceholder}  
-                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                                  {errors.PhoneNumber && touched.PhoneNumber && <p className = "text-red-700 text-sm">{errors.PhoneNumber}</p>}
                         </div>
     
                         <div>
-                            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.address}</label>
+                            <label className="block mb-2 text-sm text-gray-600 ">{signup.address}</label>
                             <input 
                                 id = "Address"
                                 value={values.Address}
@@ -164,24 +173,24 @@ const SignUp = () => {
                                 onBlur = {handleBlur}
                                 type="text" 
                                 placeholder={signup.addressPlaceholder}  
-                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                                className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                                 {errors.Address && touched.Address && <p className = "text-red-700 text-sm">{errors.Address}</p>}
                         </div>
     
                         <div>
-                            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">{signup.password}</label>
+                            <label className="block mb-2 text-sm text-gray-600 ">{signup.password}</label>
                             <input 
                               value={values.password}
                               onChange = {handleChange}
                               onBlur = {handleBlur}
                               type="password"
                               id="password"
-                              placeholder={signup.passwordPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                              placeholder={signup.passwordPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                               {errors.password && touched.password && <p className = "text-red-700 text-sm">{errors.password}</p>}
                         </div>
     
                         <div>
-                            <label className={"block mb-2 text-sm text-gray-600 dark:text-gray-200 " +
+                            <label className={"block mb-2 text-sm text-gray-600 " +
                               (errors.passwordConfirmation && touched.passwordConfirmation? "border-red-700":"border-gray-300")}>
                                 {signup.confirmPassword}
                             </label>
@@ -191,7 +200,7 @@ const SignUp = () => {
                               onChange = {handleChange}
                               onBlur = {handleBlur}
                               type="password"
-                              placeholder={signup.confirmPasswordPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                              placeholder={signup.confirmPasswordPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                               {errors.passwordConfirmation && touched.passwordConfirmation && <p className = "text-red-700 text-sm">{errors.passwordConfirmation}</p>}
                         </div>
     
@@ -206,6 +215,9 @@ const SignUp = () => {
                                     clip-rule="evenodd" />
                             </svg>
                         </button>
+                        <p className='pt-3'>Already have an account? &nbsp;
+                        <button className='underline text-blue-500' onClick={navigateToLogIn}><span >{signup.loginButtonLabel}</span></button>
+                        </p>
                     </form>
                 </div>
             </div>

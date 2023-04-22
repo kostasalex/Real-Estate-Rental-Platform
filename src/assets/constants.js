@@ -24,6 +24,7 @@ export const signup = {
   confirmPasswordPlaceholder: 'Enter your password',
 
   submitButtonLabel: 'Sign up',
+  loginButtonLabel: 'Log in',
 };
 
 export const login = {
@@ -36,5 +37,6 @@ export const login = {
   passwordPlaceholder: 'Enter your password',
   
   loginButtonLabel: 'Log in',
+  signupButtonLabel: 'Sign up!',
   submitButtonLabel: 'Don\'t have an account? Sign up',
 };
