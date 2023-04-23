@@ -21,7 +21,7 @@ const Login = () => {
 
 
     Swal.fire({
-        title: 'Welcome to Airbnb',
+        title: 'Welcome to RentSpot',
         text: '',
         icon: 'success',
         confirmButtonText: 'OK'
