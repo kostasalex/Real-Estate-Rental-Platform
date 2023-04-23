@@ -28,7 +28,7 @@ export const signup = {
 };
 
 export const login = {
-  title: 'Welcome to Airbnb',
+  title: 'Welcome to RentSpot',
   description:
     "Let’s get you all set up so you can verify your personal account and begin setting up your profile.",
   emailLabel: 'Email address',

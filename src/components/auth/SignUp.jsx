@@ -6,6 +6,7 @@ import {useFormik} from "formik"
 import {registerSchema} from "/src/schemas"
 import Swal from "sweetalert2";  
 import {useNavigate} from 'react-router-dom';
+import backgroundImage from "/src/assets/auth.png";
 
 const SignUp = () => {
 
@@ -62,10 +63,10 @@ const SignUp = () => {
     
     <section className="bg-white ">
         <div className="flex justify-center min-h-screen">
-            <div className="hidden bg-cover lg:block lg:w-2/5" style={{backgroundImage: `url('https://images.unsplash.com/photo-1494621930069-4fd4b2e24a11?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=715&q=80')`}}>
+            <div className="hidden bg-no-repeat  lg:block lg:w-2/5 bg-center"  style={{ backgroundImage: `url(${backgroundImage})` }}>
             </div>
     
-            <div className="flex items-center w-full max-w-3xl p-8 mx-auto lg:px-12 lg:w-3/5">
+            <div className="flex items-center w-full max-w-3xl p-8 mx-auto lg:px-12 lg:w-3/5 ">
                 <div className="w-full">
                     <h1 className="txt-2xl font-semibold tracking-wider text-gray-800 capitalize ">
                         {signup.title}
