@@ -67,7 +67,14 @@ const Search = () => {
         }
         setfiltersToggle(false);
 
-
+        const queryParams = Object.entries({ location, homeType, arrive, leave, guests })
+            .filter(([value]) => value !== "")
+            .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+            .join("&");
+    
+        const url = `/results/q?${queryParams}`;
+        
+        navigate(url);
 
     };
 
