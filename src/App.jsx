@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Login, SignUp, Cards } from './components'
+import { Header, Login, SignUp, Cards, Results } from './components'
 import { Route, Routes } from 'react-router-dom';
 function App() {
 
@@ -10,6 +10,7 @@ function App() {
         <Route path="/" element={<Cards/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} />
+        <Route path="/results/q?" element={<Results/>} />
       </Routes>
     </div>
   )
