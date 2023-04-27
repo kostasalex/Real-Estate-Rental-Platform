@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import {useNavigate} from 'react-router-dom';
 import backgroundImage from "/src/assets/auth.png";
 
-const Login = () => {
+const Login = (props) => {
 
   const navigate = useNavigate();
 
@@ -27,6 +27,8 @@ const Login = () => {
         confirmButtonText: 'OK'
       }).then(() => {
           /* Navigate previous paths */
+          props.handleLogin("userType");
+          navigate("/");
       });
 
 

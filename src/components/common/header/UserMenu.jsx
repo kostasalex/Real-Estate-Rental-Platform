@@ -1,6 +1,10 @@
 import React from 'react'
 import {Link} from "react-router-dom"
-const UserMenu = () => {
+import {FaUserCircle}  from "react-icons/fa";
+import {FaUserCheck}  from "react-icons/fa";
+
+
+const UserMenu = ({loggedInUserType, handleLogout}) => {
 
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const menuRef = React.useRef(null);
@@ -46,17 +50,9 @@ const UserMenu = () => {
                             </svg>
                         </div>
 
-                        <div className="block flex-grow-0 flex-shrink-0 h-10 lg:w-12 w-7 lg:pl-5">
-                            <svg
-                                viewBox="0 0 32 32"
-                                xmlns="http://www.w3.org/2000/svg"
-                                aria-hidden="true"
-                                role="presentation"
-                                focusable="false"
-                                className="block h-full w-full fill-slate-700"
-                            >
-                                <path d="m16 .7c-8.437 0-15.3 6.863-15.3 15.3s6.863 15.3 15.3 15.3 15.3-6.863 15.3-15.3-6.863-15.3-15.3-15.3zm0 28c-4.021 0-7.605-1.884-9.933-4.81a12.425 12.425 0 0 1 6.451-4.4 6.507 6.507 0 0 1 -3.018-5.49c0-3.584 2.916-6.5 6.5-6.5s6.5 2.916 6.5 6.5a6.513 6.513 0 0 1 -3.019 5.491 12.42 12.42 0 0 1 6.452 4.4c-2.328 2.925-5.912 4.809-9.933 4.809z"></path>
-                            </svg>
+                        <div className="block h-full w-full p-1 flex-grow-0 flex-shrink-0 h-10 lg:w-12 w-7 lg:pl-5">
+                            {!loggedInUserType && <FaUserCircle style={{ fontSize: '30px',color: '#333' }}/>}
+                            {loggedInUserType && <FaUserCheck style={{ fontSize: '30px',color: '' }}/>}
                         </div>
                     </button>
 
@@ -65,16 +61,38 @@ const UserMenu = () => {
                         <nav 
                             onClick={handleMenuToggle}
                             className=" flex flex-col text-left mt-3 shadow-lg w-32 bg-white absolute duration-500  ">
-                            <Link to ="/signup">
-                                <div className="flex  rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                                    <span className="mr-3 text-sm font-medium"> Sign Up </span>
+                            {!loggedInUserType && 
+                                <div>
+                                    <Link to ="/signup">
+                                        <div className="flex  rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                                            <span className="mr-3 text-sm font-medium"> Sign Up </span>
+                                        </div>
+                                    </Link>
+                                    <Link to ="/login">
+                                        <div className="flex  rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                                            <span className="mr-3 text-sm font-medium"> Login </span>
+                                        </div>
+                                    </Link>
                                 </div>
-                            </Link>
-                            <Link to ="/login">
-                                <div className="flex  rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                                    <span className="mr-3 text-sm font-medium"> Login </span>
-                                </div>
-                            </Link>
+                            }
+                            {loggedInUserType && 
+                            <div>
+                                <div className="flex rounded-lg px-4 py-2 text-gray-500 opacity-80">
+                                        <span 
+                                            className="mr-3 text-sm font-medium"
+                                            >
+                                            Dashboard 
+                                        </span>
+                                </div>  
+                                <div className="flex  cursor-pointer px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                                        <span 
+                                            className="mr-3 text-sm font-medium"
+                                            onClick={handleLogout}>
+                                            Exit 
+                                        </span>
+                                </div>                              
+                            </div>
+                            }
                         </nav>
 
                     )}
