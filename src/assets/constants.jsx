@@ -40,3 +40,28 @@ export const login = {
   signupButtonLabel: 'Sign up!',
   submitButtonLabel: 'Don\'t have an account? Sign up',
 };
+
+import { FaMapMarkerAlt, FaHome, FaCalendarAlt, FaUsers } from "react-icons/fa";
+
+export const filterCategories = {
+  location: {
+    label: "Location",
+    Icon : <FaMapMarkerAlt />
+  },
+  type: {
+    label: "HomeType",
+    Icon: <FaHome />
+  },
+  arrive: {
+    label: "Arrive",
+    Icon: <FaCalendarAlt />
+  },
+  leave: {
+    label: "Leave",
+    Icon: <FaCalendarAlt />
+  },
+  persons: {
+    label: "Persons",
+    Icon: <FaUsers />
+  }
+};
