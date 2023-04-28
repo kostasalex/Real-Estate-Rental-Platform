@@ -6,11 +6,14 @@ import {useFormik} from "formik"
 import {registerSchema} from "/src/schemas"
 import Swal from "sweetalert2";  
 import {useNavigate} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import backgroundImage from "/src/assets/auth.png";
 
-const SignUp = () => {
+const SignUp = (props) => {
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const toggle = location?.state?.toggle || false;
 
     const navigateToLogIn = () => {
       
@@ -18,7 +21,7 @@ const SignUp = () => {
     };
   
 
-    const [rentingPlace, setRentingPlace] = React.useState(false);
+    const [rentingPlace, setRentingPlace] = React.useState(toggle);
   
     const handleRentingPlaceToggle = () => {
         setRentingPlace(!rentingPlace);
@@ -27,31 +30,36 @@ const SignUp = () => {
 
   const onSubmit = (values, actions) =>{
 
-    let title = "\n"
-    if (rentingPlace === true)
-        title = "\nThank you for your interest in renting a place. Your application will be reviewed."
+    let msg = ""
+    if (rentingPlace === true){
+        msg = "\nHost Application Received. We will notify you as soon as it is approved."
+    }
+
     Swal.fire({
-        title: 'Welcome '+values.Username +'!' + title,
-        text: '',
+        title: 'Welcome '+values.Username +'!',
+        text: msg,
         icon: 'success',
         confirmButtonText: 'OK'
-      }).then(() => {
-          /* Navigate previous paths */
-      });
-
-
+    }).then(() => {
+        /* Navigate previous paths */
+        let userType = "Seeker"
+        if(rentingPlace) userType = "Host" 
+        props.handleLogin(userType);
+        navigate("/");
+    });
+  
   };
 
   const {values, errors,isSubmitting, touched, handleBlur, handleChange, handleSubmit} = useFormik({
     initialValues:{
-        email:"",
-        password:"",
-        passwordConfirmation:"",
-        Username:"",
-        FirstName:"",
-        LastName:"",
-        PhoneNumber:"",
-        Address:"",
+        email: signup.emailPlaceholder,
+        password: "ASD1a",
+        passwordConfirmation:"ASD1a",
+        Username: signup.usernamePlaceholder,
+        FirstName: signup.firstNamePlaceholder,
+        LastName: signup.lastNameLabelPlaceholder,
+        PhoneNumber: "699000000",
+        Address:signup.addressPlaceholder,
     },
     validationSchema: registerSchema,
     onSubmit,
@@ -77,28 +85,28 @@ const SignUp = () => {
                     </p>
     
                     <div className="mt-6">
-                    <h1 className="text-gray-500 ">{signup.selectAccountType}</h1>
+                        <h1 className="text-gray-500 ">{signup.selectAccountType}</h1>
 
-                <div className="mt-3 md:flex md:items-center md:-mx-2">
-                    <label className="flex justify-center items-center w-full px-6 py-3 text-white bg-blue-500 rounded-md md:w-auto md:mx-2 focus:outline-none">
-                        <input type="checkbox" name="accountType" value="lookingForPlace" checked className="hidden"/>
-                        <FiSearch/>
-                        <span className="mx-2">
-                            {signup.lookingForPlace}
-                        </span>
-                    </label>
+                        <div className="mt-3 md:flex md:items-center md:-mx-2">
+                            <label className="flex justify-center items-center w-full px-6 py-3 text-white bg-blue-500 rounded-md md:w-auto md:mx-2 focus:outline-none">
+                                <input type="checkbox" name="accountType" value="lookingForPlace" checked className="hidden"/>
+                                <FiSearch/>
+                                <span className="mx-2">
+                                    {signup.lookingForPlace}
+                                </span>
+                            </label>
 
-                    <label 
-                        className={( rentingPlace === true ?   "text-white bg-blue-500 hover:bg-blue-400 " : "text-blue-500 border border-blue-500 hover:border-blue-400 hover:text-blue-400 ")+ 
-                        " flex justify-center items-center w-full   px-6 py-3 mt-4rounded-md md:mt-0 md:w-auto md:mx-2 focus:outline-none"}
-                            >
-                        <input type="checkbox" name="accountType" value="rentingOutPlace" className="hidden" onClick={() => handleRentingPlaceToggle()}/>
-                          <GoHome/>
-                        <span className="mx-2">
-                            {signup.rentingOutPlace}
-                        </span>
-                    </label>
-                </div>
+                            <label 
+                                className={( rentingPlace === true ?   "text-white bg-blue-500 hover:bg-blue-400 " : "text-blue-500 border border-blue-500 hover:border-blue-400 hover:text-blue-400 ")+ 
+                                " flex justify-center items-center w-full   px-6 py-3 mt-4rounded-md md:mt-0 md:w-auto md:mx-2 focus:outline-none"}
+                                    >
+                                <input type="checkbox" name="accountType" value="rentingOutPlace" className="hidden" onClick={() => handleRentingPlaceToggle()}/>
+                                <GoHome/>
+                                <span className="mx-2">
+                                    {signup.rentingOutPlace}
+                                </span>
+                            </label>
+                        </div>
                     </div>
     
                     <form className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2" onSubmit={handleSubmit}>

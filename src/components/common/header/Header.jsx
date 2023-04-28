@@ -1,14 +1,49 @@
 import React from 'react'
 import {Link} from "react-router-dom"
-import SearchBar from './search/SearchBar'
-import Filters from './search/Filters'
 import UserMenu from './UserMenu'
 import Logo from '/src/assets/logo.png';
 import LogoSmall from '/src/assets/logosmall.png';
 import Search from './search/Search'
+import Swal from "sweetalert2";  
+import {useNavigate} from 'react-router-dom';
 
-const Header = () => {
 
+const Header = (props) => {
+    const navigate = useNavigate();
+
+    const becomeHostHandler = () => {
+
+        if(!props.loggedInUserType)navigate("signup", { state: { toggle: true }})
+        else{
+            console.log(props.loggedInUserType)
+            Swal.fire({
+                title: 'Application Received',
+                text: 'We will notify you as soon as it is approved',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                /* Navigate previous paths */
+                props.handleUserType("Host");
+            });
+        }
+
+
+
+
+    };
+
+
+    const rentHandler = () => {
+
+        Swal.fire({
+            position: 'top-end',
+            icon: 'info',
+            title: 'Host Application Pending.',
+            showConfirmButton: false,
+            timer: 1500
+          })
+
+    };
 
     return (
         <div>
@@ -35,11 +70,25 @@ const Header = () => {
                     
                         <div className="flex mr-4 items-center">
                             <div className="inline-block py-2 px-3 hover:bg-gray-200 rounded-full" >
-                                <div className="flex items-center relative cursor-pointer whitespace-nowrap">Become a host</div>
+                                {
+                                props.loggedInUserType !== "Host" ?
+                                 (<div 
+                                    className="flex items-center relative cursor-pointer whitespace-nowrap"
+                                    onClick= {becomeHostHandler}
+                                    >
+                                        Become a host
+                                 </div>)
+                                :(<div 
+                                    className="flex items-center relative cursor-pointer whitespace-nowrap"
+                                    onClick= {rentHandler}
+                                    >
+                                        Rent out Property
+                                 </div>)
+                                }
                             </div>
                         </div>
 
-                        <UserMenu/>
+                        <UserMenu loggedInUserType = {props.loggedInUserType} handleLogout = {props.handleLogout}/>
                     </div>
         
                 </div>
