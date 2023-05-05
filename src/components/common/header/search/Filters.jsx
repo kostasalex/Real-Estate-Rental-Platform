@@ -1,4 +1,3 @@
-
 import { BiSearch } from 'react-icons/bi';
 import { filterCategories } from "/src/assets/constants";
 
@@ -67,12 +66,10 @@ export default function Filters({arrive, handleSearch,handleOptionSelect,filters
         }`}
         onClick={() => onClick(index)}
       >
-        <div>
           <div className="flex-row flex items-center">
             {Icon}
             <div className=" ml-2 hidden md:block">  {entry ? entry : label}  </div>
           </div>
-        </div> 
       </li>
     );
   }
@@ -86,7 +83,7 @@ export default function Filters({arrive, handleSearch,handleOptionSelect,filters
 
   return (
     <div className=" flex-col flex ">
-      <div className="flex flex-row justify-center items-center h-screen">
+      <div className="flex justify-center items-center ">
           <ul className="flex justify-center space-x-2 shadow-inner items-center bg-white p-2 rounded-3xl
           m-4">
             {Object.entries(filterCategories).map(([key, value], index) => (

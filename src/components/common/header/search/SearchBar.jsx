@@ -6,11 +6,11 @@ const SearchBar = (props) => {
     let displayMsg = "Start your search";
     const hasFilters = props.filtersSelected && props.filtersSelected.some((filter) => filter !== '');
     const displayFilters = hasFilters && (
-        <div className="flex space-x-2">
+        <div className="flex lg:flex-row items-center space-x-2">
             {props.filtersSelected.map((filter, index) => (
                 <React.Fragment key={index}>
                     {filter && (
-                        <div className="bg-gray-100 opacity-70 shadow-inner rounded-2xl py-1 px-2">
+                        <div className="bg-gray-100 mb-2 opacity-70 shadow-inner rounded-2xl py-1 px-2">
                             {filter}
                         </div>
                     )}
@@ -26,7 +26,7 @@ const SearchBar = (props) => {
             <div className="inline-block">
                 <div className="inline-flex items-center">
                     <button 
-                        className="flex items-center flex-grow-0 flex-shrink pl-2 relative space-x-2  border rounded-full px-1  py-1" 
+                        className="flex items-center flex-grow-0 flex-shrink pl-2 relative space-x-2 m-2 border rounded-full px-1  py-1" 
                         type="button"
                         onClick={() => props.handleFiltersToggle()}
                         >

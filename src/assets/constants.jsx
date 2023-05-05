@@ -41,16 +41,16 @@ export const login = {
   submitButtonLabel: 'Don\'t have an account? Sign up',
 };
 
-import { FaMapMarkerAlt, FaHome, FaCalendarAlt, FaUsers } from "react-icons/fa";
+import { FaMapMarkerAlt, FaCalendarAlt, FaUsers, FaParking } from "react-icons/fa";
+import { AiOutlineWifi } from "react-icons/ai"
+import { TbAirConditioning, TbToolsKitchen2 } from "react-icons/tb"
+import { FiMonitor } from "react-icons/fi"
+import { MdElevator } from "react-icons/md"
 
 export const filterCategories = {
   location: {
     label: "Location",
     Icon : <FaMapMarkerAlt />
-  },
-  type: {
-    label: "HomeType",
-    Icon: <FaHome />
   },
   arrive: {
     label: "Arrive",
@@ -63,5 +63,39 @@ export const filterCategories = {
   persons: {
     label: "Persons",
     Icon: <FaUsers />
-  }
+  },
+};
+
+
+export const filterCategories2 = {
+  maxPrice: {
+    label: "Max Price",
+  },
+  roomType: {
+    label: "Room Type",
+    options:{
+      hotel: "Hotel",
+      apartment: "Apartment",
+      villa: "Villa"
+    }
+  },
+  amenities: {
+    label: "Amenities",
+    options: {
+      wifi: "Wi-fi",
+      airConditioning: "Air Conditioning",
+      kitchen: "Kitchen",
+      tv: "TV",
+      parking: "Parking",
+      elevator: "Elevator",
+    },
+    icons: {
+      wifi: <AiOutlineWifi />,
+      airConditioning: <TbAirConditioning />,
+      kitchen: <TbToolsKitchen2 />,
+      tv: <FiMonitor />,
+      parking: <FaParking />,
+      elevator: <MdElevator />,
+    }
+  },
 };

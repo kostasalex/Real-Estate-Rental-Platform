@@ -16,11 +16,10 @@ const Search = () => {
 
     /* Filters */
     const [location, setLocation] = useState("");
-    const [homeType, setHomeType] = useState("");
     const [arrive, setArrive] = useState("");
     const [leave, setLeave] = useState("");
     const [guests, setGuests] = useState("");
-    const filters = [location, homeType, arrive, leave, guests];
+    const filters = [location, arrive, leave, guests];
 
     /*  For filters tab */
     const [activeTab, setActiveTab] = useState("Location");
@@ -29,10 +28,6 @@ const Search = () => {
         switch (filter) {
         case "Location":
             setLocation(option);
-            setActiveTab("HomeType");
-            break;
-        case "HomeType":
-            setHomeType(option);
             setActiveTab("Arrive");
             break;
         case "Arrive":
@@ -62,17 +57,18 @@ const Search = () => {
         let persons = ""
         if(arrive && leave)date = arrive + " - " + leave
         if(guests)persons = guests + " persons"
-        if(location || homeType || date || guests){
-            setFiltersSelected([location , homeType , date , persons]) 
+        if(location || date || guests){
+            setFiltersSelected([location  , date , persons]) 
         }
         setfiltersToggle(false);
 
-        const queryParams = Object.entries({ location, homeType, arrive, leave, guests })
-            .filter(([value]) => value !== "")
+        const queryParams = Object.entries({ location, arrive, leave, guests })
+            .filter(([_, value]) => value !== "") // filter out empty values
             .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
             .join("&");
-    
+        
         const url = `/results/q?${queryParams}`;
+      
         
         navigate(url);
 

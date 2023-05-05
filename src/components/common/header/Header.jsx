@@ -47,7 +47,7 @@ const Header = (props) => {
 
     return (
         <div>
-            <nav className=" bg-white top-0 w-full fixed shadow-md flex  justify-between items-center mx-auto px-8 h-20 ">
+            <nav className=" bg-white top-0 w-full fixed shadow-md flex  justify-between items-center mx-auto px-8">
                 {/*Logo*/}
                 <div className="hidden sm:block lg:ml-12 inline-flex">
                     <Link className="_o6689fn" to="/"
@@ -65,11 +65,11 @@ const Header = (props) => {
                 </div>
 
                 {/*login*/}
-                <div className="flex-initial">
+       
                     <div className="flex justify-end items-center relative">
                     
-                        <div className="flex mr-4 items-center">
-                            <div className="inline-block py-2 px-3 hover:bg-gray-200 rounded-full" >
+                    
+                            <div className="inline-block hidden md:block py-2 px-3 hover:bg-gray-200 rounded-full" >
                                 {
                                 props.loggedInUserType !== "Host" ?
                                  (<div 
@@ -86,12 +86,12 @@ const Header = (props) => {
                                  </div>)
                                 }
                             </div>
-                        </div>
+                     
 
                         <UserMenu loggedInUserType = {props.loggedInUserType} handleLogout = {props.handleLogout}/>
                     </div>
         
-                </div>
+           
 
 
                 {/*end login*/}
