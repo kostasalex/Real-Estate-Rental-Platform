@@ -31,7 +31,7 @@ function App() {
         <Route path="/login" element={<Login handleLogin={handleLogin} />} />
         <Route path="/signup" element={<SignUp handleLogin={handleLogin} />} />
         <Route path="/results/q?" element={<Results/>} />
-        <Route path="/cards/:cardTitle" element={<CardDetails/>} />
+        <Route path="/cards/:cardId" element={<CardDetails/>} />
       </Routes>
     </div>
   )
