@@ -11,9 +11,9 @@ const Filters = ({filters, handleOptionSelect, handleMaxPriceChange}) => {
         <div className='flex flex-col pt-2'>
         <div className='flex flex-col shadow-sm pb-4'>
             {/* Filter categories */}
-            <div className='flex xl:flex-row shadow-inner  flex-col px-10 justify-center pt-6 lg:pt-4 items-center pb-4 lg:pb-0 lg:space-y-0 space-y-10'>
+            <div className='flex xl:flex-row  flex-col px-10 justify-center pt-6 lg:pt-4 items-center pb-4 lg:pb-0 lg:space-y-0 space-y-10'>
                 <div className="flex flex-col space-y-2 pt-8 items-center  border-b-2 lg:border-0 lg:mr-0 mr-10 border-gray-50 p-2">
-                    <label htmlFor="price" className="flex rounded-xl mb-1 uppercase text-grey-darker text-xs font-bold">{f.maxPrice.label}</label>
+                    <label className="flex rounded-xl mb-1 uppercase text-grey-darker text-xs font-bold">{f.maxPrice.label}</label>
                     <div className="flex flex-row ">
                     <span className="flex items-center bg-grey-lighter rounded rounded-r-none px-3 font-bold text-grey-darker">$</span>
                     <input type="number"
@@ -27,7 +27,7 @@ const Filters = ({filters, handleOptionSelect, handleMaxPriceChange}) => {
                 </div>
                 {/* Room Type */}
                 <div className="flex flex-col items-center lg:pt-8 space-y-2 px-10  border-b-2 lg:border-0 border-gray-50 p-2">
-                    <label htmlFor="price" className="flex rounded-xl mb-1 uppercase text-grey-darker text-xs font-bold">{f.roomType.label}</label>
+                    <label  className="flex rounded-xl mb-1 uppercase text-grey-darker text-xs font-bold">{f.roomType.label}</label>
                     <div className="flex flex-row " >
                     {Object.entries(f.roomType.options).map(([key, value], index) => (
                         <SelectButton
@@ -43,7 +43,7 @@ const Filters = ({filters, handleOptionSelect, handleMaxPriceChange}) => {
                 </div>
                 {/* Amenities */}
                 <div className="flex flex-col items-center lg:pt-8 space-y-2  lg:border-0  border-gray-50 p-2">
-                    <label for="price" className="flex rounded-xl mb-1  uppercase text-grey-darker text-xs font-bold">{f.amenities.label}</label>
+                    <label  className="flex rounded-xl mb-1  uppercase text-grey-darker text-xs font-bold">{f.amenities.label}</label>
                     <div className="flex flex-row">
                     {Object.entries(f.amenities.options).map(([key, value], index) => (
                         <SelectButton

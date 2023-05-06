@@ -3,7 +3,7 @@ import React from 'react'
 const SelectButton = ({ icon, label, isChecked, handleOptionSelect, category, option })=> {
     return (
         <button
-            className={"rounded-full px-4 py-2 mr-4 focus:outline-none " +  (isChecked ? "bg-blue0 hover:bg-white  shadow-inner  hover:shadow-md " : " hover:bg-blue0 shadow-md hover:shadow-inner ")}
+            className={"rounded-full px-4 py-2 mr-4  focus:outline-none hover:opacity-80 " +  (isChecked ? "bg-blue0  shadow-inner   " : "bg-gray-50  shadow-md  ")}
             role="checkbox"
             aria-checked={isChecked}
             title = {label}

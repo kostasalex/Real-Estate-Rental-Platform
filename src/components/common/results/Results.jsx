@@ -13,7 +13,7 @@ const Results = () => {
   const navigate = useNavigate();    
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-
+  const [hasFilters, setHasFilters] = React.useState(false);
 
   /* Open/close filter section */
   const [filtersToggle, setFiltersToggle] = React.useState(true);
@@ -31,21 +31,21 @@ const Results = () => {
   };
 
 
-  /* Initialize filters  */
+  /* Get filters from url if there was a previous search, or initialize them  */
   const [filters, setFilters] = React.useState({
-    maxPrice:  1000,
+    maxPrice: queryParams.get('maxPrice') ? queryParams.get('maxPrice')  : "",
     roomType: {
-      hotel:  false,
-      apartment:  false,
-      villa: false,
+      hotel: queryParams.get('roomType')?.includes('hotel') || false,
+      apartment: queryParams.get('roomType')?.includes('apartment') || false,
+      villa: queryParams.get('roomType')?.includes('villa') || false,
     },
     amenities: {
-      wifi:  false,
-      airConditioning:  false,
-      kitchen: false,
-      tv:  false,
-      parking:  false,
-      elevator:  false,
+      wifi: queryParams.get('amenities')?.includes('wifi') || false,
+      airConditioning: queryParams.get('amenities')?.includes('airConditioning') || false,
+      kitchen: queryParams.get('amenities')?.includes('kitchen') || false,
+      tv: queryParams.get('amenities')?.includes('tv') || false,
+      parking: queryParams.get('amenities')?.includes('parking') || false,
+      elevator: queryParams.get('amenities')?.includes('elevator') || false,
     },
   });
 
@@ -53,7 +53,7 @@ const Results = () => {
   /* Set the filter state based on the search parameters when the URL changes */
   React.useEffect(() => {
     setFilters({
-      maxPrice: queryParams.get('maxPrice') ? queryParams.get('maxPrice')  : 1000,
+      maxPrice: queryParams.get('maxPrice') ? queryParams.get('maxPrice')  : "",
       roomType: {
         hotel: queryParams.get('roomType')?.includes('hotel') || false,
         apartment: queryParams.get('roomType')?.includes('apartment') || false,
@@ -75,12 +75,20 @@ const Results = () => {
   const updateFilterURL = () => {
     const roomTypeFilters = Object.keys(filters.roomType).filter(key => filters.roomType[key]).join(',');
     const amenityFilters = Object.keys(filters.amenities).filter(key => filters.amenities[key]).join(',');
-    const url = 
-      `/results/q?location=${searchBarFilters.location}&arrive=${searchBarFilters.arrive}`+
-      `&leave=${searchBarFilters.leave}&guests=${searchBarFilters.guests}&roomType=${roomTypeFilters}`+
-      `&amenities=${amenityFilters}&maxPrice=${filters.maxPrice}`;
-    navigate(url)
-  };
+    let url = '/results/q?';
+  
+    if (searchBarFilters.location !== '') url += `&location=${searchBarFilters.location}`;
+    if (searchBarFilters.arrive !== '') url += `&arrive=${searchBarFilters.arrive}`;
+    if (searchBarFilters.leave !== '') url += `&leave=${searchBarFilters.leave}`;
+    if (searchBarFilters.guests !== '') url += `&guests=${searchBarFilters.guests}`;
+    if (filters.maxPrice !== '') url += `&maxPrice=${filters.maxPrice}`;
+    if (roomTypeFilters !== '') url += `&roomType=${roomTypeFilters}`;
+    if (amenityFilters !== '') url += `&amenities=${amenityFilters}`;
+    if (filters.maxPrice !== '') url += `&maxPrice=${filters.maxPrice}`;
+  
+    hasOptions();
+    navigate(url);
+  };  
   React.useEffect(() => {
     console.log("Updating filter URL")
     updateFilterURL()
@@ -97,28 +105,45 @@ const Results = () => {
   };
 
   const handleOptionSelect = (category, option) => {
-      setFilters((filters) => {
+      if (category === 'maxPrice') {
+        setFilters((filters) => ({
+          ...filters,
+          maxPrice: ""
+        }));
+      } else {
+        setFilters((filters) => {
           const categoryOptions = { ...filters[category] };
           categoryOptions[option] = !categoryOptions[option];
           return { ...filters, [category]: categoryOptions };
-      });
+        });
+      }
     };
 
 
+  /* Remove all filters (except searchbar's) */
+  const clearAll = () => {
+    const queryParams = new URLSearchParams(location.search);
+    const amenities = queryParams.get('amenities');
+    const maxPrice = queryParams.get('maxPrice');
+    const roomType = queryParams.get('roomType');
+  
+    if (amenities || maxPrice || roomType) {
+      queryParams.delete('amenities');
+      queryParams.delete('maxPrice');
+      queryParams.delete('roomType');
+      const newUrl = `${location.pathname}?${queryParams.toString()}`;
+      navigate(newUrl);
+    }
+  }
 
-    const clearAll = () => {
-      const queryParams = new URLSearchParams(location.search);
-      const amenities = queryParams.get('amenities');
-      const maxPrice = queryParams.get('maxPrice');
-      const roomType = queryParams.get('roomType');
+  /* Check if there is at least one filter */
+  const hasOptions = () => {
+    const queryParams = new URLSearchParams(location.search);
+    const amenities = queryParams.get('amenities');
+    const maxPrice = queryParams.get('maxPrice');
+    const roomType = queryParams.get('roomType');
     
-      if (amenities || maxPrice || roomType) {
-        queryParams.delete('amenities');
-        queryParams.delete('maxPrice');
-        queryParams.delete('roomType');
-        const newUrl = `${location.pathname}?${queryParams.toString()}`;
-        navigate(newUrl);
-      }
+    setHasFilters(amenities || maxPrice || roomType);
   }
 
 
@@ -126,10 +151,18 @@ const Results = () => {
   return (
     <div >
       {filtersToggle && <Filters filters = {filters} handleOptionSelect = {handleOptionSelect} handleMaxPriceChange={handleMaxPriceChange}/>}
-      <div className={(!filtersToggle ? "mt-24":"mt-10") + ` flex flex-col justify-center  items-center`}>
-      <FiltersSelected/>
+      <div className={(!filtersToggle ? "mt-24":"mt-10") + ` lg:ml-36 flex flex-row justify-start  items-center`}>
+        <FiltersSelected handleOptionSelect = {handleOptionSelect}/>
+
       </div>
-      <div className='fixed lg:top-24 top-1 left-6 justify-end xl:mr-32'>
+        {hasFilters  && <div className='flex flex-row  ml-10  border-gray-50 justify-center items-center space-x-10 '>
+            <button className='flex flex-row items-center bg-white border-blue1 rounded-xl px-2 py-1 hover:opacity-50 text-blue1'>
+                    <div className='mr-2 text-md underline' onClick={clearAll}>
+                        Clear all
+                    </div>
+            </button>
+        </div>}
+      <div className='fixed  top-36 left-1  justify-end xl:mr-32'>
             <button 
                 className='flex flex-row  items-center  justify-end shadow-xl xl:mt-0 mt-20 bg-blue1 rounded-xl px-2 py-1 transition duration-300 transform hover:translate-y--2 text-white duration-300 transform hover:translate-y-2'
                 onClick={handleFilterToggle}>
@@ -143,14 +176,6 @@ const Results = () => {
             
             </button>
       </div>
-      <div className='flex flex-row border-t-2 border-gray-50 pt-10 justify-center items-center space-x-10 mt-7'>
-            <button className='flex flex-row items-center bg-white border-2 border-blue1 rounded-xl px-2 py-1 text-blue1'>
-                    <div className='mr-2 text-lg' onClick={clearAll}>
-                        Clear All
-                    </div>
-            </button>
-      </div>
-
     </div>
   );
 };
