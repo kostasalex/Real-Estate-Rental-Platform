@@ -3,56 +3,56 @@ import Filters from './filters/Filters';
 import { useLocation } from 'react-router-dom';
 import { FaArrowAltCircleUp, FaArrowAltCircleDown } from 'react-icons/fa';
 import { BiSearch } from 'react-icons/bi';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import FiltersSelected from './filters/FiltersSelected';
+
+
+
 const Results = () => {
-    
+
   const navigate = useNavigate();    
-  
-  const [filtersToggle, setFiltersToggle] = React.useState(true);
-
-  const handleFilterToggle = () => {
-    setFiltersToggle(!filtersToggle);
-};
-
-
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  const filters = {
+
+  /* Open/close filter section */
+  const [filtersToggle, setFiltersToggle] = React.useState(true);
+  const handleFilterToggle = () => {
+    setFiltersToggle(!filtersToggle);
+  };
+
+
+  /* Set searchbar filters (header) from URL parameter q? */
+  const searchBarFilters = {
     location: queryParams.get('location') || '',
     arrive: queryParams.get('arrive') || '',
     leave: queryParams.get('leave') || '',
     guests: queryParams.get('guests') || '',
   };
 
-  const [filters2, setFilters2] = React.useState({
-    maxPrice: queryParams.get('maxPrice') ? queryParams.get('maxPrice')  : 1000,
+
+  /* Initialize filters  */
+  const [filters, setFilters] = React.useState({
+    maxPrice:  1000,
     roomType: {
-      hotel: queryParams.get('roomType')?.includes('hotel') || false,
-      apartment: queryParams.get('roomType')?.includes('apartment') || false,
-      villa: queryParams.get('roomType')?.includes('villa') || false,
+      hotel:  false,
+      apartment:  false,
+      villa: false,
     },
     amenities: {
-      wifi: queryParams.get('amenities')?.includes('wifi') || false,
-      airConditioning: queryParams.get('amenities')?.includes('airConditioning') || false,
-      kitchen: queryParams.get('amenities')?.includes('kitchen') || false,
-      tv: queryParams.get('amenities')?.includes('tv') || false,
-      parking: queryParams.get('amenities')?.includes('parking') || false,
-      elevator: queryParams.get('amenities')?.includes('elevator') || false,
+      wifi:  false,
+      airConditioning:  false,
+      kitchen: false,
+      tv:  false,
+      parking:  false,
+      elevator:  false,
     },
   });
 
-  const handleMaxPriceChange = (event) => {
-    const { value } = event.target;
-    setFilters2((filters) => ({
-      ...filters,
-      maxPrice: value,
-    }));
-  };
 
+  /* Set the filter state based on the search parameters when the URL changes */
   React.useEffect(() => {
-    setFilters2({
+    setFilters({
       maxPrice: queryParams.get('maxPrice') ? queryParams.get('maxPrice')  : 1000,
       roomType: {
         hotel: queryParams.get('roomType')?.includes('hotel') || false,
@@ -70,28 +70,41 @@ const Results = () => {
     });
   }, [location.search]);
 
-  const selectedFilters = {
-    ...filters,
-    roomType: Object.keys(filters2.roomType).filter((option) => filters2.roomType[option]),
-    amenities: Object.keys(filters2.amenities).filter((option) => filters2.amenities[option]),
+
+  /* Update URL with new filter values when filters change */
+  const updateFilterURL = () => {
+    const roomTypeFilters = Object.keys(filters.roomType).filter(key => filters.roomType[key]).join(',');
+    const amenityFilters = Object.keys(filters.amenities).filter(key => filters.amenities[key]).join(',');
+    const url = 
+      `/results/q?location=${searchBarFilters.location}&arrive=${searchBarFilters.arrive}`+
+      `&leave=${searchBarFilters.leave}&guests=${searchBarFilters.guests}&roomType=${roomTypeFilters}`+
+      `&amenities=${amenityFilters}&maxPrice=${filters.maxPrice}`;
+    navigate(url)
+  };
+  React.useEffect(() => {
+    console.log("Updating filter URL")
+    updateFilterURL()
+  }, [filters]);
+
+
+  /*  Change filter handlers */
+  const handleMaxPriceChange = (event) => {
+    const { value } = event.target;
+    setFilters((filters) => ({
+      ...filters,
+      maxPrice: value,
+    }));
   };
 
-  console.log(selectedFilters)
   const handleOptionSelect = (category, option) => {
-      console.log(category)
-      setFilters2((filters) => {
+      setFilters((filters) => {
           const categoryOptions = { ...filters[category] };
           categoryOptions[option] = !categoryOptions[option];
           return { ...filters, [category]: categoryOptions };
       });
     };
 
-    const showResults = () => {
-      const roomTypeFilters = Object.keys(filters2.roomType).filter(key => filters2.roomType[key]).join(',');
-      const amenityFilters = Object.keys(filters2.amenities).filter(key => filters2.amenities[key]).join(',');
-      const url = `/results/q?location=${filters.location}&arrive=${filters.arrive}&leave=${filters.leave}&guests=${filters.guests}&roomType=${roomTypeFilters}&amenities=${amenityFilters}&maxPrice=${filters2.maxPrice}`;
-      navigate(url)
-    };
+
 
     const clearAll = () => {
       const queryParams = new URLSearchParams(location.search);
@@ -108,9 +121,11 @@ const Results = () => {
       }
   }
 
+
+
   return (
     <div >
-      {filtersToggle && <Filters filters = {filters2} handleOptionSelect = {handleOptionSelect} handleMaxPriceChange={handleMaxPriceChange}/>}
+      {filtersToggle && <Filters filters = {filters} handleOptionSelect = {handleOptionSelect} handleMaxPriceChange={handleMaxPriceChange}/>}
       <div className={(!filtersToggle ? "mt-24":"mt-10") + ` flex flex-col justify-center  items-center`}>
       <FiltersSelected/>
       </div>
@@ -133,12 +148,6 @@ const Results = () => {
                     <div className='mr-2 text-lg' onClick={clearAll}>
                         Clear All
                     </div>
-            </button>
-            <button className='flex flex-row items-center bg-blue1 rounded-xl px-2 py-1 text-white'>
-                <div className='mr-2 text-lg' onClick={showResults}>
-                    Show Results
-                </div>
-                <BiSearch style={{ fontSize: '20px' }} />
             </button>
       </div>
 
