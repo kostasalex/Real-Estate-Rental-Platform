@@ -4,3 +4,6 @@ export {default as SignUp} from './auth/SignUp';
 export {default as Cards} from './common/homepage/Cards';
 export {default as Results} from './common/results/Results';
 export {default as CardDetails} from './common/homepage/CardDetails';
+export {default as ScrollToTopButton} from './common/scrollToTopButton/ScrollToTopButton'
+export {default as SeekerHomepage} from './users/seeker/SeekerHomepage'
+export {default as HostHomepage} from './users/host/HostHomepage'

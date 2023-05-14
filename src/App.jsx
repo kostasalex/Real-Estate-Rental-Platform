@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Login, SignUp, Cards, Results, CardDetails } from './components'
+import { Header, SeekerHomepage, HostHomepage,  Login, SignUp, Cards, Results, CardDetails } from './components'
 import { Route, Routes } from 'react-router-dom';
 function App() {
 
@@ -27,7 +27,19 @@ function App() {
     <div className="App mt-20">
       <Header loggedInUserType={loggedInUserType} handleLogout={handleLogout} handleUserType = {handleUserType} />
       <Routes>
-        <Route path="/" element={<Cards/>} />
+        {loggedInUserType === null && <Route path="/" element={<Cards/>} />}
+        {loggedInUserType === 'Host' && (
+          <>
+            <Route path="/" element={<HostHomepage />} />
+          </>
+          )
+        }
+        {loggedInUserType === 'Seeker' && (
+          <>
+            <Route path="/" element={<SeekerHomepage />} />
+          </>
+          )
+        }
         <Route path="/login" element={<Login handleLogin={handleLogin} />} />
         <Route path="/signup" element={<SignUp handleLogin={handleLogin} />} />
         <Route path="/results/q?" element={<Results/>} />
