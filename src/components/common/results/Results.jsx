@@ -5,16 +5,39 @@ import { FaArrowAltCircleUp, FaArrowAltCircleDown } from 'react-icons/fa';
 import { BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import FiltersSelected from './filters/FiltersSelected';
-
-
+import Cards from './Cards';
+import Papa from "papaparse";
+import ScrollToTopButton from '../scrollToTopButton/ScrollToTopButton';
 
 const Results = () => {
+
+  const NUM_RESULTS = 30;
 
   const navigate = useNavigate();    
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const [hasFilters, setHasFilters] = React.useState(false);
 
+  const [listings, setListings] = React.useState([]);
+  
+  React.useEffect(() => {
+    Papa.parse("/src/assets/listings.csv", {
+      download: true,
+      header: true,
+      complete: (results) => {
+        // Randomly select 10 rows from the CSV file
+        const randomRows = [];
+        for (let i = 0; i < NUM_RESULTS; i++) {
+          const randomIndex = Math.floor(Math.random() * results.data.length);
+          randomRows.push(results.data[randomIndex]);
+          results.data.splice(randomIndex, 1);
+        }
+        setListings(randomRows);
+      },
+    });
+  }, []);
+
+    console.log(listings)
   /* Open/close filter section */
   const [filtersToggle, setFiltersToggle] = React.useState(true);
   const handleFilterToggle = () => {
@@ -150,6 +173,7 @@ const Results = () => {
 
   return (
     <div >
+      <ScrollToTopButton/>
       {filtersToggle && <Filters filters = {filters} handleOptionSelect = {handleOptionSelect} handleMaxPriceChange={handleMaxPriceChange}/>}
       <div className={(!filtersToggle ? "mt-24":"mt-10") + ` lg:ml-36 flex flex-row justify-start  items-center`}>
         <FiltersSelected handleOptionSelect = {handleOptionSelect}/>
@@ -176,6 +200,10 @@ const Results = () => {
             
             </button>
       </div>
+      <div className='mt-2 justify-center flex text-3xl'>
+        <Cards listings = {listings}/>
+      </div>
+
     </div>
   );
 };
