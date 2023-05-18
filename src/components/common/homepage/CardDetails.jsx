@@ -1,6 +1,9 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import Dialog from './Dialog';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+
 function CardDetails() {
 
 	const [id, setId] = useState('');
@@ -18,11 +21,26 @@ function CardDetails() {
 	const [reviewScoresRating, setReviewScoresRating] = useState('');
 	const [street, setStreet] = useState('');
 	const [description, setDescription] = useState('');
+
 	const [hostName, setHostName] = useState('');
-	const [hostPictureUrl, setPictureUrl] = useState('');
+	const [hostPictureUrl, setHostPictureUrl] = useState('');
+	const [hostSince, setHostSince] = useState('');
+	const [hostLocation, setHostLocation] = useState('');
+	const [hostAbout, setHostAbout] = useState('');
+	const [hostResponseTime, setHostResponseTime] = useState('');
+	const [hostResponseRate, setHostResponseRate] = useState('');
+
 	const [amenities, setAmenities] = useState('');
 
+	const [longitude, setLongitude] = useState('');
+	const [latitude, setLatitude] = useState('');
 
+	const maxRating = 100; // Maximum rating on the original scale
+	const targetMaxRating = 5; // Maximum rating on the 5-point scale
+
+	const convertedRating = (reviewScoresRating / maxRating) * targetMaxRating;
+
+	const roundedRating = Math.round(convertedRating * 10) / 10;
 	const [isOpen, setIsOpen] = useState(false);
 
 	const openDialog = () => {
@@ -51,9 +69,22 @@ function CardDetails() {
 			setReviewScoresRating(cardProps.review_scores_rating);
 			setStreet(cardProps.street);
 			setDescription(cardProps.description);
-			setHostName(cardProps.host_name);
-			setPictureUrl(cardProps.host_picture_url)
 			setAmenities(cardProps.amenities);
+
+			setHostName(cardProps.host_name);
+			setHostPictureUrl(cardProps.host_picture_url)
+			setHostSince(cardProps.host_since);
+			setHostLocation(cardProps.host_location);
+			setHostResponseTime(cardProps.host_response_time);
+			setHostResponseRate(cardProps.host_response_rate);
+
+			setLongitude(cardProps.longitude);
+			setLatitude(cardProps.latitude);
+
+			if (latitude === null || latitude === undefined || longitude === null || longitude === undefined) {
+
+				return <div>Invalid coordinates</div>;
+			}
 		}
 	}, []);
 
@@ -74,7 +105,8 @@ function CardDetails() {
 								<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
 							</svg>
 						</div>
-						{numberOfReviews}({reviewScoresRating})
+						<p className="inline px-2">{roundedRating}({numberOfReviews} Reviews)</p>
+						<p></p>
 					</div>
 
 					<div className="inline text-base text-center">{street}</div>
@@ -88,6 +120,7 @@ function CardDetails() {
 						<img className="h-56 max-w-full rounded-lg hover:opacity-60 sm:h-96" src="https://flowbite.s3.amazonaws.com/docs/gallery/featured/image.jpg" alt="" />
 					</button>
 					<div className="flex flex-col justify-center">
+						<p className="mb-4  text-3xl text-center leading-none tracking-tight text-gray-900 ">About this place</p>
 						<p className="text-center">{description}</p>
 					</div>
 				</div>
@@ -134,23 +167,20 @@ function CardDetails() {
 				</div>
 			</div>
 
-			{/* host */}
-			<div>
-				<ul className="block p-auto py-auto pb-auto sm:grid grid-cols-4">
-					<li><p className="inline text-xl  leading-none tracking-tight text-gray-900 ">Room in a rental unit hosted by {hostName}</p></li>
-					<li className="inline ml-auto"><button><img className=" rounded-full object-full h-12 w-12 border-solid border border-blue-600" src={hostPictureUrl} /></button></li>
-				</ul>
-			</div>
-
 			{/* amenities - reserve */}
 			<div className="block sm:p-10 sm:grid grid-cols-2 gap-x-36">
-				<ul className="p-10 sm:p-auto grid grid-cols-4 gap-4 ">
-					{/* {amenitiesArray.map((amenity) => (
-						<li key={amenity.trim()}><p className="p-5 text-center inline-flex items-center relative border rounded-lg ">{amenity.trim()}</p></li>
-					))} */}
-					<li><p className="p-5 text-center inline-flex items-center relative border rounded-lg ">{bedType}</p></li>
-				</ul>
 
+				<div>
+					<hr className="mb-10"></hr>
+					<p className="text-center mb-10 text-2xl leading-none tracking-tight text-gray-900 sm:text-left">What this place offers</p>
+					<ul className="grid grid-cols-2 gap-0">
+						{amenitiesArray.map((amenity) => (
+							<li className="text-center mb-2" key={amenity}><p>{amenity.replace(/"/g, '')}</p></li>
+						))}
+
+					</ul>
+				</div>
+				{/* reserve */}
 				<div className="p-10 sm:p-auto" >
 					<div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
 						<div className="md:flex">
@@ -179,6 +209,44 @@ function CardDetails() {
 
 				</div>
 			</div>
+
+			{/* host */}
+			<div>
+				<ul className="block p-10">
+					<li><p className=" text-xl leading-none tracking-tight text-gray-900 ">This place is hosted by {hostName}</p></li>
+					<li>
+						<div className="pt-10 float-left" >
+							<div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+								<div className="md:flex">
+									<div className="md:flex-shrink-0">
+										<img className="h-full w-full object-cover md:w-48" src={hostPictureUrl} alt="Host Picture" />
+									</div>
+
+									<div className="p-10">
+
+										<div className=" text-center pb-4 tracking-wide text-xl text-indigo-500 font-semibold">{hostName}</div>
+										<div className="mt-4">
+											<p className="text-center">{hostAbout}</p>
+											<p className="">Since: {hostSince}</p>
+											<p className="">Location: {hostLocation}</p>
+											<p className="">Response Time: {hostResponseTime}</p>
+											<p className="">Response Rate: {hostResponseRate}</p>
+										</div>
+						
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</li>
+				</ul>
+				
+			</div>
+			
+			<MapContainer center={[37.97537432940385,23.72785230538811]} zoom={13} style={{ height: '400px', width: '100%' }}>
+				<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+				<Marker position={[37.97537432940385, 23.72785230538811]} />
+			</MapContainer>
 
 
 		</div>
