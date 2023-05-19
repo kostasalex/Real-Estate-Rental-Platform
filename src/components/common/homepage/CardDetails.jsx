@@ -5,35 +5,36 @@ import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
 function CardDetails() {
+	const cardProps = JSON.parse(localStorage.getItem("cardProps"));
 
-	const [id, setId] = useState('');
-	const [name, setName] = useState('');
-	const [thumbnail_url, setThumbnailUrl] = useState('');
-	const [medium_url, setMediumUrl] = useState('');
-	const [price, setPrice] = useState('');
-	const [roomType, setRoomType] = useState('');
-	const [beds, setBeds] = useState('');
-	const [accommodates, setAccommodates] = useState('');
-	const [bathrooms, setBathrooms] = useState('');
-	const [bedrooms, setBedrooms] = useState('');
-	const [bedType, setBedType] = useState('');
-	const [numberOfReviews, setNumberOfReviews] = useState('');
-	const [reviewScoresRating, setReviewScoresRating] = useState('');
-	const [street, setStreet] = useState('');
-	const [description, setDescription] = useState('');
+	const [id, setId] = useState(cardProps.id);
+	const [name, setName] = useState(cardProps.name);
+	const [thumbnail_url, setThumbnailUrl] = useState(cardProps.thumbnail_url);
+	const [medium_url, setMediumUrl] = useState(cardProps.medium_url);
+	const [price, setPrice] = useState(cardProps.price);
+	const [roomType, setRoomType] = useState(cardProps.room_type);
+	const [beds, setBeds] = useState(cardProps.beds);
+	const [accommodates, setAccommodates] = useState(cardProps.accommodates);
+	const [bathrooms, setBathrooms] = useState(cardProps.bathrooms);
+	const [bedrooms, setBedrooms] = useState(cardProps.bedrooms);
+	const [bedType, setBedType] = useState(cardProps.bed_type);
+	const [numberOfReviews, setNumberOfReviews] = useState(cardProps.number_of_reviews);
+	const [reviewScoresRating, setReviewScoresRating] = useState(cardProps.review_scores_rating);
+	const [street, setStreet] = useState(cardProps.street);
+	const [description, setDescription] = useState(cardProps.description);
 
-	const [hostName, setHostName] = useState('');
-	const [hostPictureUrl, setHostPictureUrl] = useState('');
-	const [hostSince, setHostSince] = useState('');
-	const [hostLocation, setHostLocation] = useState('');
+	const [hostName, setHostName] = useState(cardProps.host_name);
+	const [hostPictureUrl, setHostPictureUrl] = useState(cardProps.host_picture_url);
+	const [hostSince, setHostSince] = useState(cardProps.host_since);
+	const [hostLocation, setHostLocation] = useState(cardProps.host_location);
 	const [hostAbout, setHostAbout] = useState('');
-	const [hostResponseTime, setHostResponseTime] = useState('');
-	const [hostResponseRate, setHostResponseRate] = useState('');
+	const [hostResponseTime, setHostResponseTime] = useState(cardProps.host_response_time);
+	const [hostResponseRate, setHostResponseRate] = useState(cardProps.host_response_time);
 
-	const [amenities, setAmenities] = useState('');
+	const [amenities, setAmenities] = useState(cardProps.amenities);
 
-	const [longitude, setLongitude] = useState('');
-	const [latitude, setLatitude] = useState('');
+	const [longitude, setLongitude] = useState(cardProps.longitude);
+	const [latitude, setLatitude] = useState(cardProps.latitude);
 
 	const maxRating = 100; // Maximum rating on the original scale
 	const targetMaxRating = 5; // Maximum rating on the 5-point scale
@@ -51,42 +52,6 @@ function CardDetails() {
 		setIsOpen(false);
 	};
 
-	useEffect(() => {
-		const cardProps = JSON.parse(localStorage.getItem("cardProps"));
-		if (cardProps) {
-			setId(cardProps.id);
-			setName(cardProps.name);
-			setThumbnailUrl(cardProps.thumbnail_url);
-			setMediumUrl(cardProps.medium_url);
-			setPrice(cardProps.price);
-			setRoomType(cardProps.room_type);
-			setBeds(cardProps.beds);
-			setAccommodates(cardProps.accommodates);
-			setBathrooms(cardProps.bathrooms);
-			setBedrooms(cardProps.bedrooms);
-			setBedType(cardProps.bed_type);
-			setNumberOfReviews(cardProps.number_of_reviews);
-			setReviewScoresRating(cardProps.review_scores_rating);
-			setStreet(cardProps.street);
-			setDescription(cardProps.description);
-			setAmenities(cardProps.amenities);
-
-			setHostName(cardProps.host_name);
-			setHostPictureUrl(cardProps.host_picture_url)
-			setHostSince(cardProps.host_since);
-			setHostLocation(cardProps.host_location);
-			setHostResponseTime(cardProps.host_response_time);
-			setHostResponseRate(cardProps.host_response_rate);
-
-			setLongitude(cardProps.longitude);
-			setLatitude(cardProps.latitude);
-
-			if (latitude === null || latitude === undefined || longitude === null || longitude === undefined) {
-
-				return <div>Invalid coordinates</div>;
-			}
-		}
-	}, []);
 
 	const amenitiesArray = amenities.replace(/[\{\}]/g, '').split(',');
 	return (
@@ -243,10 +208,11 @@ function CardDetails() {
 				
 			</div>
 			
-			<MapContainer center={[37.97537432940385,23.72785230538811]} zoom={13} style={{ height: '400px', width: '100%' }}>
+			<MapContainer center={[latitude, longitude]} zoom={13} style={{ height: '400px', width: '100%' }}>
 				<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-				<Marker position={[37.97537432940385, 23.72785230538811]} />
+				<Marker position={[latitude, longitude]} />
 			</MapContainer>
+
 
 
 		</div>

@@ -13,7 +13,7 @@ function Card(props) {
 	const roundedRating = Math.round(convertedRating * 10) / 10;
 
 	return (
-		<div className="w-[450px] h-[500px] mb-4 ">
+		<div className="w-[450px] h-[500px] mb-4 cursor-pointer ">
 			<section className="flex flex-col items-center bg-white">
 				<div className="mt-10 gap-6 px-2 sm:max-w-lg sm:px-20 md:max-w-screen-xl md:grid-cols-2 md:px-10 lg:grid-cols-3 lg:gap-8">
 					<article className="mb-4 overflow-hidden rounded-xl border text-gray-700 shadow-md duration-500 ease-in-out hover:shadow-xl">
