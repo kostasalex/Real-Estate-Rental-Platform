@@ -47,7 +47,7 @@ const Header = (props) => {
 
     return (
         <div>
-            <nav className=" bg-white top-0 w-full fixed shadow-md flex  justify-between items-center mx-auto px-8">
+            <nav className=" bg-white z-10 top-0 w-full fixed shadow-md flex  justify-between items-center mx-auto px-8">
                 {/*Logo*/}
                 <div className="hidden sm:block lg:ml-12 inline-flex">
                     <Link className="_o6689fn" to="/"

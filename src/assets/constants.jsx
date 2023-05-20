@@ -53,11 +53,7 @@ export const filterCategories = {
     Icon : <FaMapMarkerAlt />
   },
   arrive: {
-    label: "Arrive",
-    Icon: <FaCalendarAlt />
-  },
-  leave: {
-    label: "Leave",
+    label: "Date",
     Icon: <FaCalendarAlt />
   },
   persons: {

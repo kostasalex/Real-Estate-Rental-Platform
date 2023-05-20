@@ -2,12 +2,14 @@ import React from 'react'
 import SearchBar from './SearchBar';
 import Filters from './Filters';
 import { useState } from "react";
-import {useNavigate} from 'react-router-dom';
-
+import {useNavigate, useLocation} from 'react-router-dom';
+import dayjs from 'dayjs';
 const Search = () => {  
 
+    
+    const location_ = useLocation();
+    const queryParams = new URLSearchParams(location_.search);
     const navigate = useNavigate();
-
     /* False for searchbar and true for filters */
     const [filtersToggle, setfiltersToggle] = React.useState(false);
 
@@ -19,24 +21,59 @@ const Search = () => {
     const [arrive, setArrive] = useState("");
     const [leave, setLeave] = useState("");
     const [guests, setGuests] = useState("");
-    const filters = [location, arrive, leave, guests];
+    const [date, setDate] = useState("");
+
+
+
+    const getDateString = (date) => {
+        return date.format('DD/MM/YY');
+    }
 
     /*  For filters tab */
     const [activeTab, setActiveTab] = useState("Location");
 
+    React.useEffect(() => {
+
+        const arriveStr = queryParams.get('arrive');
+        if(arriveStr)setArrive(dayjs(arriveStr));
+        const leaveStr = queryParams.get('leave');
+        if(leaveStr){
+            setLeave(dayjs(leaveStr));
+            const date = arriveStr + "-" + leaveStr;
+            setDate(date);
+        }
+        setLocation(queryParams.get('location') || ''),
+        setGuests(queryParams.get('guests') || '')
+      }, []);
+    
+
+    React.useEffect(() => {
+        let persons = ""
+        if(guests)persons = guests + " persons"
+        if(location || date || guests){
+            setFiltersSelected([location  , date , persons]) 
+        }
+    }, [location, arrive, leave, guests, date]);
+
     const handleOptionSelect = (filter, option) => {
+        console.log(option);
         switch (filter) {
         case "Location":
             setLocation(option);
-            setActiveTab("Arrive");
+            setActiveTab("Date");
             break;
         case "Arrive":
             setArrive(option);
-            setActiveTab("Leave");
+            //setActiveTab("Leave");
+
             break;
         case "Leave":
-            setLeave(option); 
-            setActiveTab("Persons");
+            if(option > arrive){
+                setLeave(option); 
+                setDate(getDateString(arrive) + " - " + getDateString(option));
+                setActiveTab("Persons");
+            }
+
             break;
         case "Persons":
             setGuests(option);
@@ -53,20 +90,28 @@ const Search = () => {
     };
 
     const handleSearch= () => {
-        let date = ""
-        let persons = ""
-        if(arrive && leave)date = arrive + " - " + leave
-        if(guests)persons = guests + " persons"
-        if(location || date || guests){
-            setFiltersSelected([location  , date , persons]) 
-        }
+
         setfiltersToggle(false);
 
-        const queryParams = Object.entries({ location, arrive, leave, guests })
-            .filter(([_, value]) => value !== "") // filter out empty values
-            .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-            .join("&");
+  
+
+        const getDateString = (date) => {
+            return date.format('DD/MM/YY');
+          };
+          
+          const queryParams = Object.entries({ location, arrive, leave, guests })
+            .filter(([_, value]) => value !== '') // filter out empty values
+            .map(([key, value]) => {
+              if (key === 'arrive' || key === 'leave') {
+                value = getDateString(value); // format date value using getDateString function
+              }
+              if( key === 'arrive' && !leave)value = '';
+              return `${key}=${encodeURIComponent(value)}`;
+            })
+            .join('&');
+          
         
+        console.log(queryParams)
         const url = `/results/q?${queryParams}`;
       
         
@@ -80,10 +125,11 @@ const Search = () => {
             {filtersToggle && <Filters 
                 handleSearch = {handleSearch}
                 handleOptionSelect = {handleOptionSelect}
-                filters = {filters}
+                filters = {filtersSelected}
                 activeTab = {activeTab}
                 setActiveTab = {setActiveTab}
                 arrive = {arrive}
+                leave = {leave}
                 />}  
         </div>
     )

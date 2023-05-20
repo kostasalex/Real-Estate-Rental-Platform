@@ -32,7 +32,6 @@ const HostHomepage = () => {
             <div className='justify-center flex'> <Cards listings = {recent}/>  </div>
             
         </div>
-
     </div>
   )
 }

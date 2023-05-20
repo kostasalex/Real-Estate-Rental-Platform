@@ -1,25 +1,15 @@
+import React from 'react'
 import { BiSearch } from 'react-icons/bi';
 import { filterCategories } from "/src/assets/constants";
-
+import ArriveLeaveDate from '/src/components/common/datepicker/ArriveLeaveDate';
+import CityInput from './CityInput'
   //"Dummy" data in order to test the filters functionality
   const options = [
     {
       category: "Location",
       items: ["New York", "Paris", "Tokyo", "London", "Sydney"],
     },
-    {
-      category: "HomeType",
-      items: ["Hotel", "Apartment", "Villa", "Cabin", "Treehouse"],
-    },
-    {
-      category: "Arrive",
-      items: ["7 june", "8 june", "9 june", "10 june"],
-    },
-    {
-      category: "Leave",
-      items: ["7 july", "8 july", "9 july", "10 july"],
 
-    },
     {
       category: "Persons",
       items: ["1", "2", "3", "4", "5"],
@@ -27,7 +17,12 @@ import { filterCategories } from "/src/assets/constants";
   ];
 
 
-function TabContent({ activeTab,  handleOptionSelect}) {
+function TabContent({ arrive, leave, activeTab,  handleOptionSelect}) {
+
+
+  const handleDate = (dateType, date) => { 
+        handleOptionSelect(dateType, date);
+  };
 
 
   let activeOption
@@ -37,9 +32,9 @@ function TabContent({ activeTab,  handleOptionSelect}) {
 
   return (
     <nav
-      className=" shadow-lg w-32  bg-white  duration-500 fixed  right-1/2 top-20"
+    className="flex justify-center shadow-inner bg-blue0 py-4 duration-500 rounded-xl bg-gray-1500 top-20"
     >
-      {activeOption.items.map((item, index) => (
+      {activeTab === "Location" && (activeOption.items.map((item, index) => (
         <div
           key={index}
           className="flex  rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 cursor-pointer"
@@ -47,14 +42,30 @@ function TabContent({ activeTab,  handleOptionSelect}) {
         >
           <span className="mr-3 text-sm font-medium">{item}</span>
         </div>
-      ))}
+      )))}
+      
+      {activeTab === "Persons" && (activeOption.items.map((item, index) => (
+        <div
+          key={index}
+          className="flex  rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 cursor-pointer"
+          onClick={() => handleOptionSelect(activeTab, item)}
+        >
+          <span className="mr-3 text-sm font-medium">{item}</span>
+        </div>
+      )))}
+  
+      {activeTab === "Date" && (
+      <ArriveLeaveDate
+        arrive = {arrive} 
+        leave = {leave} 
+        handleDate = {handleDate}/>)}
     </nav>
   );
 }
 
 
 
-export default function Filters({arrive, handleSearch,handleOptionSelect,filters,activeTab,setActiveTab }) {
+export default function Filters({arrive, leave, handleSearch,handleOptionSelect,filters,activeTab,setActiveTab }) {
 
   
   function Tab({ label, index, isActive, onClick, Icon, entry }) {
@@ -105,7 +116,12 @@ export default function Filters({arrive, handleSearch,handleOptionSelect,filters
           </div>
 
       </div>
-      <TabContent activeTab = {activeTab} handleOptionSelect = {handleOptionSelect}/>
+      <TabContent 
+        activeTab = {activeTab} 
+        handleOptionSelect = {handleOptionSelect}
+        arrive = {arrive}
+        leave = {leave}
+        />
 
     </div>
 

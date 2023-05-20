@@ -1,6 +1,9 @@
 import React from 'react';
 import { Header, SeekerHomepage, HostHomepage,  Login, SignUp, Cards, Results, CardDetails } from './components'
 import { Route, Routes } from 'react-router-dom';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
 function App() {
 
   const [loggedInUserType, setLoggedInUserType] = React.useState(
@@ -24,28 +27,31 @@ function App() {
 
 
   return (
-    <div className="App mt-20">
-      <Header loggedInUserType={loggedInUserType} handleLogout={handleLogout} handleUserType = {handleUserType} />
-      <Routes>
-        {loggedInUserType === null && <Route path="/" element={<Cards/>} />}
-        {loggedInUserType === 'Host' && (
-          <>
-            <Route path="/" element={<HostHomepage />} />
-          </>
-          )
-        }
-        {loggedInUserType === 'Seeker' && (
-          <>
-            <Route path="/" element={<SeekerHomepage />} />
-          </>
-          )
-        }
-        <Route path="/login" element={<Login handleLogin={handleLogin} />} />
-        <Route path="/signup" element={<SignUp handleLogin={handleLogin} />} />
-        <Route path="/results/q?" element={<Results/>} />
-        <Route path="/cards/:cardId" element={<CardDetails/>} />
-      </Routes>
-    </div>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className="App mt-20">
+        <Header loggedInUserType={loggedInUserType} handleLogout={handleLogout} handleUserType = {handleUserType} />
+        <Routes>
+          {loggedInUserType === null && <Route path="/" element={<Cards/>} />}
+          {loggedInUserType === 'Host' && (
+            <>
+              <Route path="/" element={<HostHomepage />} />
+            </>
+            )
+          }
+          {loggedInUserType === 'Seeker' && (
+            <>
+              <Route path="/" element={<SeekerHomepage />} />
+            </>
+            )
+          }
+          <Route path="/login" element={<Login handleLogin={handleLogin} />} />
+          <Route path="/signup" element={<SignUp handleLogin={handleLogin} />} />
+          <Route path="/results/q?" element={<Results/>} />
+          <Route path="/cards/:cardId" element={<CardDetails/>} />
+        </Routes>
+      </div>
+    </LocalizationProvider>
+
   )
 }
 
