@@ -3,9 +3,25 @@ import { useState, useEffect } from 'react';
 import Dialog from './Dialog';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { DatePicker } from '@mui/x-date-pickers';
+import { differenceInCalendarDays } from 'date-fns';
 
 function CardDetails() {
 	const cardProps = JSON.parse(localStorage.getItem("cardProps"));
+	const [arrivalDate, setArrivalDate] = useState(null);
+	const [departureDate, setDepartureDate] = useState(null);
+	const [numDaysStayed, setNumDaysStayed] = useState(0);
+
+	useEffect(() => {
+		if (arrivalDate && departureDate) {
+			const oneDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+			const numDays = Math.round(Math.abs((arrivalDate - departureDate) / oneDay));
+			setNumDaysStayed(numDays);
+		} else {
+			setNumDaysStayed(0);
+		}
+	}, [arrivalDate, departureDate]);
+
 
 	const [id, setId] = useState(cardProps.id);
 	const [name, setName] = useState(cardProps.name);
@@ -54,6 +70,26 @@ function CardDetails() {
 
 
 	const amenitiesArray = amenities.replace(/[\{\}]/g, '').split(',');
+	const priceAsNumber = parseFloat(price);
+	const totalPrice = numDaysStayed * parseFloat(price.substring(1)).toString();
+
+	const [people, setPeople] = useState(1);
+
+	const handleIncrease = () => {
+		if (accommodates!= null && people < accommodates) {
+			setPeople(people + 1);
+		}
+		else 
+		{
+			setPeople(1);
+		}
+	};
+
+	const handleDecrease = () => {
+		if (people > 1) {
+			setPeople(people - 1);
+		}
+	};
 	return (
 
 		<div className=" mx-auto lg:px-20 md:px-6 px-4 md:py-12 py-8 sm:mx-36">
@@ -82,7 +118,7 @@ function CardDetails() {
 			<div className=" grid gap-4">
 				<div className="block sm:grid grid-cols-2">
 					<button onClick={openDialog}>
-						<img className="h-56 max-w-full rounded-lg hover:opacity-60 sm:h-96" src="https://flowbite.s3.amazonaws.com/docs/gallery/featured/image.jpg" alt="" />
+						<img className="h-56 max-w-full rounded-lg hover:opacity-60 sm:h-96" src={thumbnail_url} alt="" />
 					</button>
 					<div className="flex flex-col justify-center">
 						<p className="mb-4  text-3xl text-center leading-none tracking-tight text-gray-900 ">About this place</p>
@@ -112,7 +148,7 @@ function CardDetails() {
 								<Dialog onClose={closeDialog}>
 									<ul className="">
 										<li>
-											<img className="mb-10 rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg" alt="" />
+											<img className="mb-10 rounded-lg" src={thumbnail_url} alt="" />
 										</li>
 										<li>
 											<img className="my-10 rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg" alt="" />
@@ -134,7 +170,6 @@ function CardDetails() {
 
 			{/* amenities - reserve */}
 			<div className="block sm:p-10 sm:grid grid-cols-2 gap-x-36">
-
 				<div>
 					<hr className="mb-10"></hr>
 					<p className="text-center mb-10 text-2xl leading-none tracking-tight text-gray-900 sm:text-left">What this place offers</p>
@@ -142,41 +177,99 @@ function CardDetails() {
 						{amenitiesArray.map((amenity) => (
 							<li className="text-center mb-2" key={amenity}><p>{amenity.replace(/"/g, '')}</p></li>
 						))}
-
 					</ul>
 				</div>
+
 				{/* reserve */}
-				<div className="p-10 sm:p-auto" >
+				<div className="p-10 sm:p-auto">
 					<div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
 						<div className="md:flex">
 							<div className="md:flex-shrink-0">
-								<img className="h-full w-full object-cover md:w-48" src="https://flowbite.s3.amazonaws.com/docs/gallery/featured/image.jpg" alt="Room" />
+								<img className="h-full w-full object-cover md:w-48" src={thumbnail_url} alt="Room" />
 							</div>
 
 							<div className="p-10">
-
 								<div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{roomType}</div>
 								<div className="mt-4">
 									<span className="text-gray-500">Price per night:</span>
 									<span className="font-semibold text-xl text-gray-900 ml-1">{price}</span>
 								</div>
 								<p className="mt-4 text-gray-500">{accommodates} guests · {bedrooms} bedroom(s) · {beds} bed(s) · {bathrooms} bathroom(s)</p>
+
+								<div className="flex items-center mt-4">
+									<label className="text-indigo-500 mr-2" htmlFor="accommodates">Accommodates:</label>
+									<div className="flex items-center border border-gray-300 rounded-md">
+										<button
+											className="px-3 py-1 bg-gray-100 text-gray-500 hover:text-gray-700 focus:outline-none"
+											onClick={handleDecrease}
+										>
+											-
+										</button>
+										<input
+											className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-12 text-center border-r border-l border-gray-300 bg-gray-100"
+											type="number"
+											min="1"
+											max={accommodates}
+											value={people}
+											onChange={(e) => setPeople(Number(e.target.people))}
+										/>
+										<button
+											className="px-3 py-1 bg-gray-100 text-gray-500 hover:text-gray-700 focus:outline-none"
+											onClick={handleIncrease}
+										>
+											+
+										</button>
+									</div>
+								</div>
+								{/* Dates */}
+								<div className="">
+									<div className="my-5">
+										<label className="text-indigo-500" htmlFor="arrivalDate">Arrival Date:</label>
+										<DatePicker
+											id="arrivalDate"
+											selected={arrivalDate}
+											onChange={(date) => setArrivalDate(date)}
+											dateFormat="dd-MM-yyyy"
+											placeholderText="Select arrival date"
+
+										/>
+									</div>
+
+									<div className="">
+										<label className="text-indigo-500" htmlFor="departureDate">Departure Date:</label>
+										<DatePicker
+											id="departureDate"
+											selected={departureDate}
+											onChange={(date) => {
+												if (date >= arrivalDate) {
+													setDepartureDate(date);
+												}
+											}}
+											dateFormat="dd-MM-yyyy"
+											minDate={arrivalDate}
+											disabled={!arrivalDate}
+											placeholderText="Select departure date"
+
+										/>
+									</div>
+								</div>
+
 								<div className="mt-4">
 									<span className="text-gray-500">Total price:</span>
-									<span className="font-semibold text-gray-900 text-xl ml-1">$510</span>
+									<span className="font-semibold text-gray-900 text-xl ml-1">${totalPrice}</span>
 								</div>
 								<div className="mt-6">
-									<button className="flex flex-row  items-center  justify-end shadow-xl xl:mt-0 mt-20 bg-blue1 rounded-xl px-2 py-1 transition duration-300 transform hover:translate-y--2 text-white text-lg duration-300 transform hover:translate-y-2">Reserve</button>
+									<button className="flex flex-row items-center justify-end shadow-xl xl:mt-0 mt-20 bg-blue1 rounded-xl px-2 py-1 transition duration-300 transform hover:translate-y--2 text-white text-lg duration-300 transform hover:translate-y-2">Reserve</button>
 								</div>
 							</div>
 						</div>
 					</div>
-
 				</div>
 			</div>
 
+
 			{/* host */}
-			<div>
+			<div className='grid grid-cols-2 gap-4'>
 				<ul className="block p-10">
 					<li><p className=" text-xl leading-none tracking-tight text-gray-900 ">This place is hosted by {hostName}</p></li>
 					<li>
@@ -197,7 +290,7 @@ function CardDetails() {
 											<p className="">Response Time: {hostResponseTime}</p>
 											<p className="">Response Rate: {hostResponseRate}</p>
 										</div>
-						
+
 									</div>
 								</div>
 							</div>
@@ -205,16 +298,13 @@ function CardDetails() {
 						</div>
 					</li>
 				</ul>
-				
+
+				<MapContainer center={[latitude, longitude]} zoom={13} style={{ height: '400px', width: '100%' }}>
+					<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+					<Marker position={[latitude, longitude]} />
+				</MapContainer>
+
 			</div>
-			
-			<MapContainer center={[latitude, longitude]} zoom={13} style={{ height: '400px', width: '100%' }}>
-				<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-				<Marker position={[latitude, longitude]} />
-			</MapContainer>
-
-
-
 		</div>
 	);
 }

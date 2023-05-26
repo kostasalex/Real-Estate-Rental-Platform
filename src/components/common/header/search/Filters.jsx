@@ -2,7 +2,7 @@ import React from 'react'
 import { BiSearch } from 'react-icons/bi';
 import { filterCategories } from "/src/assets/constants";
 import ArriveLeaveDate from '/src/components/common/datepicker/ArriveLeaveDate';
-import CityInput from './CityInput'
+
   //"Dummy" data in order to test the filters functionality
   const options = [
     {
