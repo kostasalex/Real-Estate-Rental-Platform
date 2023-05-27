@@ -2,7 +2,7 @@ import React from 'react'
 import { BiSearch } from 'react-icons/bi';
 import { filterCategories } from "/src/assets/constants";
 import ArriveLeaveDate from '/src/components/common/datepicker/ArriveLeaveDate';
-
+import Accommodates from '/src/components/common/inputs/Accommodates';
   //"Dummy" data in order to test the filters functionality
   const options = [
     {
@@ -19,6 +19,24 @@ import ArriveLeaveDate from '/src/components/common/datepicker/ArriveLeaveDate';
 
 function TabContent({ arrive, leave, activeTab,  handleOptionSelect}) {
 
+  const [people, setPeople] = React.useState(1);
+  const accommodates = 20;
+
+  const handleIncrease = () => {
+		if (accommodates!= null && people < accommodates) {
+			setPeople(people + 1);
+		}
+		else 
+		{
+			setPeople(1);
+		}
+	};
+
+	const handleDecrease = () => {
+		if (people > 1) {
+			setPeople(people - 1);
+		}
+	};
 
   const handleDate = (dateType, date) => { 
         handleOptionSelect(dateType, date);
@@ -44,21 +62,36 @@ function TabContent({ arrive, leave, activeTab,  handleOptionSelect}) {
         </div>
       )))}
       
-      {activeTab === "Persons" && (activeOption.items.map((item, index) => (
-        <div
-          key={index}
-          className="flex  rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 cursor-pointer"
-          onClick={() => handleOptionSelect(activeTab, item)}
-        >
-          <span className="mr-3 text-sm font-medium">{item}</span>
+      {activeTab === "Persons" && (
+        <div className='flex flex-row items-center space-x-4'>
+          <div className=''>
+            <Accommodates 
+            handleIncrease = {handleIncrease} 
+            handleDecrease = {handleDecrease}
+            people = {people}
+            accommodates = {accommodates}/>
+          </div>
+          <div >
+            <button 
+              className='ml-4 rounded-lg bg-blue1 px-2 py-1 opacity-80 hover:opacity-100 font-semibold text-white'
+              onClick={() => handleOptionSelect(activeTab, people)}
+              >
+                ok
+            </button>
+          </div>
         </div>
-      )))}
+
+
+      )}
+      
   
       {activeTab === "Date" && (
       <ArriveLeaveDate
         arrive = {arrive} 
         leave = {leave} 
-        handleDate = {handleDate}/>)}
+        handleDate = {handleDate}
+        />
+        )}
     </nav>
   );
 }
