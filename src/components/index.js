@@ -5,5 +5,6 @@ export {default as Cards} from './common/homepage/Cards';
 export {default as Results} from './common/results/Results';
 export {default as CardDetails} from './common/homepage/CardDetails';
 export {default as ScrollToTopButton} from './common/scrollToTopButton/ScrollToTopButton'
-export {default as SeekerHomepage} from './users/seeker/SeekerHomepage'
-export {default as HostHomepage} from './users/host/HostHomepage'
+export {default as SeekerHomepage} from './users/seeker/SeekerHomepage';
+export {default as HostHomepage} from './users/host/HostHomepage';
+export {default as NewListing} from './users/host/newListing/NewListing'

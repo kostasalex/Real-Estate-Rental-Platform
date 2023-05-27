@@ -35,13 +35,14 @@ const Header = (props) => {
 
     const rentHandler = () => {
 
-        Swal.fire({
+        navigate('/newlisting')
+        /*Swal.fire({
             position: 'top-end',
             icon: 'info',
             title: 'Host Application Pending.',
             showConfirmButton: false,
             timer: 1500
-          })
+          })*/
 
     };
 

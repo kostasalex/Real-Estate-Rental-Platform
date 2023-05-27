@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, SeekerHomepage, HostHomepage,  Login, SignUp, Cards, Results, CardDetails } from './components'
+import { Header, SeekerHomepage, HostHomepage, NewListing,  Login, SignUp, Cards, Results, CardDetails } from './components'
 import { Route, Routes } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -35,6 +35,7 @@ function App() {
           {loggedInUserType === 'Host' && (
             <>
               <Route path="/" element={<HostHomepage />} />
+              <Route path="/newlisting" element={<NewListing />} />
             </>
             )
           }

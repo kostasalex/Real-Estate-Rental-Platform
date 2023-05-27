@@ -1,9 +1,17 @@
 import React from 'react'
 import Cards from '../Cards';
 import Papa from "papaparse";
+import {useNavigate} from 'react-router-dom';
+
+
 
 const HostHomepage = () => {
     const [recent, setRecent] = React.useState([]);
+    const navigate = useNavigate();
+
+    const newListingHandler = () => {
+      navigate('/newlisting')
+    };
 
     const NUM_RESULTS = 3;
 
@@ -24,7 +32,11 @@ const HostHomepage = () => {
   return (
     <div className='flex flex-col space-y-16'>
         <div className='mt-10 justify-center  text-blue1 font-semibold hover:opacity-90 flex flex-col'>
-            <button className='justify-center  text-3xl flex'> Add New Listing  </button>
+            <button 
+              className='justify-center  text-3xl flex'
+              onClick= {newListingHandler}
+              > Add New Listing  
+              </button>
             <div className=' flex justify-center text-3xl '>+</div>
         </div>
         <div className='mt-2 '>
