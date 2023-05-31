@@ -3,6 +3,9 @@ import { BiSearch } from 'react-icons/bi';
 import { filterCategories } from "/src/assets/constants";
 import ArriveLeaveDate from '/src/components/common/datepicker/ArriveLeaveDate';
 import Accommodates from '/src/components/common/inputs/Accommodates';
+import Suggestions from '/src/components/common/maps/Suggestions';
+import {BsFillArrowRightCircleFill} from 'react-icons/bs'
+import { FaTimes } from 'react-icons/fa';
   //"Dummy" data in order to test the filters functionality
   const options = [
     {
@@ -17,10 +20,16 @@ import Accommodates from '/src/components/common/inputs/Accommodates';
   ];
 
 
-function TabContent({ arrive, leave, activeTab,  handleOptionSelect}) {
+function TabContent({ arrive, leave, activeTab, handleOptionSelect}) {
 
   const [people, setPeople] = React.useState(1);
+
   const accommodates = 20;
+
+  const handleSelectSuggestion = (location) => {
+    console.log(location)
+    handleOptionSelect(activeTab, location)
+  }
 
   const handleIncrease = () => {
 		if (accommodates!= null && people < accommodates) {
@@ -42,6 +51,11 @@ function TabContent({ arrive, leave, activeTab,  handleOptionSelect}) {
         handleOptionSelect(dateType, date);
   };
 
+  const handleSearch = () => { 
+    handleOptionSelect(activeTab, "");
+};
+
+
 
   let activeOption
   if(activeTab)
@@ -52,18 +66,18 @@ function TabContent({ arrive, leave, activeTab,  handleOptionSelect}) {
     <nav
     className="flex justify-center shadow-inner bg-blue0 py-4 duration-500 rounded-xl bg-gray-1500 top-20"
     >
-      {activeTab === "Location" && (activeOption.items.map((item, index) => (
-        <div
-          key={index}
-          className="flex  rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 cursor-pointer"
-          onClick={() => handleOptionSelect(activeTab, item)}
-        >
-          <span className="mr-3 text-sm font-medium">{item}</span>
+      {activeTab === "Location" && (
+        <div className='flex flex-col'>
+
+          <Suggestions
+            handleSelectSuggestion = {handleSelectSuggestion}
+          />
         </div>
-      )))}
+
+      )}
       
       {activeTab === "Persons" && (
-        <div className='flex flex-row items-center space-x-4'>
+        <div className='flex flex-row items-center p-10 space-x-4'>
           <div className=''>
             <Accommodates 
             handleIncrease = {handleIncrease} 
@@ -86,11 +100,25 @@ function TabContent({ arrive, leave, activeTab,  handleOptionSelect}) {
       
   
       {activeTab === "Date" && (
-      <ArriveLeaveDate
-        arrive = {arrive} 
-        leave = {leave} 
-        handleDate = {handleDate}
-        />
+          <div className='flex flex-col text-lg text-blue1 font-semibold items-center'>
+            <ArriveLeaveDate
+              arrive = {arrive} 
+              leave = {leave} 
+              handleDate = {handleDate}
+              />
+
+            </div>
+          )}
+
+        {activeTab === "Search" && (
+          <button 
+            className='flex flex-row text-lg opacity-80 shadow-xl hover:opacity-100 hover:shadow-2xl bg-blue1 rounded-full py-3 px-4 m-10 text-white font-semibold items-center'
+            onClick={() =>  handleSearch()}
+            >
+            
+            <div className='mr-2 mb-1'>Search</div>
+            <BiSearch style={{ color: 'white', fontSize: '24px' }} />
+          </button>
         )}
     </nav>
   );
@@ -100,7 +128,8 @@ function TabContent({ arrive, leave, activeTab,  handleOptionSelect}) {
 
 export default function Filters({arrive, leave, handleSearch,handleOptionSelect,filters,activeTab,setActiveTab }) {
 
-  
+  const tabContentTitle =  {'Location': "Search Destination" , 'Date': "Add dates", 'Persons' : "Add persons" };
+
   function Tab({ label, index, isActive, onClick, Icon, entry }) {
   
     return (
@@ -143,18 +172,34 @@ export default function Filters({arrive, leave, handleSearch,handleOptionSelect,
             ))}
           </ul>
           <div 
-            className={"flex items-center justify-center relative bg-blue1 cursor-pointer p-2 border-4 border-white hover:border-blue1 rounded-full " +( !activeTab && "animate-pulse")}
+            className={"flex items-center justify-center relative bg-blue1 cursor-pointer p-2 border-4 border-white hover:border-blue1 rounded-full " +( (activeTab ==="Search" || !activeTab) && "animate-pulse")}
             onClick={() =>  handleSearch()}>
             <BiSearch style={{ color: 'white', fontSize: '22px' }} />
           </div>
 
       </div>
-      <TabContent 
-        activeTab = {activeTab} 
-        handleOptionSelect = {handleOptionSelect}
-        arrive = {arrive}
-        leave = {leave}
-        />
+      {activeTab && (
+        <div className="flex rounded-2xl  justify-center items-start  fixed inset inset-20">
+          <div className="bg-white text-lg text-blue1 font-semibold items-center shadow-2xl p-5 relative">
+            <div
+              className="text-black opacity-60 cursor-pointer hover:opacity-100 py-1 px-2 bg-red-50 rounded-full absolute top-2 right-2"
+              onClick={() => setActiveTab("")}
+            >
+              <FaTimes />
+            </div>
+            <div className="flex mb-10 justify-center">{tabContentTitle[activeTab]}</div>
+
+            <TabContent
+              activeTab={activeTab}
+              handleOptionSelect={handleOptionSelect}
+              arrive={arrive}
+              leave={leave}
+              handleSearch = {handleSearch}
+            />
+          </div>
+        </div>
+      )}
+
 
     </div>
 

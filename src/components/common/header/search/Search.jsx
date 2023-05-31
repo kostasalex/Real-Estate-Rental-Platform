@@ -56,6 +56,7 @@ const Search = () => {
     }, [location, arrive, leave, guests, date]);
 
     const handleOptionSelect = (filter, option) => {
+        
         console.log(option);
         switch (filter) {
         case "Location":
@@ -77,8 +78,12 @@ const Search = () => {
             break;
         case "Persons":
             setGuests(option);
-            setActiveTab("");
+            setActiveTab("Search");
             //handleSearch([location, homeType, arrive, leave ,guests]);
+            break;
+        case "Search":
+            setActiveTab("");
+            handleSearch();
             break;
         default:
             break;
