@@ -4,6 +4,10 @@ import Map from '/src/components/common/maps/Map';
 const Location = ({ formattedAddress, setFormattedAddress, accessingInfo, setAccessingInfo, setIsFormComplete }) => {
   const [searchQuery, setSearchQuery] = React.useState('Athens');
 
+  /* Temporary for testing */
+  if(searchQuery && accessingInfo)
+  setIsFormComplete(true)
+
   const formattedAddressHandler = (address) => {
     const { suburb, town, city, village } = address;
     let formattedAddress = suburb;

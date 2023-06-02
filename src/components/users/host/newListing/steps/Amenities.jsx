@@ -1,6 +1,8 @@
 import React from 'react'
 
-const Amenities = () => {
+const Amenities = ({setIsFormComplete}) => {
+
+  setIsFormComplete(true);
   return (
     <div>Amenities</div>
   )

@@ -1,25 +1,23 @@
 import React from 'react'
 
 const Details = ({setIsFormComplete}) => {
-
   setIsFormComplete(true);
-  
   return (
     <ul className='flex flex-col space-y-10 text-xl text-blue1'>
       <li>
-        Listing Description
+        Beds
       </li>
       <li>
-        Room Type
+        Bathrooms
       </li>
       <li>
-        Photos of the Listing
+        Bedrooms
       </li>
       <li>
-        Rental Rules
+        Living room
       </li>
       <li>
-        description
+        Size
       </li>
     </ul>
   )
