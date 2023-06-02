@@ -1,8 +1,12 @@
 import React from 'react'
 
-const Dates = () => {
+const Dates = ({setIsFormComplete}) => {
+  setIsFormComplete(true);
+  
   return (
-    <div>Dates</div>
+    <div>
+      Dates
+    </div>
   )
 }
 

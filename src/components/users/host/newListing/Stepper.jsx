@@ -5,7 +5,7 @@ const Stepper = (props) => {
 
   return (
         <div className="mx-4 p-4">
-            <div className="flex items-center">
+            <div className="flex  items-center">
             {steps.map((step, index) => {
                 const isCurrentStep = index + 1 === currentStep;
                 const isStepPassed = index + 1 < currentStep;
@@ -19,8 +19,8 @@ const Stepper = (props) => {
                 if (isCurrentStep) {
                     stepClassNames = "flex items-center text-white relative";
                     circleClassNames =
-                    "rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 bg-blue1 border-blue1";
-                    titleClassNames = "absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-blue1";
+                    "rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 bg-blue1 border-blue1 ring-inset ring-2 ring-white ";
+                    titleClassNames = "absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-bold uppercase text-blue1";
                     lineClassNames = "flex-auto border-t-2 transition duration-500 ease-in-out border-gray-300"
                 } else if (isStepPassed) {
                     stepClassNames = "flex items-center text-blue1 relative";

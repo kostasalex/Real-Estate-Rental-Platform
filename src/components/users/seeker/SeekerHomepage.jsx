@@ -2,6 +2,7 @@ import React from 'react'
 import Cards from '../Cards';
 import Papa from "papaparse";
 
+
 const SeekerHomepage = () => {
     const [suggested, setSuggested] = React.useState([]);
     const [recent, setRecent] = React.useState([]);
@@ -35,6 +36,8 @@ const SeekerHomepage = () => {
             <div className='justify-center text-gray-900 text-3xl flex'> Recent Listings  </div>
             <div className='justify-center flex'> <Cards listings = {recent}/>  </div>
         </div>
+
+  
 
     </div>
   )
