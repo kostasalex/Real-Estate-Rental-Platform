@@ -5,8 +5,8 @@ const Location = ({ formattedAddress, setFormattedAddress, accessingInfo, setAcc
   const [searchQuery, setSearchQuery] = React.useState('Athens');
 
   /* Temporary for testing */
-  if(searchQuery && accessingInfo)
-  setIsFormComplete(true)
+  if (searchQuery && accessingInfo)
+    setIsFormComplete(true)
 
   const formattedAddressHandler = (address) => {
     const { suburb, town, city, village } = address;
@@ -23,35 +23,40 @@ const Location = ({ formattedAddress, setFormattedAddress, accessingInfo, setAcc
   };
 
   React.useEffect(() => {
-    if(searchQuery && accessingInfo)
+    if (searchQuery && accessingInfo)
       setIsFormComplete(true)
-    else(setIsFormComplete(false))
-  },[searchQuery,accessingInfo]);
+    else (setIsFormComplete(false))
+  }, [searchQuery, accessingInfo]);
 
   return (
-    <div className="flex space-y-10 flex-col justify-center items-center">
-      <div className="flex z-0">
-        <Map
-          formattedAddressHandler={formattedAddressHandler}
-          formattedAddress={formattedAddress}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
-      </div>
-      <div className="flex justify-center mx-auto border-t-2">
-        <div className="my-10">
-          <label htmlFor="accessingInfo" className="mb-1 block text-xl text-gray-700">
-            Information about Accessing Transportation to the Rental Space
-          </label>
-          <textarea
-            id="accessingInfo"
-            className="block w-full text-md font-serif rounded-md border-2 mt-2 border-gray-300 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-100"
-            rows="3"
-            placeholder="Leave a message"
-            value={accessingInfo}
-            onChange={handleAccessingInfoChange}
-          ></textarea>
-          <p className="mt-1 text-sm text-gray-500">Help message.</p>
+    <div className="text-blue1 mt-10">
+      <div className='block text-xl sm:grid sm:grid-cols-2 sm:gap-y-20 sm:gap-x-80'>
+        <div className="flex z-0">
+          <Map
+            formattedAddressHandler={formattedAddressHandler}
+            formattedAddress={formattedAddress}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
+        </div>
+        <div className="flex justify-center mx-auto">
+          <div className="mb-10">
+            <label htmlFor="accessingInfo" className="mb-1 block text-xl text-gray-700">
+              Information about Accessing Transportation to the Rental Space
+            </label>
+            <textarea
+              maxLength={1500}
+              id="description"
+              rows="4"
+              className="block w-full p-2.5 py-5 mt-5 w-96 text-sm text-blue1 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Building Entrance: The main entrance to the building is located on Patision."
+              value={accessingInfo}
+              onChange={handleAccessingInfoChange}
+            ></textarea>
+            <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900">
+              Max characters 1500
+            </label>
+          </div>
         </div>
       </div>
     </div>
