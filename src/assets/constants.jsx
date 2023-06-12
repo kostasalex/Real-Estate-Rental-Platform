@@ -95,3 +95,25 @@ export const filterCategories2 = {
     }
   },
 };
+
+
+export const dashboard = {
+  title: "dashboard",
+  description: "Data Overview",
+  users: {
+    title: "users",
+    description: "Users Manager",
+  },
+  listings: {
+    title: "listings",
+    description: "Listings Overview",
+  },
+  bookings: {
+    title: "bookings",
+    description: "Bookings Overview",
+  },
+  reviews: {
+    title: "reviews",
+    description: "Reviews Overview",
+  },
+};

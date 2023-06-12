@@ -4,7 +4,14 @@ export {default as SignUp} from './auth/SignUp';
 export {default as Cards} from './common/homepage/Cards';
 export {default as Results} from './common/results/Results';
 export {default as CardDetails} from './common/homepage/CardDetails';
-export {default as ScrollToTopButton} from './common/scrollToTopButton/ScrollToTopButton'
+export {default as ScrollToTopButton} from './common/scrollToTopButton/ScrollToTopButton';
 export {default as SeekerHomepage} from './users/seeker/SeekerHomepage';
 export {default as HostHomepage} from './users/host/HostHomepage';
-export {default as NewListing} from './users/host/newListing/NewListing'
+export {default as NewListing} from './users/host/newListing/NewListing';
+export {default as AdminDashboard} from './users/admin/AdminDashboard';
+export {default as AdminBookings} from './users/admin/bookings/Bookings';
+export {default as AdminListings} from './users/admin/listings/Listings';
+export {default as AdminReviews} from './users/admin/reviews/Reviews';
+export {default as AdminUsers} from './users/admin/users/Users';
+export {default as Navbar} from './common/navbars/Sidebar';
+export {default as AdminHomepage} from './users/admin/homepage/Homepage';

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Header, SeekerHomepage, HostHomepage, NewListing,  Login, SignUp, Cards, Results, CardDetails } from './components'
-import { Route, Routes } from 'react-router-dom';
+import { Header, SeekerHomepage, HostHomepage, NewListing,  Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
@@ -29,8 +29,12 @@ function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="App mt-20">
+      {loggedInUserType === 'Admin' && location.pathname.startsWith('/dashboard') && <AdminDashboard />}
         <Header loggedInUserType={loggedInUserType} handleLogout={handleLogout} handleUserType = {handleUserType} />
         <Routes>
+          {loggedInUserType === 'Admin' && (
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          )}
           {loggedInUserType === null && <Route path="/" element={<Cards/>} />}
           {loggedInUserType === 'Host' && (
             <>
@@ -42,6 +46,16 @@ function App() {
           {loggedInUserType === 'Seeker' && (
             <>
               <Route path="/" element={<SeekerHomepage />} />
+            </>
+            )
+          }
+          {loggedInUserType === 'Admin' && (
+            <>
+              <Route path="/dashboard" element={<AdminHomepage />} />
+              <Route path="/dashboard/bookings" element={<AdminBookings />} />
+              <Route path="/dashboard/listings" element={<AdminListings />} />
+              <Route path="/dashboard/reviews" element={<AdminReviews />} />
+              <Route path="/dashboard/users" element={<AdminUsers />} />
             </>
             )
           }

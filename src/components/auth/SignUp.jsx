@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import {useNavigate} from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import backgroundImage from "/src/assets/auth.png";
-
+import {BsFillKeyFill} from 'react-icons/bs'
 const SignUp = (props) => {
 
     const navigate = useNavigate();
@@ -50,6 +50,13 @@ const SignUp = (props) => {
   
   };
 
+  const handleAdmin = () =>{
+    props.handleLogin("Admin");
+    navigate("/");
+  }
+
+
+
   const {values, errors,isSubmitting, touched, handleBlur, handleChange, handleSubmit} = useFormik({
     initialValues:{
         email: signup.emailPlaceholder,
@@ -73,7 +80,6 @@ const SignUp = (props) => {
         <div className="flex justify-center min-h-screen">
             <div className="hidden bg-no-repeat  lg:block lg:w-2/5 bg-center"  style={{ backgroundImage: `url(${backgroundImage})` }}>
             </div>
-    
             <div className="flex items-center w-full max-w-3xl p-8 mx-auto lg:px-12 lg:w-3/5 ">
                 <div className="w-full">
                     <h1 className="txt-2xl font-semibold tracking-wider text-gray-800 capitalize ">
@@ -88,6 +94,15 @@ const SignUp = (props) => {
                         <h1 className="text-gray-500 ">{signup.selectAccountType}</h1>
 
                         <div className="mt-3 md:flex md:items-center md:-mx-2">
+                            <button className="flex justify-center items-center w-full px-6 py-3 text-white bg-orange-500 hover:bg-orange-400 hover:shadow-xl rounded-md md:w-auto md:mx-2 focus:outline-none"
+                                onClick={() => handleAdmin()}
+                                >
+                                    <BsFillKeyFill/>
+                                    <span className="mx-2">
+                                        Admin
+                                    </span>
+                            </button>
+
                             <label className="flex justify-center items-center w-full px-6 py-3 text-white bg-blue-500 rounded-md md:w-auto md:mx-2 focus:outline-none">
                                 <input type="checkbox" name="accountType" value="lookingForPlace" checked className="hidden"/>
                                 <FiSearch/>
@@ -106,6 +121,7 @@ const SignUp = (props) => {
                                     {signup.rentingOutPlace}
                                 </span>
                             </label>
+                            
                         </div>
                     </div>
     
