@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,useLocation} from 'react-router-dom';
 import { FaChartLine, ImUsers, BsHousesFill, BiCalendarCheck, MdRateReview } from 'react-icons/all';
 import Sidebar from '/src/components/common/navbars/Sidebar';
 
 const AdminDashboard = () => {
-    
+  
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const path = location.pathname;
     const currentTab = path.substring(path.lastIndexOf('/') + 1);
-    const navigate = useNavigate();
+
+
     const [activeTab, setActiveTab] = useState(currentTab.toLowerCase());
 
     useEffect(() => {
       const path = location.pathname;
       const currentTab = path.substring(path.lastIndexOf('/') + 1);
-      setActiveTab(currentTab.toLowerCase());
-      console.log(currentTab)
+      currentTab ? setActiveTab(currentTab.toLowerCase()) : setActiveTab("dashboard");
     }, [location]);
 
     const handleTabClick = (title) => {

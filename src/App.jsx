@@ -29,7 +29,7 @@ function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="App mt-20">
-      {loggedInUserType === 'Admin' && location.pathname.startsWith('/dashboard') && <AdminDashboard />}
+      {loggedInUserType === 'Admin' && <AdminDashboard />}
         <Header loggedInUserType={loggedInUserType} handleLogout={handleLogout} handleUserType = {handleUserType} />
         <Routes>
           {loggedInUserType === 'Admin' && (
