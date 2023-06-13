@@ -4,7 +4,9 @@ import Dialog from './Dialog';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DatePicker } from '@mui/x-date-pickers';
-import { differenceInCalendarDays } from 'date-fns';
+import Swal from "sweetalert2";
+import Papa from "papaparse";
+import { FaUser } from "react-icons/fa";
 
 function CardDetails() {
 	const cardProps = JSON.parse(localStorage.getItem("cardProps"));
@@ -46,19 +48,25 @@ function CardDetails() {
 	const [hostAbout, setHostAbout] = useState('');
 	const [hostResponseTime, setHostResponseTime] = useState(cardProps.host_response_time);
 	const [hostResponseRate, setHostResponseRate] = useState(cardProps.host_response_time);
+	const [hostListingCount, setHostListingCount] = useState(cardProps.host_listings_count);
 
 	const [amenities, setAmenities] = useState(cardProps.amenities);
 
 	const [longitude, setLongitude] = useState(cardProps.longitude);
 	const [latitude, setLatitude] = useState(cardProps.latitude);
 
-	const maxRating = 100; // Maximum rating on the original scale
-	const targetMaxRating = 5; // Maximum rating on the 5-point scale
-
-	const convertedRating = (reviewScoresRating / maxRating) * targetMaxRating;
-
-	const roundedRating = Math.round(convertedRating * 10) / 10;
+	const [people, setPeople] = useState(1);
 	const [isOpen, setIsOpen] = useState(false);
+	const [isOpenHost, setIsOpenHost] = useState(false);
+	const [isFormComplete, setIsFormComplete] = useState(false);
+	const [reviews, setReviews] = useState([]);
+
+	const maxRating = 100;
+	const targetMaxRating = 5;
+	const convertedRating = (reviewScoresRating / maxRating) * targetMaxRating;
+	const roundedRating = Math.round(convertedRating * 10) / 10;
+	const amenitiesArray = amenities.replace(/[\{\}]/g, '').split(',');
+	let totalPrice;
 
 	const openDialog = () => {
 		setIsOpen(true);
@@ -68,19 +76,27 @@ function CardDetails() {
 		setIsOpen(false);
 	};
 
+	const openDialogHost = () => {
+		setIsOpenHost(true);
+	};
 
-	const amenitiesArray = amenities.replace(/[\{\}]/g, '').split(',');
-	const priceAsNumber = parseFloat(price);
-	const totalPrice = numDaysStayed * parseFloat(price.substring(1)).toString();
+	const closeDialogHost = () => {
+		setIsOpenHost(false);
+	};
 
-	const [people, setPeople] = useState(1);
+	if (people === 1) {
+		totalPrice = (numDaysStayed * parseFloat(price.substring(1))).toString();
+	} else {
+		const basePrice = parseFloat(price.substring(1));
+		const additionalPrice = (people - 1) * 0.4 * basePrice;
+		totalPrice = ((numDaysStayed * basePrice) + additionalPrice).toString();
+	}
 
 	const handleIncrease = () => {
-		if (accommodates!= null && people < accommodates) {
+		if (accommodates != null && people < accommodates) {
 			setPeople(people + 1);
 		}
-		else 
-		{
+		else {
 			setPeople(1);
 		}
 	};
@@ -90,6 +106,51 @@ function CardDetails() {
 			setPeople(people - 1);
 		}
 	};
+
+	function postHandler() {
+		Swal.fire({
+			title: 'Reservation successfull!',
+			text: 'The host is notified about your booking.',
+			icon: 'success',
+			confirmButtonText: 'OK'
+		}).then(() => {
+			navigate('/');
+		});
+	}
+
+	useEffect(() => {
+		if (accommodates && arrivalDate && departureDate)
+			setIsFormComplete(true);
+		else
+			setIsFormComplete(false);
+	}, [accommodates, arrivalDate, departureDate]);
+
+	useEffect(() => {
+		Papa.parse("/src/assets/reviews.csv", {
+			download: true,
+			header: true,
+			complete: (results) => {
+				// Filter rows where card_id is equal to listing_id
+				const filteredRows = results.data.filter((row) => cardProps.id === row.listing_id);
+				// Set the filtered rows to the state
+				setReviews(filteredRows);
+			},
+		});
+	}, []);
+
+
+	const [question, setQuestion] = useState('');
+	const [questions, setQuestions] = useState([]);
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (question.trim() !== '') {
+			setQuestions([question, ...questions]);
+			setQuestion('');
+		}
+	};
+
+
 	return (
 
 		<div className=" mx-auto lg:px-20 md:px-6 px-4 md:py-12 py-8 sm:mx-36">
@@ -169,23 +230,128 @@ function CardDetails() {
 			</div>
 
 			{/* amenities - reserve */}
-			<div className="block sm:p-10 sm:grid grid-cols-2 gap-x-36">
+			<div className="grid grid-cols1 sm:p-10 sm:grid sm:grid-cols-2 sm:gap-x-10 ">
+
 				<div>
-					<hr className="mb-10"></hr>
-					<p className="text-center mb-10 text-2xl leading-none tracking-tight text-gray-900 sm:text-left">What this place offers</p>
-					<ul className="grid grid-cols-2 gap-0">
-						{amenitiesArray.map((amenity) => (
-							<li className="text-center mb-2" key={amenity}><p>{amenity.replace(/"/g, '')}</p></li>
-						))}
-					</ul>
+					{/* amenities */}
+					<div>
+						<hr className="mb-10"></hr>
+						<p className="text-center mb-10 text-2xl leading-none tracking-tight text-gray-900 sm:text-left">What this place offers</p>
+						<ul className="grid grid-cols-2 gap-0">
+							{amenitiesArray.map((amenity) => (
+								<li className="text-center mb-2" key={amenity}><p>{amenity.replace(/"/g, '')}</p></li>
+							))}
+						</ul>
+					</div>
+
+					{/* host */}
+
+					<div className='pt-5 pb-10 block sm:grid sm:grid-cols-2 sm:gap-4'>
+						<ul>
+							<button onClick={openDialogHost}>
+								<li>
+									<p className="text-center text-2xl leading-none tracking-tight text-gray-900 sm:text-left">
+										This place is hosted by {hostName}
+									</p>
+								</li>
+								<li>
+									<div className="pt-10 float-left">
+										<div className="max-w-lg mx-auto rounded-2xl shadow-lg hover:shadow-2xl transition duration-500">
+											<div className="md:flex">
+												<div className="md:flex-shrink-0">
+													<img
+														className="h-full w-full object-cover md:w-48"
+														src={hostPictureUrl}
+														alt="Host Picture"
+													/>
+												</div>
+												<div className="p-10">
+													<div className="text-center pb-4 tracking-wide text-xl text-indigo-500 font-semibold">
+														{hostName}
+													</div>
+													<div className="mt-4">
+														<p className="text-center">{hostAbout}</p>
+														<p className="">Since: {hostSince}</p>
+														<p className="">Listings: {hostListingCount}</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>
+							</button>
+							{isOpenHost && (
+								<Dialog onClose={closeDialogHost}> {/* Pass closeDialogHost as onClose prop */}
+									<div className="block sm:grid sm:grid-cols-2 gap-2">
+										<div className="md:flex-shrink-0">
+											<img
+												className="h-full w-full object-cover "
+												src={hostPictureUrl}
+												alt="Host Picture"
+											/>
+										</div>
+										<div className="p-10">
+											<div className="text-center pb-4 tracking-wide text-xl text-indigo-500 font-semibold">
+												{hostName}
+											</div>
+											<div className="mt-4">
+												<p className="text-center">{hostAbout}</p>
+												<p className="">Since: {hostSince}</p>
+												<p className="">Location: {hostLocation}</p>
+												<p className="">Listings: {hostListingCount}</p>
+												<p className="mt-5">Response Time: {hostResponseTime}</p>
+												<p className="">Response Rate: {hostResponseRate}</p>
+											</div>
+										</div>
+									</div>
+									<div>
+										<form
+											className="max-w-2xl bg-white rounded-lg border p-2 mx-auto mt-20"
+											onSubmit={handleSubmit}
+										>
+											<div className="px-3 mb-2 mt-2">
+												<textarea
+													placeholder={`Ask ${hostName} a question`}
+													className="w-full placeholder-gray-500 bg-gray-100 rounded border border-gray-400 leading-normal resize-none h-20 py-2 px-3 font-medium placeholder-gray-700 focus:outline-none focus:bg-white"
+													value={question}
+													onChange={(e) => setQuestion(e.target.value)}
+												></textarea>
+											</div>
+											<div className="flex justify-end px-4">
+												<button type="submit" className="px-2.5 py-1.5 rounded-md text-white text-sm bg-blue1">
+													Comment
+												</button>
+											</div>
+										</form>
+										<p className="text-center my-3 text-xl leading-none tracking-tight text-gray-900 sm:text-left">Your questions</p>
+										{questions.map((q, index) => (
+											<div key={index} className="max-w-2xl bg-white rounded-lg border p-2 mx-auto mt-4">
+												<p>{q}</p>
+											</div>
+										))}
+									</div>
+								</Dialog>
+							)}
+
+						</ul>
+
+					</div>
+
+					{/* map */}
+					<div className="relative">
+						<MapContainer center={[latitude, longitude]} zoom={13} style={{ height: '400px', width: '100%' }} className="z-0">
+							<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+							<Marker position={[latitude, longitude]} />
+						</MapContainer>
+					</div>
 				</div>
 
 				{/* reserve */}
-				<div className="p-10 sm:p-auto">
+				<div className="">
 					<div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-						<div className="md:flex">
+						<div className="block">
 							<div className="md:flex-shrink-0">
-								<img className="h-full w-full object-cover md:w-48" src={thumbnail_url} alt="Room" />
+								<img className=" w-full h-  " src={thumbnail_url} alt="Room" />
 							</div>
 
 							<div className="p-10">
@@ -208,7 +374,7 @@ function CardDetails() {
 										<input
 											className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-12 text-center border-r border-l border-gray-300 bg-gray-100"
 											type="number"
-											min="1"
+											min="0"
 											max={accommodates}
 											value={people}
 											onChange={(e) => setPeople(Number(e.target.people))}
@@ -259,7 +425,25 @@ function CardDetails() {
 									<span className="font-semibold text-gray-900 text-xl ml-1">${totalPrice}</span>
 								</div>
 								<div className="mt-6">
-									<button className="flex flex-row items-center justify-end shadow-xl xl:mt-0 mt-20 bg-blue1 rounded-xl px-2 py-1 transition duration-300 transform hover:translate-y--2 text-white text-lg duration-300 transform hover:translate-y-2">Reserve</button>
+									{
+										(isFormComplete ?
+											(<button className="text-base  ml-2  hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer 
+												hover:bg-blue1  
+												bg-blue1 
+												text-blue0 
+												border duration-200 ease-in-out 
+												border-blue1 transition"
+												onClick={postHandler}>Reserve</button>)
+											:
+											(<button className="text-base  ml-2  flex justify-center px-4 py-2 rounded font-bold cursor-not-allowed 
+												bg-gray-50 
+												text-gray-500
+												border-2
+												border-gray-500
+												duration-200 ease-in-out 
+												transition"
+											>Reserve</button>)
+										)}
 								</div>
 							</div>
 						</div>
@@ -268,43 +452,32 @@ function CardDetails() {
 			</div>
 
 
-			{/* host */}
-			<div className='grid grid-cols-2 gap-4'>
-				<ul className="block p-10">
-					<li><p className=" text-xl leading-none tracking-tight text-gray-900 ">This place is hosted by {hostName}</p></li>
-					<li>
-						<div className="pt-10 float-left" >
-							<div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-								<div className="md:flex">
-									<div className="md:flex-shrink-0">
-										<img className="h-full w-full object-cover md:w-48" src={hostPictureUrl} alt="Host Picture" />
-									</div>
-
-									<div className="p-10">
-
-										<div className=" text-center pb-4 tracking-wide text-xl text-indigo-500 font-semibold">{hostName}</div>
-										<div className="mt-4">
-											<p className="text-center">{hostAbout}</p>
-											<p className="">Since: {hostSince}</p>
-											<p className="">Location: {hostLocation}</p>
-											<p className="">Response Time: {hostResponseTime}</p>
-											<p className="">Response Rate: {hostResponseRate}</p>
+			<div className='block'>
+				<div className="">
+					<div><p className=" text-xl leading-none tracking-tight text-gray-900 ">Reviews about this place</p></div>
+					<div className="sm:grid sm:grid-cols-2 sm:gap-4">
+						{reviews.map(({ listing_id, id, date, reviewer_id, reviewer_name, comments }) => (
+							<div key={id} className=" flex items-center justify-center">
+								<div className="">
+									<div className="bg-white max-w-xl rounded-2xl px-10 py-8 shadow-lg hover:shadow-2xl transition duration-500">
+										<link rel="icon" type="image/svg+xml" href="/src/assets/logosmall.png" />
+										<div className="mt-4 flex items-center space-x-4 ">
+											<div className="">
+												<FaUser style={{ fontSize: '30px', color: '' }} />
+											</div>
+											<div className="text-sm font-semibold"> {reviewer_name} • <span className="font-normal"> {date}</span></div>
 										</div>
-
+										<div className="mt-4">
+											<p className="mt-4 text-md text-gray-600">{comments}</p>
+										</div>
 									</div>
 								</div>
 							</div>
-
-						</div>
-					</li>
-				</ul>
-
-				<MapContainer center={[latitude, longitude]} zoom={13} style={{ height: '400px', width: '100%' }}>
-					<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-					<Marker position={[latitude, longitude]} />
-				</MapContainer>
-
+						))}
+					</div>
+				</div>
 			</div>
+
 		</div>
 	);
 }

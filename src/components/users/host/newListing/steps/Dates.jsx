@@ -3,7 +3,10 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHostDepartureDate,selectedDates,setSelectedDates, setIsFormComplete }) => {
- 
+  
+  if ( selectedDates && setIsFormComplete)
+    setIsFormComplete(true)
+
   useEffect(() => {
     if (selectedDates.length !==0) {
       setIsFormComplete(true);

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 
 const Details = ({ beds, setBeds, bathrooms, setBathrooms, bedrooms, setBedrooms, livingrooms, setLivingrooms, size, setSize, setIsFormComplete }) => {
 
+  if (beds && bathrooms && bedrooms && size && setIsFormComplete)
+    setIsFormComplete(true)
+
   useEffect(() => {
     if (beds != 0 && bathrooms != 0 && bedrooms != 0 && size != 0) {
       setIsFormComplete(true);

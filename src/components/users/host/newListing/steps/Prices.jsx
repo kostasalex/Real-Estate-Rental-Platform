@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect } from 'react';
 
 const Prices = ({ defaultGuestPrice, setDefaultGuestPrice, additionalGuestPrice, setAdditionalGuestPrice, maxGuests, setMaxGuests, setIsFormComplete }) => {
+
+  if (defaultGuestPrice !=0 && additionalGuestPrice !=0 && maxGuests !=0 && setIsFormComplete)
+    setIsFormComplete(true)
 
   useEffect(() => {
     if (defaultGuestPrice != 0 && additionalGuestPrice != 0 && maxGuests != 0) {

@@ -58,7 +58,7 @@ const NewListing = () => {
   const [size, setSize] = React.useState(0);
 
   const [hostArrivalDate, setHostArrivalDate] = React.useState(null);
-	const [hostDepartureDate, setHostDepartureDate] = React.useState(null);
+  const [hostDepartureDate, setHostDepartureDate] = React.useState(null);
   const [selectedDates, setSelectedDates] = React.useState([]);
 
   const [defaultGuestPrice, setDefaultGuestPrice] = React.useState(0);
@@ -66,16 +66,16 @@ const NewListing = () => {
   const [maxGuests, setMaxGuests] = React.useState(0);
 
   const [amenities, setAmenities] = React.useState({
-    TV : false,
-    Internet : false,
-    Air_Conditioning : false,
-    Kitchen : false,
-    Heating : false,
-    Family_Kid_Friendly : false,
-    Washer : false,
-    Shampoo : false,
-    Parking : false,
-    Elevator : false
+    TV: false,
+    Internet: false,
+    Air_Conditioning: false,
+    Kitchen: false,
+    Heating: false,
+    Family_Kid_Friendly: false,
+    Washer: false,
+    Shampoo: false,
+    Parking: false,
+    Elevator: false
   });
 
 
@@ -122,8 +122,8 @@ const NewListing = () => {
           setIsFormComplete={setIsFormComplete} />}
 
         {step === 4 && <Amenities
-          amenities = {amenities}
-          setAmenities = {setAmenities}
+          amenities={amenities}
+          setAmenities={setAmenities}
           setIsFormComplete={setIsFormComplete} />}
 
         {step === 5 && <Dates
@@ -186,15 +186,26 @@ const NewListing = () => {
           }
         </div>
 
-
         {steps.length == step &&
-          (<button className="text-base  ml-2  hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer 
-                    hover:bg-blue1  
-                    bg-blue1 
-                    text-blue0 
-                    border duration-200 ease-in-out 
-                    border-blue1 transition"
-            onClick={postHandler}>Post</button>)}
+          (isFormComplete ?
+            (<button className="text-base  ml-2  hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer 
+                  hover:bg-blue1  
+                  bg-blue1 
+                  text-blue0 
+                  border duration-200 ease-in-out 
+                  border-blue1 transition"
+              onClick={postHandler}>Post</button>)
+            :
+            (<button className="text-base  ml-2  flex justify-center px-4 py-2 rounded font-bold cursor-not-allowed 
+                  bg-gray-50 
+                  text-gray-500
+                  border-2
+                  border-gray-500
+                   duration-200 ease-in-out 
+                  transition"
+            >Post</button>)
+          )
+        }
       </div>
 
     </div>
