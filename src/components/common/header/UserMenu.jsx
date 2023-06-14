@@ -18,6 +18,7 @@ const UserMenu = ({loggedInUserType, handleLogout}) => {
         setIsMenuOpen(false);
       }
     };
+    
   
     React.useEffect(() => {
       document.addEventListener('click', handleDocumentClick);
@@ -84,10 +85,10 @@ const UserMenu = ({loggedInUserType, handleLogout}) => {
                                             Dashboard 
                                         </span>
                                 </div>  
-                                <div className="flex  cursor-pointer px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                                <div className="flex  cursor-pointer px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                                onClick={() => handleLogout()}>
                                         <span 
-                                            className="mr-3 text-sm font-medium"
-                                            onClick={handleLogout}>
+                                            className="mr-3 text-sm font-medium">
                                             Exit 
                                         </span>
                                 </div>                              

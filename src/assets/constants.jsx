@@ -97,7 +97,7 @@ export const filterCategories2 = {
 };
 
 
-export const dashboard = {
+export const adminSidebar = {
   title: "dashboard",
   description: "Data Overview",
   users: {

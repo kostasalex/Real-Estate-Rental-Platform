@@ -1,10 +1,12 @@
 import React from 'react';
 import { Header, SeekerHomepage, HostHomepage, NewListing,  Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function App() {
+
+  const navigate = useNavigate();
 
   const [loggedInUserType, setLoggedInUserType] = React.useState(
     localStorage.getItem('loggedInUserType') || null
@@ -20,9 +22,10 @@ function App() {
   };
 
   const handleLogout = () => {
+    navigate('/');
+    console.log('Logout button clicked');
     setLoggedInUserType(null);
     localStorage.removeItem('loggedInUserType');
-    navigate('/');
   };
 
 
