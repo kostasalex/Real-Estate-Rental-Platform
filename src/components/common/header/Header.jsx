@@ -72,7 +72,7 @@ const Header = (props) => {
                     
                             <div className="font-semibold inline-block hidden md:block py-2 px-3 opacity-70 hover:opacity-100 rounded-full" >
                                 {
-                                props.loggedInUserType === "Seeker" || !props.loggedInUserType  && 
+                                (props.loggedInUserType === "Seeker" || !props.loggedInUserType)  && 
                                  (<div 
                                     className="flex items-center relative cursor-pointer whitespace-nowrap"
                                     onClick= {becomeHostHandler}

@@ -136,6 +136,7 @@ const Cards = ({listings}) => {
                   </div>)}
               </div>
           </div>)}
+          
         </div>
 
     );
