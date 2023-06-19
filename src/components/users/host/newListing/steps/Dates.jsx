@@ -41,6 +41,7 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHost
           </label>
           <DatePicker
             id="hostArrivalDate"
+            minDate={hostDepartureDate}
             selected={hostArrivalDate}
             onChange={(date) => setHostArrivalDate(date)}
             dateFormat="dd/MM/yyyy"
