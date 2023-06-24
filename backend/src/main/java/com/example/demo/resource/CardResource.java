@@ -1,7 +1,6 @@
 package com.example.demo.resource;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +26,7 @@ public class CardResource {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "{cardId}")
-    public Card fetchCard(@PathVariable("cardId") UUID cardId) {
+    public Card fetchCard(@PathVariable("cardId") String cardId) {
         return cardService.getCard(cardId).orElse(null);
     }
 

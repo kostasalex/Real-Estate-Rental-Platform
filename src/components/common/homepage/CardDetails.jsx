@@ -85,9 +85,9 @@ function CardDetails() {
 	};
 
 	if (people === 1) {
-		totalPrice = (numDaysStayed * parseFloat(price.substring(1))).toString();
+		totalPrice = (numDaysStayed * parseFloat(price.toString().substring(1))).toString();
 	} else {
-		const basePrice = parseFloat(price.substring(1));
+		const basePrice = parseFloat(price.toString().substring(1));
 		const additionalPrice = (people - 1) * 0.4 * basePrice;
 		totalPrice = ((numDaysStayed * basePrice) + additionalPrice).toString();
 	}

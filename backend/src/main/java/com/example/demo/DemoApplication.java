@@ -2,9 +2,9 @@ package com.example.demo;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,14 +15,15 @@ import com.example.demo.resource.CardResource;
 
 import com.example.demo.service.CardService;
 
-@SpringBootApplication
 @RestController
 @RequestMapping("/api/v1/cards")
+@CrossOrigin(origins = "http://localhost:5173")
+@SpringBootApplication
 public class DemoApplication {
 
     private CardService cardService;
 
-    @Autowired
+    
     public DemoApplication(CardService cardService) {
         this.cardService = cardService;
     }

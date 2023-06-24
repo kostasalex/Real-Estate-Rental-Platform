@@ -1,79 +1,208 @@
 package com.example.demo.dao;
 
+import java.math.BigDecimal;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.stereotype.Repository;
 
 import com.example.demo.model.Card;
 
-@Repository
 public class FakeDataDaoCard implements CardDao {
 
-    private static Map<UUID,Card> database;
-
-    static {
-        database = new HashMap<>();
-        UUID joeCardUid = UUID.randomUUID();
-        database.put(joeCardUid,
-            new Card(joeCardUid,
-                "https://a1.muscache.com/ac/pictures/13462809/26642ff7_original.jpg?interpolation=lanczos-none&size=small&output-format=jpg&output-quality=70",
-                "Entire home/apt",
-                "Frinichou, Athens, Attica 105 58, Greece",
-                "This 30m2 flat on Frinihou str. is located in Plaka, the old part of the city, at the foot of the Acropolis in the heart of Athens. Frinihou str. is a quiet street very close to a main street which leads to the New Acropolis Museum. The flat is only 100m away from the “Acropolis” Metro station as well as the New Acropolis Museum. Very close -less than 50m away- the Dionisiou Aeropagitou pedestrian street starts which is considered one of the most beautiful pedestrian streets in Athens. It takes straight to the Herodou Attikou ancient theatre. The flat is in the semi-basement of a stately building with its own court aglaise. It overlooks the street and its really sunny and bright. The flat is fully furnished, beautifully decorated and equipped with a kitchen , air-conditioning , central heating, a telephone line and free Internet. It is a two person flat but there is plenty of room for a third person. Super offer Two bicycles at your disposal, to ride the historical part of Athens free ",
-                "Athens Soul Apartments Plaka",
-                "Dimitris",
-                "https://a0.muscache.com/ac/users/4935030/profile_pic/1359790474/original.jpg?interpolation=lanczos-none&crop=w:w;*,*&crop=h:h;*,*&resize=225:*&output-format=jpg&output-quality=70",
-                "{Internet,Wireless Internet,Air Conditioning,Kitchen,Heating}",
-                "Real Bed",
-                "2013-02-02",
-                "Athens, Attica, Greece",
-                "Hello! My name is Dimitris. You are welcome to come and stay at my apartments in Athens, Greece! If you have any questions, feel free to ask!",
-                "within a few hours",
-                100,
-                2,
-                40,
-                2,
-                1,
-                2,
-                2,
-                3,
-                63,
-                23.731204f,
-                37.969859f));
-
-    }
+    // Database connection details
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/airbnb";
+    private static final String DB_USERNAME = "root";
+    private static final String DB_PASSWORD = "123456789";
 
     @Override
     public List<Card> selectAllCards() {
-        return new ArrayList<>(database.values());
+        List<Card> cards = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM listings");) {
+            while (rs.next()) {
+                Card card = mapResultSetToCard(rs);
+                cards.add(card);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return cards;
     }
 
     @Override
-    public Optional<Card> selectCardByCardUid(UUID cardUid) {
-        return Optional.ofNullable(database.get(cardUid));
+    public Optional<Card> selectCardByCardId(String cardId) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM listings WHERE id = ?");) {
+            stmt.setString(1, cardId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Card card = mapResultSetToCard(rs);
+                    return Optional.of(card);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return Optional.empty();
     }
 
     @Override
     public int updateCard(Card card) {
-        database.put(card.getCardUid(), card);
-        return 1;
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(
+                     "UPDATE listings SET thumbnail_url = ?, medium_url = ?, price = ?, room_type = ?, " +
+                             "beds = ?, number_of_reviews = ?, review_scores_rating = ?, street = ?, description = ?, name = ?, host_name = ?, "
+                             +
+                             "host_picture_url = ?, amenities = ?, accommodates = ?, bathrooms = ?, bedrooms = ?, bed_type = ?, "
+                             +
+                             "longitude = ?, latitude = ?, host_since = ?, host_location = ?, host_about = ?, host_response_time = ?, "
+                             +
+                             "host_response_rate = ?, host_listings_count = ? WHERE id = ?");) {
+            stmt.setString(1, card.getThumbnailUrl());
+            stmt.setString(2, card.getMediumUrl());
+            stmt.setBigDecimal(3, card.getPrice());
+            stmt.setString(4, card.getRoomType());
+            stmt.setInt(5, card.getBeds());
+            stmt.setInt(6, card.getNumberOfReviews());
+            stmt.setInt(7, card.getReviewScoresRating());
+            stmt.setString(8, card.getStreet());
+            stmt.setString(9, card.getDescription());
+            stmt.setString(10, card.getName());
+            stmt.setString(11, card.getHostName());
+            stmt.setString(12, card.getHostPictureUrl());
+            stmt.setString(13, card.getAmenities());
+            stmt.setInt(14, card.getAccommodates());
+            stmt.setBigDecimal(15, card.getBathrooms());
+            stmt.setInt(16, card.getBedrooms());
+            stmt.setString(17, card.getBedType());
+            stmt.setBigDecimal(18, card.getLongitude());
+            stmt.setBigDecimal(19, card.getLatitude());
+            stmt.setDate(20, Date.valueOf(card.getHostSince()));
+            stmt.setString(21, card.getHostLocation());
+            stmt.setString(22, card.getHostAbout());
+            stmt.setString(23, card.getHostResponseTime());
+            stmt.setBigDecimal(24, card.getHostResponseRate());
+            stmt.setInt(25, card.getHostListingsCount());
+            stmt.setString(26, card.getId());
+
+            rowsAffected = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return rowsAffected;
     }
 
     @Override
-    public int deleteCardByCardUid(UUID cardUid) {
-        database.remove(cardUid);
-        return 1;
+    public int deleteCardByCardId(String cardId) {
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement("DELETE FROM listings WHERE id = ?");) {
+            stmt.setString(1, cardId);
+
+            rowsAffected = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return rowsAffected;
     }
 
     @Override
-    public int insertCard(UUID cardUid, Card card) {
-        database.put(cardUid, card);
-        return 1;
+    public int insertCard(String cardId, Card card) {
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn
+                     .prepareStatement("INSERT INTO listings (id, thumbnail_url, medium_url, price, " +
+                             "room_type, beds, number_of_reviews, review_scores_rating, street, description, name, host_name, "
+                             +
+                             "host_picture_url, amenities, accommodates, bathrooms, bedrooms, bed_type, longitude, latitude, "
+                             +
+                             "host_since, host_location, host_about, host_response_time, host_response_rate, host_listings_count) "
+                             +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
+            stmt.setString(1, cardId);
+            stmt.setString(2, card.getThumbnailUrl());
+            stmt.setString(3, card.getMediumUrl());
+            stmt.setBigDecimal(4, card.getPrice());
+            stmt.setString(5, card.getRoomType());
+            stmt.setInt(6, card.getBeds());
+            stmt.setInt(7, card.getNumberOfReviews());
+            stmt.setInt(8, card.getReviewScoresRating());
+            stmt.setString(9, card.getStreet());
+            stmt.setString(10, card.getDescription());
+            stmt.setString(11, card.getName());
+            stmt.setString(12, card.getHostName());
+            stmt.setString(13, card.getHostPictureUrl());
+            stmt.setString(14, card.getAmenities());
+            stmt.setInt(15, card.getAccommodates());
+            stmt.setBigDecimal(16, card.getBathrooms());
+            stmt.setInt(17, card.getBedrooms());
+            stmt.setString(18, card.getBedType());
+            stmt.setBigDecimal(19, card.getLongitude());
+            stmt.setBigDecimal(20, card.getLatitude());
+            stmt.setDate(21, Date.valueOf(card.getHostSince()));
+            stmt.setString(22, card.getHostLocation());
+            stmt.setString(23, card.getHostAbout());
+            stmt.setString(24, card.getHostResponseTime());
+            stmt.setBigDecimal(25, card.getHostResponseRate());
+            stmt.setInt(26, card.getHostListingsCount());
+
+            rowsAffected = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return rowsAffected;
     }
-    
+
+    private Card mapResultSetToCard(ResultSet rs) throws SQLException {
+        String id = rs.getString("id");
+        String thumbnailUrl = rs.getString("thumbnail_url");
+        String mediumUrl = rs.getString("medium_url");
+        BigDecimal price = rs.getBigDecimal("price");
+        String roomType = rs.getString("room_type");
+        int beds = rs.getInt("beds");
+        int numberOfReviews = rs.getInt("number_of_reviews");
+        int reviewScoresRating = rs.getInt("review_scores_rating");
+        String street = rs.getString("street");
+        String description = rs.getString("description");
+        String name = rs.getString("name");
+        String hostName = rs.getString("host_name");
+        String hostPictureUrl = rs.getString("host_picture_url");
+        String amenities = rs.getString("amenities");
+        int accommodates = rs.getInt("accommodates");
+        BigDecimal bathrooms = rs.getBigDecimal("bathrooms");
+        int bedrooms = rs.getInt("bedrooms");
+        String bedType = rs.getString("bed_type");
+        BigDecimal longitude = rs.getBigDecimal("longitude");
+        BigDecimal latitude = rs.getBigDecimal("latitude");
+        LocalDate hostSince = rs.getDate("host_since").toLocalDate();
+        String hostLocation = rs.getString("host_location");
+        String hostAbout = rs.getString("host_about");
+        String hostResponseTime = rs.getString("host_response_time");
+        BigDecimal hostResponseRate = rs.getBigDecimal("host_response_rate");
+        int hostListingsCount = rs.getInt("host_listings_count");
+
+        return new Card(id, thumbnailUrl, mediumUrl, price, roomType, beds, numberOfReviews, reviewScoresRating,
+                street, description, name, hostName, hostPictureUrl, amenities, accommodates, bathrooms, bedrooms,
+                bedType, longitude, latitude, hostSince, hostLocation, hostAbout, hostResponseTime, hostResponseRate,
+                hostListingsCount);
+    }
 }

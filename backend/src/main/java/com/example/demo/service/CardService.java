@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 
 import org.springframework.stereotype.Service;
@@ -24,31 +23,30 @@ public class CardService {
         return cardDao.selectAllCards();
     }
 
-    public Optional<Card> getCard(UUID cardUid) {
-        return cardDao.selectCardByCardUid(cardUid);
+    public Optional<Card> getCard(String cardId) {
+        return cardDao.selectCardByCardId(cardId);
 
     }
 
     public int updateCard(Card card) {
-        Optional<Card> optinalCard = getCard(card.getCardUid());
+        Optional<Card> optinalCard = getCard(card.getId());
         if (optinalCard.isPresent()) {
             cardDao.updateCard(card);
-            return 1;
+            return 1; 
         }
         return -1;
     }
 
-    public int removeCard(UUID cardUid) {
-        Optional<Card> optinalCard = getCard(cardUid);
+    public int removeCard(String cardId) {
+        Optional<Card> optinalCard = getCard(cardId);
         if (optinalCard.isPresent()) {
-            cardDao.deleteCardByCardUid(cardUid);
+            cardDao.deleteCardByCardId(cardId);
             return 1;
         }
         return -1;
     }
 
     public int insertCard(Card card) {
-        UUID uuid = UUID.randomUUID();
-        return cardDao.insertCard(uuid, card);
+        return cardDao.insertCard("okoko", card);
     }
 }
