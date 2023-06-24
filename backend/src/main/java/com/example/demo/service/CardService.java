@@ -3,7 +3,6 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.CardDao;
@@ -14,7 +13,8 @@ public class CardService {
 
     private CardDao cardDao;
 
-    
+
+
     public CardService(CardDao cardDao) {
         this.cardDao = cardDao;
     }
@@ -29,8 +29,8 @@ public class CardService {
     }
 
     public int updateCard(Card card) {
-        Optional<Card> optinalCard = getCard(card.getId());
-        if (optinalCard.isPresent()) {
+        Optional<Card> optionalCard = getCard(card.getId());
+        if (optionalCard.isPresent()) {
             cardDao.updateCard(card);
             return 1; 
         }
@@ -38,8 +38,8 @@ public class CardService {
     }
 
     public int removeCard(String cardId) {
-        Optional<Card> optinalCard = getCard(cardId);
-        if (optinalCard.isPresent()) {
+        Optional<Card> optionalCard = getCard(cardId);
+        if (optionalCard.isPresent()) {
             cardDao.deleteCardByCardId(cardId);
             return 1;
         }
@@ -47,6 +47,6 @@ public class CardService {
     }
 
     public int insertCard(Card card) {
-        return cardDao.insertCard("okoko", card);
+        return cardDao.insertCard(card.getId(), card);
     }
 }

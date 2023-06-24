@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
 import com.example.demo.model.Card;
 
+@Component
 public class FakeDataDaoCard implements CardDao {
 
     // Database connection details
@@ -33,6 +35,7 @@ public class FakeDataDaoCard implements CardDao {
         }
 
         return cards;
+        
     }
 
     @Override
