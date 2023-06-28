@@ -14,7 +14,7 @@ import com.example.demo.model.Card;
 public class FakeDataDaoCard implements CardDao {
 
     // Database connection details
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/airbnb";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/rentspot_db";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "123456789";
 

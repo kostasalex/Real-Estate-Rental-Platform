@@ -2,8 +2,6 @@ package com.example.demo.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-
 
 import org.springframework.stereotype.Service;
 
@@ -15,7 +13,6 @@ public class UserService {
 
     private UserDao userDao;
 
-    
     public UserService(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -24,31 +21,29 @@ public class UserService {
         return userDao.selectAllUsers();
     }
 
-    public Optional<User> getUser(UUID userUid) {
-        return userDao.selectUserByUserUid(userUid);
-
+    public Optional<User> getUser(String userId) {
+        return userDao.selectUserByUserId(userId);
     }
 
     public int updateUser(User user) {
-        Optional<User> optinalUser = getUser(user.getUserUid());
-        if (optinalUser.isPresent()) {
+        Optional<User> optionalUser = getUser(user.getId());
+        if (optionalUser.isPresent()) {
             userDao.updateUser(user);
             return 1;
         }
         return -1;
     }
 
-    public int removeUser(UUID userUid) {
-        Optional<User> optinalUser = getUser(userUid);
-        if (optinalUser.isPresent()) {
-            userDao.deleteUserByUserUid(userUid);
+    public int removeUser(String userId) {
+        Optional<User> optionalUser = getUser(userId);
+        if (optionalUser.isPresent()) {
+            userDao.deleteUserByUserId(userId);
             return 1;
         }
         return -1;
     }
 
     public int insertUser(User user) {
-        UUID uuid = UUID.randomUUID();
-        return userDao.insertUser(uuid, user);
+        return userDao.insertUser(user.getId(), user);
     }
 }

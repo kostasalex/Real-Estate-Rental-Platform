@@ -1,54 +1,184 @@
 package com.example.demo.dao;
 
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.stereotype.Repository;
-
+import org.springframework.stereotype.Component;
 import com.example.demo.model.User;
-import com.example.demo.model.User.Gender;
 
-@Repository
+@Component
 public class FakeDataDao implements UserDao {
 
-    private static Map<UUID,User> database;
-
-    static {
-        database = new HashMap<>();
-        UUID joeUserUid = UUID.randomUUID();
-        database.put(joeUserUid, new User(joeUserUid, "Joe", "Jones", Gender.MALE, 22, "joe.jone@gmail.com"));
-    }
+    // Database connection details
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/rentspot_db";
+    private static final String DB_USERNAME = "root";
+    private static final String DB_PASSWORD = "123456789";
 
     @Override
     public List<User> selectAllUsers() {
-        return new ArrayList<>(database.values());
+        List<User> users = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM users");) {
+            while (rs.next()) {
+                User user = mapResultSetToUser(rs);
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return users;
     }
 
     @Override
-    public Optional<User> selectUserByUserUid(UUID userUid) {
-        return Optional.ofNullable(database.get(userUid));
+    public Optional<User> selectUserByUserId(String userId) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?");) {
+            stmt.setString(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    User user = mapResultSetToUser(rs);
+                    return Optional.of(user);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return Optional.empty();
     }
 
     @Override
     public int updateUser(User user) {
-        database.put(user.getUserUid(), user);
-        return 1;
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(
+                        "UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ?, phone_number = ?, address = ?, password = ? WHERE id = ?");) {
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getFirstName());
+            stmt.setString(4, user.getLastName());
+            stmt.setString(5, user.getPhoneNumber());
+            stmt.setString(6, user.getAddress());
+            stmt.setString(7, user.getPassword());
+            stmt.setString(8, user.getId().toString());
+
+            rowsAffected = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return rowsAffected;
     }
 
     @Override
-    public int deleteUserByUserUid(UUID userUid) {
-        database.remove(userUid);
-        return 1;
+    public int deleteUserByUserId(String userId) {
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("DELETE FROM users WHERE id = ?");) {
+            stmt.setString(1, userId);
+
+            rowsAffected = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return rowsAffected;
     }
 
+    // int rowsAffected = 0;
+
+    // try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME,
+    // DB_PASSWORD);
+    // PreparedStatement stmt = conn.prepareStatement(
+    // "INSERT INTO users (id, username, email, first_name, last_name, phone_number,
+    // address, password) "
+    // +
+    // "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+
+    // // Generate a unique user ID if not provided
+    // if (userId == null || userId.isEmpty()) {
+    // userId = generateUniqueId();
+    // }
+
+    // stmt.setString(1, userId);
+    // stmt.setString(2, user.getUsername());
+    // stmt.setString(3, user.getEmail());
+    // stmt.setString(4, user.getFirstName());
+    // stmt.setString(5, user.getLastName());
+    // stmt.setString(6, user.getPhoneNumber());
+    // stmt.setString(7, user.getAddress());
+    // stmt.setString(8, user.getPassword());
+
+    // rowsAffected = stmt.executeUpdate();
+    // } catch (SQLException e) {
+    // e.printStackTrace();
+    // // Handle the exception as needed
+    // }
+
+    // return rowsAffected;
+    // }
+
     @Override
-    public int insertUser(UUID userUid, User user) {
-        database.put(userUid, user);
-        return 1;
+    public int insertUser(String userId, User user) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(
+                        "INSERT INTO users (id, email, password, address, register_date, is_admin, host_application, image_url, first_name, last_name, username, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
+            stmt.setString(1, user.getId());
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getPassword());
+            stmt.setString(4, user.getAddress());
+            stmt.setString(5, user.getRegisterDate());
+            stmt.setString(6, user.getIsAdmin());
+            stmt.setString(7, user.getHostApplication());
+            stmt.setString(8, user.getImageUrl());
+            stmt.setString(9, user.getFirstName());
+            stmt.setString(10, user.getLastName());
+            stmt.setString(11, user.getUsername());
+            stmt.setString(12, user.getPhoneNumber());
+
+            return stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return 0;
     }
-    
+
+    // private String generateUniqueId() {
+    //     UUID uuid = UUID.randomUUID();
+    //     return uuid.toString();
+    // }
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        String id = rs.getString("id");
+        String username = rs.getString("username");
+        String email = rs.getString("email");
+        String firstName = rs.getString("first_name");
+        String lastName = rs.getString("last_name");
+        String phoneNumber = rs.getString("phone_number");
+        String address = rs.getString("address");
+        String password = rs.getString("password");
+        String registerDate = rs.getString("register_date");
+        String isAdmin = rs.getString("is_admin");
+        String hostApplication = rs.getString("host_application");
+        String imageUrl = rs.getString("image_url");
+
+        return new User(id, username, email, firstName, lastName, phoneNumber, address, password,
+                registerDate, isAdmin, hostApplication, imageUrl);
+    }
+
 }

@@ -1,18 +1,16 @@
 package com.example.demo.resource;
 
 import java.util.List;
-import java.util.UUID;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 
 @RestController
-@RequestMapping(path = "/api/v1/users")
+@RequestMapping(path = "api/v1/users")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserResource {
 
     private UserService userService;
@@ -21,14 +19,24 @@ public class UserResource {
         this.userService = userService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<User> fetchUsers() {
-        return userService.getAllUsers();
+    @GetMapping
+    public ResponseEntity<List<User>> getUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok().body(users);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "{userId}")
-    public User fetchUser(@PathVariable("userId") UUID userId) {
-        return userService.getUser(userId).orElse(null);
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> fetchUser(@PathVariable("userId") String userId) {
+        User user = userService.getUser(userId).orElse(null);
+        return ResponseEntity.ok().body(user);
     }
 
+    @PostMapping
+    public ResponseEntity<Integer> insertNewUser(@RequestBody User user) {
+        int result = userService.insertUser(user);
+        if (result == 1) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().build();
+    }
 }

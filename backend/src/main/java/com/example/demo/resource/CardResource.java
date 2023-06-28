@@ -11,7 +11,8 @@ import com.example.demo.model.Card;
 import com.example.demo.service.CardService;
 
 @RestController
-@RequestMapping(path = "/api/v1/cards")
+@RequestMapping(path = "api/v1/cards")
+
 public class CardResource {
 
     private CardService cardService;
