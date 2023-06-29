@@ -1,6 +1,8 @@
 package com.example.demo.dao;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -140,9 +142,12 @@ public class FakeDataDao implements UserDao {
             stmt.setString(2, user.getEmail());
             stmt.setString(3, user.getPassword());
             stmt.setString(4, user.getAddress());
-            stmt.setString(5, user.getRegisterDate());
-            stmt.setString(6, user.getIsAdmin());
-            stmt.setString(7, user.getHostApplication());
+
+            LocalDate currentDate = LocalDate.now();
+            String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            stmt.setString(5, formattedDate);
+            stmt.setInt(6, 0);
+            stmt.setInt(7, 0);
             stmt.setString(8, user.getImageUrl());
             stmt.setString(9, user.getFirstName());
             stmt.setString(10, user.getLastName());
@@ -159,8 +164,8 @@ public class FakeDataDao implements UserDao {
     }
 
     // private String generateUniqueId() {
-    //     UUID uuid = UUID.randomUUID();
-    //     return uuid.toString();
+    // UUID uuid = UUID.randomUUID();
+    // return uuid.toString();
     // }
 
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
