@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
@@ -100,41 +101,29 @@ public class FakeDataDao implements UserDao {
         return rowsAffected;
     }
 
-    // int rowsAffected = 0;
+    @Override
+    public boolean authenticateUser(String email, String password) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn
+                        .prepareStatement("SELECT * FROM users WHERE email = ? AND password = ?");) {
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // Returns true if the query has a result, indicating valid credentials
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
 
-    // try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME,
-    // DB_PASSWORD);
-    // PreparedStatement stmt = conn.prepareStatement(
-    // "INSERT INTO users (id, username, email, first_name, last_name, phone_number,
-    // address, password) "
-    // +
-    // "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
-
-    // // Generate a unique user ID if not provided
-    // if (userId == null || userId.isEmpty()) {
-    // userId = generateUniqueId();
-    // }
-
-    // stmt.setString(1, userId);
-    // stmt.setString(2, user.getUsername());
-    // stmt.setString(3, user.getEmail());
-    // stmt.setString(4, user.getFirstName());
-    // stmt.setString(5, user.getLastName());
-    // stmt.setString(6, user.getPhoneNumber());
-    // stmt.setString(7, user.getAddress());
-    // stmt.setString(8, user.getPassword());
-
-    // rowsAffected = stmt.executeUpdate();
-    // } catch (SQLException e) {
-    // e.printStackTrace();
-    // // Handle the exception as needed
-    // }
-
-    // return rowsAffected;
-    // }
+        return false; // Invalid credentials
+    }
 
     @Override
     public int insertUser(String userId, User user) {
+
+        userId = generateUniqueId();
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
                         "INSERT INTO users (id, email, password, address, register_date, is_admin, host_application, image_url, first_name, last_name, username, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
@@ -163,11 +152,6 @@ public class FakeDataDao implements UserDao {
         return 0;
     }
 
-    // private String generateUniqueId() {
-    // UUID uuid = UUID.randomUUID();
-    // return uuid.toString();
-    // }
-
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         String id = rs.getString("id");
         String username = rs.getString("username");
@@ -184,6 +168,16 @@ public class FakeDataDao implements UserDao {
 
         return new User(id, username, email, firstName, lastName, phoneNumber, address, password,
                 registerDate, isAdmin, hostApplication, imageUrl);
+    }
+
+    // private String generateUniqueId() {
+    // Random random = new Random();
+    // int id = random.nextInt(1000000); // Generate a random number within a range
+    // return Integer.toString(id);
+    // }
+
+    private String generateUniqueId() {
+        return UUID.randomUUID().toString();
     }
 
 }

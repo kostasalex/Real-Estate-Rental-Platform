@@ -12,5 +12,5 @@ public interface UserDao {
     int updateUser(User user);
     int deleteUserByUserId(String userId);
     int insertUser(String userId,User user); 
-    
+    boolean authenticateUser(String email, String password);
 }

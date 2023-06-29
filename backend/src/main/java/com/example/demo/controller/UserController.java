@@ -35,4 +35,14 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to register user");
         }
     }
+
+    @PostMapping("/api/v1/login")
+    public ResponseEntity<String> loginUser(@RequestBody User user) {
+        // Check if the user exists and the credentials are correct
+        if (userDao.authenticateUser(user.getEmail(), user.getPassword())) {
+            return ResponseEntity.ok("Login successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        }
+    }
 }
