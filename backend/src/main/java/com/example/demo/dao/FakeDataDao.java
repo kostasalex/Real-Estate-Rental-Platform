@@ -103,6 +103,7 @@ public class FakeDataDao implements UserDao {
 
     @Override
     public boolean authenticateUser(String email, String password) {
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn
                         .prepareStatement("SELECT * FROM users WHERE email = ? AND password = ?");) {

@@ -16,7 +16,7 @@ const Login = (props) => {
   const onSubmit = async (values, actions) => {
     console.log('Form submitted');
     try {
-      const response = await fetch('/api/v1/login', {
+      const response = await fetch('http://localhost:8080/api/v1/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,9 +26,9 @@ const Login = (props) => {
 
       if (response.ok) {
         // User login successful
-        const data = await response.json();
-        // Perform any necessary actions after successful login
-        props.handleLogin(data.userType);
+        const data = await response.text();
+        // Temporary by default all users will be Seekers.
+        props.handleLogin("Seeker");
         navigate('/');
       } else if (response.status === 401) {
         // User not found or incorrect credentials
