@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Papa from 'papaparse';
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2';
 import UserDetails from './UserDetails';
 import UsersTable from './UsersTable';
 import userIcon from '/src/assets/user-icon.png';
+import Papa from 'papaparse';
 
 const Users = () => {
-
   const NUM_RESULTS = 30;
   const MAX_RESULTS_PER_PAGE = 10;
 
@@ -16,21 +15,24 @@ const Users = () => {
   const [isOpenUser, setIsOpenUser] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
-
-
   /* Read the data */
   useEffect(() => {
-    Papa.parse("/src/assets/users.csv", {
-      download: true,
-      header: true,
-      complete: (results) => {
-        const rows = results.data.slice(0, NUM_RESULTS);
-        setUsers(rows);
-      },
-    });
+    fetch('http://localhost:8080/api/v1/users') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
+      .then((response) => response.json())
+      .then((data) => {
+        const usersData = data.slice(0, NUM_RESULTS);
+        setUsers(usersData);
+      })
+      .catch((error) => {
+        console.error('Error fetching users:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to fetch users from the server.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      });
   }, []);
-
-
 
   /** Users details **/
   const openDialogUser = (user) => {
@@ -42,8 +44,6 @@ const Users = () => {
     setIsOpenUser(false);
   };
   /*************************** */
-
-
 
   /* Handle pages */
   useEffect(() => {
@@ -68,7 +68,6 @@ const Users = () => {
     }
   };
   /******************************************************* */
-
 
   /** Handle download data  **/
   const downloadCSV = () => {
@@ -98,13 +97,11 @@ const Users = () => {
   };
   /************************************************ */
 
-
-
   const approveHostApplication = (name) => {
     Swal.fire({
       title: `${name} application successfully approved!`,
       icon: 'success',
-      confirmButtonText: 'OK'
+      confirmButtonText: 'OK',
     }).then(() => {
       setIsOpenUser(false);
     });
@@ -124,8 +121,15 @@ const Users = () => {
             className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700"
             onClick={downloadCSV}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="h-4 w-4"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" />
             </svg>
             CSV
           </button>
@@ -133,8 +137,15 @@ const Users = () => {
             className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700"
             onClick={downloadJSON}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="h-4 w-4"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" />
             </svg>
             JSON
           </button>
@@ -142,19 +153,14 @@ const Users = () => {
       </div>
       <div className="overflow-y-hidden rounded-lg border">
         <div className="overflow-x-auto">
-          <UsersTable
-            users={filteredUsers}
-            rowClickHandler={openDialogUser}
-            iconStyle={iconStyle}
-            userIcon ={userIcon}
-          />
+          <UsersTable users={filteredUsers} rowClickHandler={openDialogUser} iconStyle={iconStyle} userIcon={userIcon} />
           {isOpenUser && (
             <UserDetails
               user={selectedUser}
               closeDialogUser={closeDialogUser}
               approveHandle={approveHostApplication}
               iconStyle={iconStyle}
-              userIcon ={userIcon}
+              userIcon={userIcon}
             />
           )}
         </div>

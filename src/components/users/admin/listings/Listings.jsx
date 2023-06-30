@@ -3,48 +3,40 @@ import Papa from 'papaparse';
 import ListingsTable from './ListingsTable';
 
 const Listings = () => {
-
   const NUM_RESULTS = 30;
   const MAX_RESULTS_PER_PAGE = 10;
 
   const [currentPage, setCurrentPage] = useState(1);
-
   const [listings, setListings] = useState([]);
   const [filteredListings, setFilteredListings] = useState([]);
 
-
-  /* Import Data */
   useEffect(() => {
-    Papa.parse("/src/assets/listings.csv", {
-      download: true,
-      header: true,
-      complete: (results) => {
-        const processedListings = results.data.map(({ host_name, host_location, name, id, medium_url }) => ({
-          host_name,
-          host_location,
-          name,
-          id,
-          medium_url,
+    fetch('http://localhost:8080/api/v1/cards')
+      .then((response) => response.json())
+      .then((data) => {
+        const processedListings = data.map((listing) => ({
+          id: listing.id,
+          name: listing.name,
+          host_location: listing.hostLocation,
+          host_name: listing.hostName,
+          medium_url: listing.mediumUrl,
         }));
         setListings(processedListings.slice(0, NUM_RESULTS));
-      },
-    });
+      })
+      .catch((error) => {
+        console.error('Error fetching listings:', error);
+      });
   }, []);
 
-
-
-  /* Handle pages */
   useEffect(() => {
     const start = (currentPage - 1) * MAX_RESULTS_PER_PAGE;
     const end = start + MAX_RESULTS_PER_PAGE;
     setFilteredListings(listings.slice(start, end));
   }, [currentPage, listings]);
 
-
   const totalPages = () => {
     return listings ? Math.ceil(listings.length / MAX_RESULTS_PER_PAGE) : 1;
   };
-
 
   const nextPageHandle = () => {
     if (currentPage < totalPages()) {
@@ -57,10 +49,7 @@ const Listings = () => {
       setCurrentPage((prevPage) => prevPage - 1);
     }
   };
-  /******************************************************** */
 
-
-  /** Handle download data  **/
   const downloadCSV = () => {
     const csv = Papa.unparse(listings);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -74,7 +63,6 @@ const Listings = () => {
     document.body.removeChild(link);
   };
 
-
   const downloadJSON = () => {
     const json = JSON.stringify(listings, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
@@ -87,7 +75,6 @@ const Listings = () => {
     link.click();
     document.body.removeChild(link);
   };
-  /*******************************************************/
 
   const iconStyle = 'h-10 w-10 rounded-full object-cover';
 
@@ -96,7 +83,7 @@ const Listings = () => {
       <div className="flex items-center justify-between pb-6">
         <div>
           <h2 className="font-semibold text-gray-700">Listings</h2>
-          <span className="text-sm text-gray-500">View listings</span>
+          <span className="text-sm text-gray-500">View listings being currently booked</span>
         </div>
         <div className="ml-10 space-x-8 flex flex-rows lg:ml-40">
           <button
@@ -121,10 +108,7 @@ const Listings = () => {
       </div>
       <div className="overflow-y-hidden rounded-lg border">
         <div className="overflow-x-auto">
-        <ListingsTable
-            listings={filteredListings}
-            iconStyle = {iconStyle}
-        />
+          <ListingsTable listings={filteredListings} />
         </div>
         <div className="flex flex-col items-center border-t bg-white px-5 py-5 sm:flex-row sm:justify-between">
           <span className="text-xs text-gray-600 sm:text-sm">
