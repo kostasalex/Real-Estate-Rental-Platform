@@ -41,7 +41,7 @@ export const login = {
   submitButtonLabel: 'Don\'t have an account? Sign up',
 };
 
-import { FaMapMarkerAlt, FaCalendarAlt, FaUsers, FaParking } from "react-icons/fa";
+import { FaMapMarkerAlt, FaCalendarAlt, FaUsers, FaParking, FaSwimmingPool } from "react-icons/fa";
 import { AiOutlineWifi } from "react-icons/ai"
 import { TbAirConditioning, TbToolsKitchen2 } from "react-icons/tb"
 import { FiMonitor } from "react-icons/fi"
@@ -70,9 +70,9 @@ export const filterCategories2 = {
   roomType: {
     label: "Room Type",
     options:{
-      hotel: "Hotel",
-      apartment: "Apartment",
-      villa: "Villa"
+      entire_home: "Entire home/apt",
+      private_room: "Private room",
+      shared_room: "Shared room"
     }
   },
   amenities: {
@@ -84,6 +84,7 @@ export const filterCategories2 = {
       tv: "TV",
       parking: "Parking",
       elevator: "Elevator",
+      pool: "pool",
     },
     icons: {
       wifi: <AiOutlineWifi />,
@@ -92,6 +93,7 @@ export const filterCategories2 = {
       tv: <FiMonitor />,
       parking: <FaParking />,
       elevator: <MdElevator />,
+      pool: <FaSwimmingPool />,
     }
   },
 };

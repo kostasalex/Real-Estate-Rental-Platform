@@ -76,32 +76,8 @@ const Cards = ({listings}) => {
           </div>)}
 
             <div className="flex flex-wrap">
-                {listings && listings.slice((currentPage - 1)  * MAX_RESULTS_PER_PAGE , MAX_RESULTS_PER_PAGE + ((currentPage-1)  * MAX_RESULTS_PER_PAGE )).map(
-                ({
-                    thumbnail_url,
-                    medium_url,
-                    price,
-                    room_type,
-                    beds,
-                    number_of_reviews,
-                    review_scores_rating,
-                    street,
-                    description,
-                }) => (
-                    <Card
-                    key={thumbnail_url}
-                    thumbnail_url={thumbnail_url}
-                    medium_url={medium_url}
-                    price={price}
-                    room_type={room_type}
-                    beds={beds}
-                    number_of_reviews={number_of_reviews}
-                    review_scores_rating={review_scores_rating}
-                    street={street}
-                    description={description}
-                    />
-                )
-                )}
+                {listings && listings.slice((currentPage - 1)  * MAX_RESULTS_PER_PAGE , MAX_RESULTS_PER_PAGE + ((currentPage-1)  * MAX_RESULTS_PER_PAGE )).map((listing, index) => (
+                    <Card key={index} id={listing.cardUid} {...listing} />))}
             </div>
             {totalPages() > 0 && (
         <div className="mt-6 sm:flex sm:items-center sm:justify-between flex-col ">

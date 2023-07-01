@@ -5,7 +5,22 @@ import SelectButton from '/src/components/common/buttons/SelectButton'
 
 const Filters = ({filters, handleOptionSelect, handleMaxPriceChange}) => {
    
-    
+    const [maxPriceInput, setMaxPriceInput] = React.useState('');
+    const [toggleUpdate, setToggleUpdate] = React.useState(false);
+
+    React.useEffect(() => {
+        if(!filters.maxPrice)setMaxPriceInput("");
+      }, [filters.maxPrice]);
+
+    const handleUpdateMaxPrice = (value) => {
+        setMaxPriceInput(value);
+        setToggleUpdate(true);
+    };
+
+    const handleUpdateButton = () => {
+        handleMaxPriceChange(maxPriceInput);
+        setToggleUpdate(false);
+    }
 
     return (
         <div className='flex flex-col pt-2'>
@@ -16,13 +31,20 @@ const Filters = ({filters, handleOptionSelect, handleMaxPriceChange}) => {
                     <label className="flex rounded-xl mb-1 uppercase text-grey-darker text-xs font-bold">{f.maxPrice.label}</label>
                     <div className="flex flex-row ">
                     <span className="flex items-center bg-grey-lighter rounded rounded-r-none px-3 font-bold text-grey-darker">$</span>
-                    <input type="number"
+                    <input
+                        type="number"
                         name="price"
                         placeholder=""
-                        className="rounded-xl bg-grey-lighter text-grey-darker py-2 px-2 font-normal  text-grey-darkest border border-grey-lighter rounded-l-none font-bold"
-                        value={filters.maxPrice}
-                        onChange={handleMaxPriceChange}
-                    />
+                        className="rounded-xl bg-grey-lighter text-grey-darker py-2 px-2 font-normal text-grey-darkest border border-grey-lighter rounded-l-none font-bold"
+                        value={maxPriceInput}
+                        onChange={(e) => handleUpdateMaxPrice(e.target.value)}
+                        />
+                    {toggleUpdate && maxPriceInput ? (<button className = "text-sm ml-2 py-1 px-2 opacity-80 hover:shadow-xl hover:opacity-100 text-gray-100 shadow-sm font-bold bg-blue1 rounded-lg"
+                        onClick={() => handleUpdateButton()}> Update
+                    </button>)
+                    :(<button className = "text-sm ml-2 py-1 px-2 bg-gray-400  text-gray-100 shadow-sm font-bold bg-blue1 rounded-lg"
+                    > Update
+                </button>)}                   
                     </div>
                 </div>
                 {/* Room Type */}

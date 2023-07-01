@@ -2,18 +2,23 @@ package com.example.demo.dao;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.model.Card;
 
 @Component
 public interface CardDao {
-    
+
     List<Card> selectAllCards();
+
     Optional<Card> selectCardByCardId(String cardId);
+
     int updateCard(Card card);
+
     int deleteCardByCardId(String carId);
-    int insertCard(String carId,Card card); 
-    
+
+    int insertCard(String carId, Card card);
+
+    List<Card> searchCards(String filters);
 }

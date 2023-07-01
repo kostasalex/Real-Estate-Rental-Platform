@@ -20,24 +20,6 @@ const Results = () => {
 
   const [listings, setListings] = React.useState([]);
   
-  React.useEffect(() => {
-    Papa.parse("/src/assets/listings.csv", {
-      download: true,
-      header: true,
-      complete: (results) => {
-        // Randomly select 10 rows from the CSV file
-        const randomRows = [];
-        for (let i = 0; i < NUM_RESULTS; i++) {
-          const randomIndex = Math.floor(Math.random() * results.data.length);
-          randomRows.push(results.data[randomIndex]);
-          results.data.splice(randomIndex, 1);
-        }
-        setListings(randomRows);
-      },
-    });
-  }, []);
-
-    console.log(listings)
   /* Open/close filter section */
   const [filtersToggle, setFiltersToggle] = React.useState(true);
   const handleFilterToggle = () => {
@@ -53,14 +35,13 @@ const Results = () => {
     guests: queryParams.get('guests') || '',
   };
 
-
   /* Get filters from url if there was a previous search, or initialize them  */
   const [filters, setFilters] = React.useState({
     maxPrice: queryParams.get('maxPrice') ? queryParams.get('maxPrice')  : "",
     roomType: {
-      hotel: queryParams.get('roomType')?.includes('hotel') || false,
-      apartment: queryParams.get('roomType')?.includes('apartment') || false,
-      villa: queryParams.get('roomType')?.includes('villa') || false,
+      entire_home: queryParams.get('roomType')?.includes('entire_home') || false,
+      private_room: queryParams.get('roomType')?.includes('private_room') || false,
+      shared_room: queryParams.get('roomType')?.includes('shared_room') || false,
     },
     amenities: {
       wifi: queryParams.get('amenities')?.includes('wifi') || false,
@@ -69,18 +50,42 @@ const Results = () => {
       tv: queryParams.get('amenities')?.includes('tv') || false,
       parking: queryParams.get('amenities')?.includes('parking') || false,
       elevator: queryParams.get('amenities')?.includes('elevator') || false,
+      pool: queryParams.get('amenities')?.includes('pool') || false,
     },
   });
 
 
+  const searchListings = async () => {
+    const allFilters = JSON.stringify({ ...searchBarFilters, ...filters });
+    console.log(allFilters);
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: allFilters,
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        setListings(data);
+      } else {
+        throw new Error('Failed to retrieve search results');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   /* Set the filter state based on the search parameters when the URL changes */
   React.useEffect(() => {
     setFilters({
       maxPrice: queryParams.get('maxPrice') ? queryParams.get('maxPrice')  : "",
       roomType: {
-        hotel: queryParams.get('roomType')?.includes('hotel') || false,
-        apartment: queryParams.get('roomType')?.includes('apartment') || false,
-        villa: queryParams.get('roomType')?.includes('villa') || false,
+        entire_home: queryParams.get('roomType')?.includes('entire_home') || false,
+        private_room: queryParams.get('roomType')?.includes('private_room') || false,
+        shared_room: queryParams.get('roomType')?.includes('shared_room') || false,
       },
       amenities: {
         wifi: queryParams.get('amenities')?.includes('wifi') || false,
@@ -89,8 +94,10 @@ const Results = () => {
         tv: queryParams.get('amenities')?.includes('tv') || false,
         parking: queryParams.get('amenities')?.includes('parking') || false,
         elevator: queryParams.get('amenities')?.includes('elevator') || false,
+        pool: queryParams.get('amenities')?.includes('pool') || false,
       },
     });
+    searchListings()
   }, [location.search]);
 
 
@@ -107,11 +114,11 @@ const Results = () => {
     if (filters.maxPrice !== '') url += `&maxPrice=${filters.maxPrice}`;
     if (roomTypeFilters !== '') url += `&roomType=${roomTypeFilters}`;
     if (amenityFilters !== '') url += `&amenities=${amenityFilters}`;
-    if (filters.maxPrice !== '') url += `&maxPrice=${filters.maxPrice}`;
-  
+
     hasOptions();
     navigate(url);
   };  
+  
   React.useEffect(() => {
     console.log("Updating filter URL")
     updateFilterURL()
@@ -119,8 +126,7 @@ const Results = () => {
 
 
   /*  Change filter handlers */
-  const handleMaxPriceChange = (event) => {
-    const { value } = event.target;
+  const handleMaxPriceChange = (value) => {
     setFilters((filters) => ({
       ...filters,
       maxPrice: value,
