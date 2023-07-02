@@ -126,17 +126,17 @@ function CardDetails() {
 	}, [accommodates, arrivalDate, departureDate]);
 
 	useEffect(() => {
-		Papa.parse("/src/assets/reviews.csv", {
-			download: true,
-			header: true,
-			complete: (results) => {
-				// Filter rows where card_id is equal to listing_id
-				const filteredRows = results.data.filter((row) => cardProps.id === row.listing_id);
-				// Set the filtered rows to the state
-				setReviews(filteredRows);
-			},
-		});
+		fetch('http://localhost:8080/api/v1/reviews')
+			.then((response) => response.json())
+			.then((data) => {
+				const filteredReviews = data.filter((review) => cardProps.id === review.listing_id);
+				setReviews(filteredReviews);
+			})
+			.catch((error) => {
+				console.error('Error fetching reviews:', error);
+			});
 	}, []);
+
 
 
 	const [question, setQuestion] = useState('');

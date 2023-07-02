@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Card;
+import com.example.demo.model.Review;
 import com.example.demo.model.User;
 import com.example.demo.service.CardService;
 import com.example.demo.service.UserService;
+import com.example.demo.service.ReviewService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173/", maxAge = 3600)
@@ -23,10 +25,12 @@ public class DemoApplication {
 
     private final CardService cardService;
     private final UserService userService;
+    private final ReviewService reviewService;
 
-    public DemoApplication(CardService cardService, UserService userService) {
+    public DemoApplication(CardService cardService, UserService userService,ReviewService reviewService) {
         this.cardService = cardService;
         this.userService = userService;
+        this.reviewService = reviewService;
     }
 
     public static void main(String[] args) {
@@ -43,5 +47,11 @@ public class DemoApplication {
     @ResponseBody
     public List<User> fetchUsers() {
         return userService.getAllUsers();
+    }
+
+    @GetMapping("/reviews")
+    @ResponseBody
+    public List<Review> fetchReviews() {
+        return reviewService.getAllReviews();
     }
 }

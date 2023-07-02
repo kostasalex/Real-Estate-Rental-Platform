@@ -13,7 +13,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 import com.example.demo.model.Card;
-import com.example.demo.model.FilterModel;
 
 @Component
 public class FakeDataDaoCard implements CardDao {
@@ -191,8 +190,8 @@ public class FakeDataDaoCard implements CardDao {
             filtersJson = objectMapper.readTree(filters);
 
             String location = filtersJson.get("location").asText();
-            String arrive = filtersJson.get("arrive").asText();
-            String leave = filtersJson.get("leave").asText();
+            // String arrive = filtersJson.get("arrive").asText();
+            // String leave = filtersJson.get("leave").asText();
             String guests = filtersJson.get("guests").asText();
             String maxPrice = filtersJson.get("maxPrice").asText();
 
