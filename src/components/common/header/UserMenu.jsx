@@ -1,10 +1,11 @@
 import React from 'react'
 import {Link} from "react-router-dom"
-import {FaUserCircle}  from "react-icons/fa";
-import {FaUserCheck}  from "react-icons/fa";
+import {FaUserCircle, FaUserCheck}  from "react-icons/fa";
+import {ImExit} from "react-icons/im"
+import {BsChatSquareTextFill} from "react-icons/bs"
+import {IoMdSettings} from "react-icons/io"
 
-
-const UserMenu = ({loggedInUserType, handleLogout}) => {
+const UserMenu = ({loggedInUserType, handleLogout, handleMessages}) => {
 
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const menuRef = React.useRef(null);
@@ -61,7 +62,7 @@ const UserMenu = ({loggedInUserType, handleLogout}) => {
 
                         <nav 
                             onClick={handleMenuToggle}
-                            className=" flex flex-col text-left mt-3 shadow-lg w-32 bg-white absolute duration-500  ">
+                            className=" flex flex-col text-left mt-3 shadow-lg w-32 bg-white absolute mr-4 duration-500  ">
                             {!loggedInUserType && 
                                 <div>
                                     <Link to ="/signup">
@@ -79,18 +80,34 @@ const UserMenu = ({loggedInUserType, handleLogout}) => {
                             {loggedInUserType && 
                             <div>
                                 <div className="flex rounded-lg px-4 py-2 text-gray-500 opacity-80">
-                                        <span 
-                                            className="mr-3 text-sm font-medium"
-                                            >
-                                            Dashboard 
-                                        </span>
+                                <div className='rounded-full p-1 mr-2'>
+                                        <IoMdSettings/>
+                                    </div>
+                                    <div 
+                                        className="mr-3 text-sm font-medium">
+                                        Acount Settings 
+                                    </div>
                                 </div>  
-                                <div className="flex  cursor-pointer px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                                <div className="flex cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                                    <div className='rounded-full p-1 mr-2'>
+                                        <BsChatSquareTextFill/>
+                                    </div>
+                                    <div 
+                                        className="mr-3 text-sm font-medium"
+                                        onClick={() => handleMessages()}>
+                                        Messages 
+                                    </div>
+                                </div>  
+                                <div className="flex  items-center cursor-pointer px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                                 onClick={() => handleLogout()}>
-                                        <span 
+
+                                        <div className='rounded-full p-1 mr-2'>
+                                            <ImExit/>
+                                        </div>
+                                        <div 
                                             className="mr-3 text-sm font-medium">
                                             Exit 
-                                        </span>
+                                        </div>
                                 </div>                              
                             </div>
                             }

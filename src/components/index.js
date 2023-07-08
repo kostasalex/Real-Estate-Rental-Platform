@@ -15,3 +15,4 @@ export {default as AdminReviews} from './users/admin/reviews/Reviews';
 export {default as AdminUsers} from './users/admin/users/Users';
 export {default as Navbar} from './common/navbars/Sidebar';
 export {default as AdminHomepage} from './users/admin/homepage/Homepage';
+export {default as Messages} from './common/messages/Messages'

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, SeekerHomepage, HostHomepage, NewListing,  Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
+import { Header, SeekerHomepage, HostHomepage, NewListing, Messages,  Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -23,18 +23,24 @@ function App() {
 
   const handleLogout = () => {
     navigate('/');
-    console.log('Logout button clicked');
     setLoggedInUserType(null);
     localStorage.removeItem('loggedInUserType');
   };
 
+  
+  const handleMessages = () => {
+    navigate('/messages');
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="App mt-20">
       {loggedInUserType === 'Admin' && <AdminDashboard />}
-        <Header loggedInUserType={loggedInUserType} handleLogout={handleLogout} handleUserType = {handleUserType} />
+        <Header loggedInUserType={loggedInUserType} handleLogout={handleLogout} handleUserType = {handleUserType} handleMessages={handleMessages}/>
         <Routes>
+          {loggedInUserType && (
+            <Route path = "/messages" element={<Messages/>}/>
+          )}
           {loggedInUserType === 'Admin' && (
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           )}
