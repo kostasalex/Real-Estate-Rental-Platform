@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,10 @@ public class UserController {
     @PostMapping("/api/v1/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         // Check if the user already exists
-        if (userDao.selectUserByUserId(user.getId()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists");
+        if (userDao.selectUserByEmail(user.getEmail()).isPresent()) {
+            System.out.print(user.getEmail());
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Email already registered. Please use a different email.");
         }
 
         // You can perform additional validations on the user data here
@@ -37,12 +40,14 @@ public class UserController {
     }
 
     @PostMapping("/api/v1/login")
-    public ResponseEntity<String> loginUser(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User user) {
         // Check if the user exists and the credentials are correct
-        if (userDao.authenticateUser(user.getEmail(), user.getPassword())) {
-            return ResponseEntity.ok("Login successful");
+        Map<String, Object> userDetails = userDao.authenticateUser(user.getEmail(), user.getPassword());
+        if (userDetails != null) {
+            return ResponseEntity.ok(userDetails);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
+
 }

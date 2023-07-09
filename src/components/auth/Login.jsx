@@ -13,6 +13,7 @@ const Login = (props) => {
     navigate('/signup');
   };
 
+
   const onSubmit = async (values, actions) => {
     console.log('Form submitted');
     try {
@@ -26,9 +27,13 @@ const Login = (props) => {
 
       if (response.ok) {
         // User login successful
-        const data = await response.text();
-        // Temporary by default all users will be Seekers.
-        props.handleLogin("Seeker");
+        const userData = await response.json();
+        const userData2 = {
+          ...userData,
+          email: values.email
+        };
+        
+        props.handleLogin(userData2);
         navigate('/');
       } else if (response.status === 401) {
         // User not found or incorrect credentials

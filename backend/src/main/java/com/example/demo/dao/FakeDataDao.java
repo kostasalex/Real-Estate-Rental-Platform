@@ -4,9 +4,11 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 import com.example.demo.model.User;
@@ -43,6 +45,25 @@ public class FakeDataDao implements UserDao {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?");) {
             stmt.setString(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    User user = mapResultSetToUser(rs);
+                    return Optional.of(user);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> selectUserByEmail(String userEmail) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE email = ?");) {
+            stmt.setString(1, userEmail);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     User user = mapResultSetToUser(rs);
@@ -101,22 +122,34 @@ public class FakeDataDao implements UserDao {
     }
 
     @Override
-    public boolean authenticateUser(String email, String password) {
-
+    public Map<String, Object> authenticateUser(String email, String password) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn
                         .prepareStatement("SELECT * FROM users WHERE email = ? AND password = ?");) {
             stmt.setString(1, email);
             stmt.setString(2, password);
             try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next(); // Returns true if the query has a result, indicating valid credentials
+                if (rs.next()) {
+                    int id = rs.getInt("id");
+                    String firstName = rs.getString("first_name");
+                    int hostApplication = rs.getInt("host_application");
+                    String userType = (hostApplication == 2) ? "Host" : "Seeker";
+
+                    // Create a map to hold the user information
+                    Map<String, Object> userMap = new HashMap<>();
+                    userMap.put("id", id);
+                    userMap.put("firstName", firstName);
+                    userMap.put("userType", userType);
+
+                    return userMap;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle the exception as needed
         }
 
-        return false; // Invalid credentials
+        return null; // Invalid credentials or user not found
     }
 
     @Override

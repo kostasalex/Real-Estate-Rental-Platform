@@ -29,7 +29,7 @@ const SignUp = (props) => {
         if (rentingPlace === true) {
             msg = "\nHost Application Received. We will notify you as soon as it is approved.";
         }
-
+    
         try {
             // Send the form data to the backend and handle the response
             const response = await fetch('http://localhost:8080/api/v1/register', {
@@ -39,7 +39,7 @@ const SignUp = (props) => {
                 },
                 body: JSON.stringify(values)
             });
-
+    
             if (response.ok) {
                 Swal.fire({
                     title: 'Welcome ' + values.Username + '!',
@@ -50,11 +50,26 @@ const SignUp = (props) => {
                     /* Navigate previous paths */
                     let userType = 'Seeker';
                     if (rentingPlace) userType = 'Host';
-                    props.handleLogin(userType);
+                    const userData = {
+                        id: values.id,
+                        firstName: values.Username,
+                        userType: userType,
+                        email: values.email
+                      };
+                      
+
+                    props.handleLogin(userData);
                     navigate('/');
                 });
+
             } else {
-                throw new Error('Failed to send form data');
+                const errorMessage = await response.text(); // Extract the error message from the response body
+                Swal.fire({
+                    title: 'Error',
+                    text: errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             }
         } catch (error) {
             console.error(error);
@@ -66,9 +81,17 @@ const SignUp = (props) => {
             });
         }
     };
+    
 
     const handleAdmin = () => {
-        props.handleLogin('Admin');
+        let userType = 'Admin';
+        const userData = {
+            id: values.id,
+            firstName: values.Username,
+            userType: userType,
+            email: values.email
+          };
+        props.handleLogin(userData);
         navigate('/');
     };
 

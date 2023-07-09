@@ -15,8 +15,8 @@ public class User {
     private final String imageUrl;
 
     public User(String id, String username, String email, String firstName, String lastName, String phoneNumber,
-                String address, String password, String registerDate, String isAdmin, String hostApplication,
-                String imageUrl) {
+            String address, String password, String registerDate, String isAdmin, String hostApplication,
+            String imageUrl) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -77,6 +77,10 @@ public class User {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public String getUserType() {
+        return (hostApplication.equals("2")) ? "Host" : "Seeker";
     }
 
     @Override

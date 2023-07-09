@@ -1,24 +1,83 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { Header, SeekerHomepage, HostHomepage, NewListing, Messages,  Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import Swal from "sweetalert2";
 
 function App() {
 
   const navigate = useNavigate();
 
-  const [loggedInUserType, setLoggedInUserType] = React.useState(
+  const [loggedInUserType, setLoggedInUserType] = useState(
     localStorage.getItem('loggedInUserType') || null
   );
+
+  const [loggedInUser, setLoggedInUser] = useState(
+    JSON.parse(localStorage.getItem('loggedInUser')) || {}
+  );
+
+  const [lastActivity, setLastActivity] = useState(Date.now());
+
+  useEffect(() => {
+    const resetActivityTimer = () => {
+      setLastActivity(Date.now());
+    };
+  
+    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll'];
+  
+    activityEvents.forEach((event) => {
+      window.addEventListener(event, resetActivityTimer);
+    });
+  
+    return () => {
+      activityEvents.forEach((event) => {
+        window.removeEventListener(event, resetActivityTimer);
+      });
+    };
+  }, []);
+
+
+  useEffect(() => {
+    const logoutTimeout = 10 * 60 * 1000; // 10 minutes timeout in milliseconds
+  
+    const checkActivity = () => {
+      const currentTime = Date.now();
+      const elapsedTime = currentTime - lastActivity;
+  
+      if (elapsedTime > logoutTimeout && loggedInUserType !== null) {
+        handleLogout();
+        Swal.fire({
+          title: 'Logged Out',
+          text: 'You have been logged out due to inactivity.',
+          icon: 'info',
+          confirmButtonText: 'OK',
+        });
+      }
+    };
+  
+    const activityCheckInterval = setInterval(checkActivity, 60000); // Check every minute
+  
+    return () => {
+      clearInterval(activityCheckInterval);
+    };
+  }, [lastActivity, loggedInUserType]);
+  
 
   const handleUserType = (userType) => {
     setLoggedInUserType(userType);
   };
 
-  const handleLogin = (userType) => {
-    handleUserType(userType);
+  const handleLogin = (userData) => {
+    const { id, firstName, userType, email } = userData;
+    // Save the user details to local storage
+    console.log(id + " - " + firstName + " - " + userType + " - " + email);
+    localStorage.setItem('loggedInUserId', id);
+    localStorage.setItem('loggedInUserName', firstName);
+    localStorage.setItem('loggedInUserEmail', email);
     localStorage.setItem('loggedInUserType', userType);
+    handleUserType(userType);
   };
 
   const handleLogout = () => {
