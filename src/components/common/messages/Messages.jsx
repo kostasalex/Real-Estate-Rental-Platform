@@ -4,22 +4,39 @@ import { TbSend } from 'react-icons/tb';
 
 const Messages = () => {
   const [users, setUsers] = useState([
-    { id: 1, name: 'John' },
-    { id: 2, name: 'Henry Boyd' },
-    { id: 3, name: 'Marta Curtis' },
+    { id: 5679, name: 'John' },
+    { id: 1, name: 'Henry Boyd' },
+    { id: 1234, name: 'Marta Curtis' },
   ]);
 
   const [selectedUser, setSelectedUser] = useState(users[1]);
   const [newMessage, setNewMessage] = useState('');
+  const [messages, setMessages] = useState([]);
 
-  const [messages, setMessages] = useState([
-    { id: 1, sender: 1, recipient: 2, content: "Hi Henry, I'm interested in your Airbnb listing." },
-    { id: 2, sender: 2, recipient: 1, content: "Hello John! I'm glad you're interested. It's a beautiful place." },
-    { id: 3, sender: 1, recipient: 2, content: 'Can you tell me more about the amenities?' },
-    { id: 4, sender: 2, recipient: 1, content: "Sure! The amenities include a pool, gym, and a stunning view of the city." },
-    { id: 5, sender: 1, recipient: 3, content: 'Hi Marta, is your Airbnb available for next month?' },
-    { id: 6, sender: 3, recipient: 1, content: "Hi John! Yes, it's available. Let me know your preferred dates." },
-  ]);
+  const userId = 5679;
+  const fetchUserMessages = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/messages/resource/user/${userId}`);
+      if (response.ok) {
+        const messages = await response.json();
+        setMessages(messages);
+      } else {
+        throw new Error('Failed to fetch user messages');
+      }
+    } catch (error) {
+      console.error(error);
+      // Handle the error
+    }
+  };
+  
+  
+  // Call the function to fetch messages for a specific user
+  React.useEffect(() => {
+
+    fetchUserMessages(userId);
+    console.log(messages);
+  }, [selectedUser]);
+
 
   const handleUserClick = (user) => {
     setSelectedUser(user);
@@ -28,29 +45,44 @@ const Messages = () => {
   const getUserMessages = (userId) => {
     return messages.filter(
       (message) =>
-        (message.sender === userId && message.recipient === 1) ||
-        (message.sender === 1 && message.recipient === userId)
+        message.senderId === userId || message.recipientId === userId
     );
   };
+
 
   const handleInputChange = (event) => {
     setNewMessage(event.target.value);
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (newMessage.trim() === '') return;
-
-    const newId = messages.length + 1;
-
+  
     const newMessageObj = {
-      id: newId,
-      sender: 1,
-      recipient: selectedUser.id,
+      senderId: userId,
+      recipientId: selectedUser.id,
       content: newMessage,
     };
-
-    setMessages((prevMessages) => [...prevMessages, newMessageObj]);
-    setNewMessage('');
+  
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newMessageObj),
+      });
+  
+      if (response.ok) {
+        // Message sent successfully, update the state or fetch the updated messages
+        fetchUserMessages(userId);
+        setNewMessage('');
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error) {
+      console.error(error);
+      // Handle the error
+    }
   };
 
   const handleKeyDown = (event) => {
@@ -76,9 +108,9 @@ const Messages = () => {
                   {users.length - 1}
                 </span>
               </div>
-              <div className="flex flex-col space-y-1 mt-4 -mx-2 h-full overflow-auto">
+              <div className="flex flex-col space-y-1 mt-4 -mx-2 h-full  overflow-auto">
                 {users.map((user) =>
-                  user.id !== 1 ? (
+                  user.id !== userId && (
                     <button
                       key={user.id}
                       className={`flex flex-row items-center hover:bg-gray-100 rounded-xl p-2 ${
@@ -86,12 +118,12 @@ const Messages = () => {
                       }`}
                       onClick={() => handleUserClick(user)}
                     >
-                      <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
+                      <div className="flex items-center justify-center h-8 w-8 font-semibold bg-indigo-200 rounded-full">
                         {user.name.charAt(0)}
                       </div>
-                      <div className="ml-2 text-sm font-semibold">{user.name}</div>
+                      <div className="ml-2 text-md font-semibold">{user.name}</div>
                     </button>
-                  ) : null
+                  )
                 )}
               </div>
             </div>
@@ -106,27 +138,27 @@ const Messages = () => {
                       <div
                         key={message.id}
                         className={`flex flex col gap-y-2 ${
-                          message.sender === 1 ? 'justify-end' : 'justify-'
+                          message.senderId === userId ? 'justify-end' : 'justify-'
                         }`}
                       >
-                        <div className="col-start-1 col-end-8 p-3 rounded-lg">
+                        <div className="col-start-1 font-semibold col-end-8 p-3 rounded-lg">
                           <div className={`flex flex-row items-center ${
-                                message.sender === 1 ? 'justify-end' : 'justify-start'
+                                message.senderId === userId ? 'justify-end' : 'justify-start'
                               } flex-shrink-0`}>
-                            {message.sender !== 1 && 
+                            {message.senderId !== userId && 
                             (<div
                               className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-200 flex-shrink-0"
                             >
                               {selectedUser.name.charAt(0)}
                             </div>)}
-                            <div className={`relative ml-3 text-sm bg-white py-2 px-4 shadow  ${
-                                message.sender === 1 ? 'bg-blue-200' : 'bg-indigo-500'} rounded-xl`}>
+                            <div className={`relative ml-3 text-md  py-2 px-4 shadow  ${
+                                message.senderId === userId ? 'bg-blue-200' : 'bg-white'} rounded-xl`}>
                               <div>{message.content}</div>
 
                             </div>
-                            {message.sender === 1 && 
+                            {message.senderId === userId && 
                               (<div
-                                className="flex items-center justify-center h-10 w-10 rounded-full ml-3 bg-indigo-500 flex-shrink-0"
+                                className="flex items-center  justify-center h-10 w-10 rounded-full ml-3 bg-indigo-500 flex-shrink-0"
                               >
                                 {users[0].name.charAt(0)}
                               </div>)}
