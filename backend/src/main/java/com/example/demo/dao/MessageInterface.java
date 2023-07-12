@@ -4,7 +4,7 @@ import com.example.demo.model.Message;
 
 import java.util.List;
 
-public interface MessageDao {
+public interface MessageInterface {
     int insertMessage(Message message);
 
     List<Message> getUserMessages(int userId);

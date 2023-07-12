@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dao.MessageDao;
+import com.example.demo.dao.MessageInterface;
 import com.example.demo.model.Message;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +13,9 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8080")
 public class MessageController {
 
-    private final MessageDao messageDao;
+    private final MessageInterface messageDao;
 
-    public MessageController(MessageDao messageDao) {
+    public MessageController(MessageInterface messageDao) {
         this.messageDao = messageDao;
     }
 

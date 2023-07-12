@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import com.example.demo.model.User;
 
-public interface UserDao {
+public interface UserInterface {
 
     List<User> selectAllUsers();
 

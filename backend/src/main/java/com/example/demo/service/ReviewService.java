@@ -5,15 +5,15 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dao.ReviewDao;
+import com.example.demo.dao.ReviewInterface;
 import com.example.demo.model.Review;
 
 @Service
 public class ReviewService {
 
-    private ReviewDao reviewDao;
+    private ReviewInterface reviewDao;
 
-    public ReviewService(ReviewDao reviewDao) {
+    public ReviewService(ReviewInterface reviewDao) {
         this.reviewDao = reviewDao;
     }
 

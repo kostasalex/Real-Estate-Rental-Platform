@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.model.Review;
 
 @Component
-public class FakaDataDaoReview implements ReviewDao {
+public class ReviewImpl implements ReviewInterface {
 
     // Database connection details
     private static final String DB_URL = "jdbc:mysql://localhost:3306/rentspot_db";

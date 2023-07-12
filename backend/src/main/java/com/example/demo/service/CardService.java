@@ -5,17 +5,15 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dao.CardDao;
+import com.example.demo.dao.CardInterface;
 import com.example.demo.model.Card;
 
 @Service
 public class CardService {
 
-    private CardDao cardDao;
+    private CardInterface cardDao;
 
-
-
-    public CardService(CardDao cardDao) {
+    public CardService(CardInterface cardDao) {
         this.cardDao = cardDao;
     }
 
@@ -32,7 +30,7 @@ public class CardService {
         Optional<Card> optionalCard = getCard(card.getId());
         if (optionalCard.isPresent()) {
             cardDao.updateCard(card);
-            return 1; 
+            return 1;
         }
         return -1;
     }

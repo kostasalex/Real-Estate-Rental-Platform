@@ -5,12 +5,17 @@ import java.util.Optional;
 
 import com.example.demo.model.Review;
 
-public interface ReviewDao {
-    
+public interface ReviewInterface {
+
     List<Review> selectAllReviews();
+
     Optional<Review> selectReviewByReviewId(String reviewId);
+
     int updateReview(Review review);
+
     int deleteReviewByReviewId(String reviewId);
-    int insertReview(String reviewId, Review review); 
+
+    int insertReview(String reviewId, Review review);
+
     boolean authenticateReview(String email, String password);
 }

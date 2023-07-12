@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dao.MessageDao;
+import com.example.demo.dao.MessageInterface;
 import com.example.demo.model.Message;
 
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.List;
 @Service
 public class MessageService {
 
-    private final MessageDao messageDao;
+    private final MessageInterface messageDao;
 
-    public MessageService(MessageDao messageDao) {
+    public MessageService(MessageInterface messageDao) {
         this.messageDao = messageDao;
     }
 

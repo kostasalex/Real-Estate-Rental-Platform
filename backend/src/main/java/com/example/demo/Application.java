@@ -21,20 +21,20 @@ import com.example.demo.service.ReviewService;
 @CrossOrigin(origins = "http://localhost:5173/", maxAge = 3600)
 @RequestMapping("/")
 @SpringBootApplication
-public class DemoApplication {
+public class Application {
 
     private final CardService cardService;
     private final UserService userService;
     private final ReviewService reviewService;
 
-    public DemoApplication(CardService cardService, UserService userService,ReviewService reviewService) {
+    public Application(CardService cardService, UserService userService, ReviewService reviewService) {
         this.cardService = cardService;
         this.userService = userService;
         this.reviewService = reviewService;
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @GetMapping("/cards")

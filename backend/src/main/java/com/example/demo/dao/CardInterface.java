@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.model.Card;
 
 @Component
-public interface CardDao {
+public interface CardInterface {
 
     List<Card> selectAllCards();
 

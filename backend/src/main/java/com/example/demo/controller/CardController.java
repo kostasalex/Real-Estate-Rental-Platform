@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dao.CardDao;
+import com.example.demo.dao.CardInterface;
 import com.example.demo.model.Card;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +11,9 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class CardController {
 
-    private final CardDao cardDao;
+    private final CardInterface cardDao;
 
-    public CardController(CardDao cardDao) {
+    public CardController(CardInterface cardDao) {
         this.cardDao = cardDao;
     }
 

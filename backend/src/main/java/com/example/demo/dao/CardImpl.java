@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.model.Card;
 
 @Component
-public class FakeDataDaoCard implements CardDao {
+public class CardImpl implements CardInterface {
 
     // Database connection details
     private static final String DB_URL = "jdbc:mysql://localhost:3306/rentspot_db";
@@ -280,7 +280,6 @@ public class FakeDataDaoCard implements CardDao {
         }
         return values;
     }
-
 
     private Card mapResultSetToCard(ResultSet rs) throws SQLException {
         String id = rs.getString("id");

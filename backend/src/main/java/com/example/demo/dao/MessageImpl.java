@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public class FakeMessageDao implements MessageDao {
+public class MessageImpl implements MessageInterface {
 
     private final List<Message> messages;
 
-    public FakeMessageDao() {
+    public MessageImpl() {
         this.messages = new ArrayList<>();
     }
 

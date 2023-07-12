@@ -6,15 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.User;
-import com.example.demo.dao.UserDao;
+import com.example.demo.dao.UserInterface;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
 public class UserController {
 
-    private final UserDao userDao;
+    private final UserInterface userDao;
 
-    public UserController(UserDao userDao) {
+    public UserController(UserInterface userDao) {
         this.userDao = userDao;
     }
 

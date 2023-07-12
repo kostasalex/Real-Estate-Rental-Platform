@@ -5,15 +5,15 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dao.UserDao;
+import com.example.demo.dao.UserInterface;
 import com.example.demo.model.User;
 
 @Service
 public class UserService {
 
-    private UserDao userDao;
+    private UserInterface userDao;
 
-    public UserService(UserDao userDao) {
+    public UserService(UserInterface userDao) {
         this.userDao = userDao;
     }
 

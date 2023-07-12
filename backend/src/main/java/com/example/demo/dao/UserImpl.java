@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.model.User;
 
 @Component
-public class FakeDataDao implements UserDao {
+public class UserImpl implements UserInterface {
 
     // Database connection details
     private static final String DB_URL = "jdbc:mysql://localhost:3306/rentspot_db";
