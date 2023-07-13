@@ -1,13 +1,13 @@
 -- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: rentspot_db
+-- Host: localhost    Database: airbnbdb
 -- ------------------------------------------------------
 -- Server version	8.0.33
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -105,17 +105,17 @@ DROP TABLE IF EXISTS `messages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `messages` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `message` varchar(1000) NOT NULL,
   `datetime_sent` datetime NOT NULL,
   `sender_id` int NOT NULL,
-  `reciever_id` int NOT NULL,
-  PRIMARY KEY (`id`,`sender_id`,`reciever_id`),
+  `recipient_id` int NOT NULL,
+  PRIMARY KEY (`id`,`sender_id`,`recipient_id`),
   KEY `fk_messages_users1_idx` (`sender_id`),
-  KEY `fk_messages_users2_idx` (`reciever_id`),
+  KEY `fk_messages_users2_idx` (`recipient_id`),
   CONSTRAINT `fk_messages_users1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_messages_users2` FOREIGN KEY (`reciever_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `fk_messages_users2` FOREIGN KEY (`recipient_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,6 +124,7 @@ CREATE TABLE `messages` (
 
 LOCK TABLES `messages` WRITE;
 /*!40000 ALTER TABLE `messages` DISABLE KEYS */;
+INSERT INTO `messages` VALUES (1,'Hi Henry, I\'m interested in your Airbnb listing.','2023-07-09 18:53:58',5679,1),(2,'Hello John! I\'m glad you\'re interested. It\'s a beautiful place.','2023-07-09 18:53:58',1,5679),(3,'Can you tell me more about the amenities?','2023-07-09 18:53:58',1234,1),(4,'Sure! The amenities include a pool, gym, and a stunning view of the city.','2023-07-09 18:53:58',1,1234),(5,'Hi Marta, is your Airbnb available for next month?','2023-07-09 18:53:58',5679,1234),(6,'Hi John! Yes, it\'s available. Let me know your preferred dates.','2023-07-09 18:53:58',1234,5679),(7,'adfa','2023-07-10 00:40:22',5679,1234),(8,'test 12:40 7/10/2023','2023-07-10 00:40:54',5679,1234),(9,'kjkj','2023-07-11 19:14:16',5679,1234);
 /*!40000 ALTER TABLE `messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -202,4 +203,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-01 21:39:12
+-- Dump completed on 2023-07-13 22:57:36
