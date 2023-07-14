@@ -30,16 +30,16 @@ const ReviewsTable = ({ reviews, iconStyle }) => {
                 <p className="whitespace-no-wrap">{review.date}</p>
               </td>
               <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                <p className="whitespace-no-wrap">{review.host_id}</p>
+                <p className="whitespace-no-wrap">{review.hostId}</p>
               </td>
               <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                <p className="whitespace-no-wrap">{review.listings_id}</p>
+                <p className="whitespace-no-wrap">{review.listingId}</p>
               </td>
               <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                 <p className="whitespace-no-wrap">{review.rating}</p>
               </td>
               <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                <p className="whitespace-no-wrap">{review.renter_id}</p>
+                <p className="whitespace-no-wrap">{review.renterId}</p>
               </td>
             </tr>
           ))}
