@@ -62,7 +62,7 @@ public class ReviewImpl implements ReviewInterface {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
                         "UPDATE reviews SET rating = ?, comment = ?, date = ?, renter_id = ?, listings_id = ?, host_id = ? WHERE id = ?");) {
-            stmt.setInt(1, review.getRating());
+            stmt.setFloat(1, review.getRating());
             stmt.setString(2, review.getComment());
             stmt.setString(3, review.getDate());
             stmt.setString(4, review.getRenterId());
@@ -125,7 +125,7 @@ public class ReviewImpl implements ReviewInterface {
                 PreparedStatement stmt = conn.prepareStatement(
                         "INSERT INTO reviews (id, rating, comment, date, renter_id, listings_id, host_id) VALUES (?, ?, ?, ?, ?, ?, ?)");) {
             stmt.setString(1, review.getId());
-            stmt.setInt(2, review.getRating());
+            stmt.setFloat(2, review.getRating());
             stmt.setString(3, review.getComment());
             stmt.setString(4, review.getDate());
             stmt.setString(5, review.getRenterId());
@@ -143,7 +143,7 @@ public class ReviewImpl implements ReviewInterface {
 
     private Review mapResultSetToReview(ResultSet rs) throws SQLException {
         String id = rs.getString("id");
-        int rating = rs.getInt("rating");
+        float rating = rs.getFloat("rating");
         String comment = rs.getString("comment");
         String date = rs.getString("date");
         String renterId = rs.getString("renter_id");

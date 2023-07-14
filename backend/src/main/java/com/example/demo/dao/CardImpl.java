@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -77,7 +76,7 @@ public class CardImpl implements CardInterface {
                                 "host_response_rate = ?, host_listings_count = ? WHERE id = ?");) {
             stmt.setString(1, card.getThumbnailUrl());
             stmt.setString(2, card.getMediumUrl());
-            stmt.setBigDecimal(3, card.getPrice());
+            stmt.setFloat(3, card.getPrice());
             stmt.setString(4, card.getRoomType());
             stmt.setInt(5, card.getBeds());
             stmt.setInt(6, card.getNumberOfReviews());
@@ -89,16 +88,16 @@ public class CardImpl implements CardInterface {
             stmt.setString(12, card.getHostPictureUrl());
             stmt.setString(13, card.getAmenities());
             stmt.setInt(14, card.getAccommodates());
-            stmt.setBigDecimal(15, card.getBathrooms());
+            stmt.setInt(15, card.getBathrooms());
             stmt.setInt(16, card.getBedrooms());
             stmt.setString(17, card.getBedType());
-            stmt.setBigDecimal(18, card.getLongitude());
-            stmt.setBigDecimal(19, card.getLatitude());
+            stmt.setFloat(18, card.getLongitude());
+            stmt.setFloat(19, card.getLatitude());
             stmt.setDate(20, Date.valueOf(card.getHostSince()));
             stmt.setString(21, card.getHostLocation());
             stmt.setString(22, card.getHostAbout());
             stmt.setString(23, card.getHostResponseTime());
-            stmt.setBigDecimal(24, card.getHostResponseRate());
+            stmt.setInt(24, card.getHostResponseRate());
             stmt.setInt(25, card.getHostListingsCount());
             stmt.setString(26, card.getId());
 
@@ -146,7 +145,7 @@ public class CardImpl implements CardInterface {
             stmt.setString(1, cardId);
             stmt.setString(2, card.getThumbnailUrl());
             stmt.setString(3, card.getMediumUrl());
-            stmt.setBigDecimal(4, card.getPrice());
+            stmt.setFloat(4, card.getPrice());
             stmt.setString(5, card.getRoomType());
             stmt.setInt(6, card.getBeds());
             stmt.setInt(7, card.getNumberOfReviews());
@@ -158,16 +157,16 @@ public class CardImpl implements CardInterface {
             stmt.setString(13, card.getHostPictureUrl());
             stmt.setString(14, card.getAmenities());
             stmt.setInt(15, card.getAccommodates());
-            stmt.setBigDecimal(16, card.getBathrooms());
+            stmt.setInt(16, card.getBathrooms());
             stmt.setInt(17, card.getBedrooms());
             stmt.setString(18, card.getBedType());
-            stmt.setBigDecimal(19, card.getLongitude());
-            stmt.setBigDecimal(20, card.getLatitude());
+            stmt.setFloat(19, card.getLongitude());
+            stmt.setFloat(20, card.getLatitude());
             stmt.setDate(21, Date.valueOf(card.getHostSince()));
             stmt.setString(22, card.getHostLocation());
             stmt.setString(23, card.getHostAbout());
             stmt.setString(24, card.getHostResponseTime());
-            stmt.setBigDecimal(25, card.getHostResponseRate());
+            stmt.setInt(25, card.getHostResponseRate());
             stmt.setInt(26, card.getHostListingsCount());
 
             rowsAffected = stmt.executeUpdate();
@@ -285,7 +284,7 @@ public class CardImpl implements CardInterface {
         String id = rs.getString("id");
         String thumbnailUrl = rs.getString("thumbnail_url");
         String mediumUrl = rs.getString("medium_url");
-        BigDecimal price = rs.getBigDecimal("price");
+        float price = rs.getFloat("price");
         String roomType = rs.getString("room_type");
         int beds = rs.getInt("beds");
         int numberOfReviews = rs.getInt("number_of_reviews");
@@ -297,16 +296,16 @@ public class CardImpl implements CardInterface {
         String hostPictureUrl = rs.getString("host_picture_url");
         String amenities = rs.getString("amenities");
         int accommodates = rs.getInt("accommodates");
-        BigDecimal bathrooms = rs.getBigDecimal("bathrooms");
+        int bathrooms = rs.getInt("bathrooms");
         int bedrooms = rs.getInt("bedrooms");
         String bedType = rs.getString("bed_type");
-        BigDecimal longitude = rs.getBigDecimal("longitude");
-        BigDecimal latitude = rs.getBigDecimal("latitude");
+        float longitude = rs.getFloat("longitude");
+        float latitude = rs.getFloat("latitude");
         LocalDate hostSince = rs.getDate("host_since").toLocalDate();
         String hostLocation = rs.getString("host_location");
         String hostAbout = rs.getString("host_about");
         String hostResponseTime = rs.getString("host_response_time");
-        BigDecimal hostResponseRate = rs.getBigDecimal("host_response_rate");
+        int hostResponseRate = rs.getInt("host_response_rate");
         int hostListingsCount = rs.getInt("host_listings_count");
 
         return new Card(id, thumbnailUrl, mediumUrl, price, roomType, beds, numberOfReviews, reviewScoresRating,

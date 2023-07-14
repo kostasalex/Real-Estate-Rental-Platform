@@ -2,14 +2,14 @@ package com.example.demo.model;
 
 public class Review {
     private final String id;
-    private final Integer rating;
+    private final Float rating;
     private final String comment;
     private final String date;
     private final String renterId;
     private final String listingId;
     private final String hostId;
 
-    public Review(String id, Integer rating, String comment, String date, String renterId, String listingId,
+    public Review(String id, Float rating, String comment, String date, String renterId, String listingId,
             String hostId) {
         this.id = id;
         this.rating = rating;
@@ -24,7 +24,7 @@ public class Review {
         return id;
     }
 
-    public Integer getRating() {
+    public Float getRating() {
         return rating;
     }
 

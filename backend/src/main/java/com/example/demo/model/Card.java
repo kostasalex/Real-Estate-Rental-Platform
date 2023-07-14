@@ -1,6 +1,5 @@
 package com.example.demo.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Card {
@@ -8,7 +7,7 @@ public class Card {
     private final String id;
     private final String thumbnailUrl;
     private final String mediumUrl;
-    private final BigDecimal price;
+    private final float price;
     private final String roomType;
     private final int beds;
     private final int numberOfReviews;
@@ -20,24 +19,19 @@ public class Card {
     private final String hostPictureUrl;
     private final String amenities;
     private final int accommodates;
-    private final BigDecimal bathrooms;
+    private final int bathrooms;
     private final int bedrooms;
     private final String bedType;
-    private final BigDecimal longitude;
-    private final BigDecimal latitude;
+    private final float longitude;
+    private final float latitude;
     private final LocalDate hostSince;
     private final String hostLocation;
     private final String hostAbout;
     private final String hostResponseTime;
-    private final BigDecimal hostResponseRate;
+    private final int hostResponseRate;
     private final int hostListingsCount;
 
-    public Card(String id, String thumbnailUrl, String mediumUrl, BigDecimal price, String roomType, int beds,
-            int numberOfReviews, int reviewScoresRating, String street, String description, String name,
-            String hostName, String hostPictureUrl, String amenities, int accommodates, BigDecimal bathrooms,
-            int bedrooms, String bedType, BigDecimal longitude, BigDecimal latitude, LocalDate hostSince,
-            String hostLocation, String hostAbout, String hostResponseTime, BigDecimal hostResponseRate,
-            int hostListingsCount) {
+    public Card(String id, String thumbnailUrl, String mediumUrl, float price, String roomType, int beds, int numberOfReviews, int reviewScoresRating, String street, String description, String name, String hostName, String hostPictureUrl, String amenities, int accommodates, int bathrooms, int bedrooms, String bedType, float longitude, float latitude, LocalDate hostSince, String hostLocation, String hostAbout, String hostResponseTime, int hostResponseRate, int hostListingsCount) {
         this.id = id;
         this.thumbnailUrl = thumbnailUrl;
         this.mediumUrl = mediumUrl;
@@ -78,7 +72,7 @@ public class Card {
         return mediumUrl;
     }
 
-    public BigDecimal getPrice() {
+    public float getPrice() {
         return price;
     }
 
@@ -126,7 +120,7 @@ public class Card {
         return accommodates;
     }
 
-    public BigDecimal getBathrooms() {
+    public int getBathrooms() {
         return bathrooms;
     }
 
@@ -138,11 +132,11 @@ public class Card {
         return bedType;
     }
 
-    public BigDecimal getLongitude() {
+    public float getLongitude() {
         return longitude;
     }
 
-    public BigDecimal getLatitude() {
+    public float getLatitude() {
         return latitude;
     }
 
@@ -162,7 +156,7 @@ public class Card {
         return hostResponseTime;
     }
 
-    public BigDecimal getHostResponseRate() {
+    public int getHostResponseRate() {
         return hostResponseRate;
     }
 
