@@ -43,13 +43,13 @@ const registerSchema = yup.object().shape({
         .required("This field is required"),
     Username: yup.string()
         .required("This field is required"),
-    FirstName: yup.string()
+    first_name: yup.string()
         .required("This field is required"),
-    LastName: yup.string()
+    last_name: yup.string()
         .required("This field is required"),
-    PhoneNumber: yup.string()
+        phone_number: yup.string()
         .required("This field is required"),
-    Address: yup.string()
+    address: yup.string()
         .required("This field is required"),
 });
 

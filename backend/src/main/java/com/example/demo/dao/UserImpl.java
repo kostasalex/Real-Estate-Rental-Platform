@@ -17,7 +17,7 @@ import com.example.demo.model.User;
 public class UserImpl implements UserInterface {
 
     // Database connection details
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/rentspot_db";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/airbnbdb";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "123456789";
 
@@ -159,22 +159,23 @@ public class UserImpl implements UserInterface {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
-                        "INSERT INTO users (id, email, password, address, register_date, is_admin, host_application, image_url, first_name, last_name, username, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
-            stmt.setString(1, user.getId());
-            stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getPassword());
-            stmt.setString(4, user.getAddress());
+                        "INSERT INTO users (email, password, address, register_date, is_admin, host_application, image_url, first_name, last_name, username, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
+
+            System.out.println(user);
+            stmt.setString(1, user.getEmail());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getAddress());
 
             LocalDate currentDate = LocalDate.now();
             String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            stmt.setString(5, formattedDate);
+            stmt.setString(4, formattedDate);
+            stmt.setInt(5, 0);
             stmt.setInt(6, 0);
-            stmt.setInt(7, 0);
-            stmt.setString(8, user.getImageUrl());
-            stmt.setString(9, user.getFirstName());
-            stmt.setString(10, user.getLastName());
-            stmt.setString(11, user.getUsername());
-            stmt.setString(12, user.getPhoneNumber());
+            stmt.setString(7, user.getImageUrl());
+            stmt.setString(8, user.getFirstName());
+            stmt.setString(9, user.getLastName());
+            stmt.setString(10, user.getUsername());
+            stmt.setString(11, user.getPhoneNumber());
 
             return stmt.executeUpdate();
         } catch (SQLException e) {
@@ -187,17 +188,17 @@ public class UserImpl implements UserInterface {
 
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         String id = rs.getString("id");
-        String username = rs.getString("username");
-        String email = rs.getString("email");
-        String firstName = rs.getString("first_name");
-        String lastName = rs.getString("last_name");
         String phoneNumber = rs.getString("phone_number");
+        String lastName = rs.getString("last_name");
+        String username = rs.getString("username");
+        String firstName = rs.getString("first_name");
+        String imageUrl = rs.getString("image_url");
+        String hostApplication = rs.getString("host_application");
+        String isAdmin = rs.getString("is_admin");
+        String registerDate = rs.getString("register_date");
         String address = rs.getString("address");
         String password = rs.getString("password");
-        String registerDate = rs.getString("register_date");
-        String isAdmin = rs.getString("is_admin");
-        String hostApplication = rs.getString("host_application");
-        String imageUrl = rs.getString("image_url");
+        String email = rs.getString("email");
 
         return new User(id, username, email, firstName, lastName, phoneNumber, address, password,
                 registerDate, isAdmin, hostApplication, imageUrl);

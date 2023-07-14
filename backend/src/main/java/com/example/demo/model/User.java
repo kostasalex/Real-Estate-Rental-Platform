@@ -4,31 +4,31 @@ public class User {
     private final String id;
     private final String username;
     private final String email;
-    private final String firstName;
-    private final String lastName;
-    private final String phoneNumber;
+    private final String first_name;
+    private final String last_name;
+    private final String phone_number;
     private final String address;
     private final String password;
-    private final String registerDate;
-    private final String isAdmin;
-    private final String hostApplication;
-    private final String imageUrl;
+    private final String register_date;
+    private final String is_admin;
+    private final String host_application;
+    private final String image_url;
 
-    public User(String id, String username, String email, String firstName, String lastName, String phoneNumber,
-            String address, String password, String registerDate, String isAdmin, String hostApplication,
-            String imageUrl) {
+    public User(String id, String username, String email, String first_name, String last_name, String phone_number,
+            String address, String password, String register_date, String is_admin, String host_application,
+            String image_url) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.phone_number = phone_number;
         this.address = address;
         this.password = password;
-        this.registerDate = registerDate;
-        this.isAdmin = isAdmin;
-        this.hostApplication = hostApplication;
-        this.imageUrl = imageUrl;
+        this.register_date = register_date;
+        this.is_admin = is_admin;
+        this.host_application = host_application;
+        this.image_url = image_url;
     }
 
     public String getId() {
@@ -44,15 +44,15 @@ public class User {
     }
 
     public String getFirstName() {
-        return firstName;
+        return first_name;
     }
 
     public String getLastName() {
-        return lastName;
+        return last_name;
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+        return phone_number;
     }
 
     public String getAddress() {
@@ -64,30 +64,30 @@ public class User {
     }
 
     public String getRegisterDate() {
-        return registerDate;
+        return register_date;
     }
 
     public String getIsAdmin() {
-        return isAdmin;
+        return is_admin;
     }
 
     public String getHostApplication() {
-        return hostApplication;
+        return host_application;
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return image_url;
     }
 
     public String getUserType() {
-        return (hostApplication.equals("2")) ? "Host" : "Seeker";
+        return (host_application.equals("2")) ? "Host" : "Seeker";
     }
 
     @Override
     public String toString() {
-        return "User [id=" + id + ", username=" + username + ", email=" + email + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", phoneNumber=" + phoneNumber + ", address=" + address + ", password="
-                + password + ", registerDate=" + registerDate + ", isAdmin=" + isAdmin + ", hostApplication="
-                + hostApplication + ", imageUrl=" + imageUrl + "]";
+        return "User [id=" + id + ", username=" + username + ", email=" + email + ", first_name=" + first_name
+                + ", last_name=" + last_name + ", phone_number=" + phone_number + ", address=" + address
+                + ", password=" + password + ", register_date=" + register_date + ", is_admin=" + is_admin
+                + ", host_application=" + host_application + ", image_url=" + image_url + "]";
     }
 }

@@ -101,10 +101,10 @@ const SignUp = (props) => {
             password: 'ASD1a',
             passwordConfirmation: 'ASD1a',
             Username: signup.usernamePlaceholder,
-            FirstName: signup.firstNamePlaceholder,
-            LastName: signup.lastNameLabelPlaceholder,
-            PhoneNumber: '699000000',
-            Address: signup.addressPlaceholder
+            first_name: signup.firstNamePlaceholder,
+            last_name: signup.lastNameLabelPlaceholder,
+            phone_number: '699000000',
+            address: signup.addressPlaceholder
         },
         validationSchema: registerSchema,
         onSubmit
@@ -182,53 +182,53 @@ const SignUp = (props) => {
                             <div>
                                 <label className="block mb-2 text-sm text-gray-600 ">{signup.firstNameLabel}</label>
                                 <input
-                                    id="FirstName"
-                                    value={values.FirstName}
+                                    id="first_name"
+                                    value={values.first_name}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     type="text"
                                     placeholder={signup.firstNamePlaceholder}
                                     className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md  focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
-                                {errors.FirstName && touched.FirstName && <p className="text-red-700 text-sm">{errors.FirstName}</p>}
+                                {errors.first_name && touched.first_name && <p className="text-red-700 text-sm">{errors.first_name}</p>}
                             </div>
 
                             <div>
                                 <label className="block mb-2 text-sm text-gray-600 ">{signup.lastNameLabel}</label>
                                 <input
-                                    id="LastName"
-                                    value={values.LastName}
+                                    id="last_name"
+                                    value={values.last_name}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     type="text"
                                     placeholder={signup.lastNameLabelPlaceholder}
                                     className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md  focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
-                                {errors.LastName && touched.LastName && <p className="text-red-700 text-sm">{errors.LastName}</p>}
+                                {errors.last_name && touched.last_name && <p className="text-red-700 text-sm">{errors.last_name}</p>}
                             </div>
 
                             <div>
                                 <label className="block mb-2 text-sm text-gray-600 ">{signup.phoneNumber}</label>
                                 <input
-                                    id="PhoneNumber"
-                                    value={values.PhoneNumber}
+                                    id="phone_number"
+                                    value={values.phone_number}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     type="text"
                                     placeholder={signup.phoneNumberPlaceholder}
                                     className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
-                                {errors.PhoneNumber && touched.PhoneNumber && <p className="text-red-700 text-sm">{errors.PhoneNumber}</p>}
+                                {errors.phone_number && touched.phone_number && <p className="text-red-700 text-sm">{errors.phone_number}</p>}
                             </div>
 
                             <div>
                                 <label className="block mb-2 text-sm text-gray-600 ">{signup.address}</label>
                                 <input
-                                    id="Address"
-                                    value={values.Address}
+                                    id="address"
+                                    value={values.address}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     type="text"
                                     placeholder={signup.addressPlaceholder}
                                     className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
-                                {errors.Address && touched.Address && <p className="text-red-700 text-sm">{errors.Address}</p>}
+                                {errors.address && touched.address && <p className="text-red-700 text-sm">{errors.address}</p>}
                             </div>
 
                             <div>
