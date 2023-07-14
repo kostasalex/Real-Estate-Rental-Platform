@@ -5,7 +5,6 @@ import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DatePicker } from '@mui/x-date-pickers';
 import Swal from "sweetalert2";
-import Papa from "papaparse";
 import { FaUser } from "react-icons/fa";
 
 function CardDetails() {
@@ -27,28 +26,28 @@ function CardDetails() {
 
 	const [id, setId] = useState(cardProps.id);
 	const [name, setName] = useState(cardProps.name);
-	const [thumbnail_url, setThumbnailUrl] = useState(cardProps.thumbnail_url);
-	const [medium_url, setMediumUrl] = useState(cardProps.medium_url);
+	const [thumbnailUrl, setThumbnailUrl] = useState(cardProps.thumbnailUrl);
+	const [mediumUrl, setMediumUrl] = useState(cardProps.mediumUrl);
 	const [price, setPrice] = useState(cardProps.price);
-	const [roomType, setRoomType] = useState(cardProps.room_type);
+	const [roomType, setRoomType] = useState(cardProps.roomType);
 	const [beds, setBeds] = useState(cardProps.beds);
 	const [accommodates, setAccommodates] = useState(cardProps.accommodates);
 	const [bathrooms, setBathrooms] = useState(cardProps.bathrooms);
 	const [bedrooms, setBedrooms] = useState(cardProps.bedrooms);
-	const [bedType, setBedType] = useState(cardProps.bed_type);
-	const [numberOfReviews, setNumberOfReviews] = useState(cardProps.number_of_reviews);
-	const [reviewScoresRating, setReviewScoresRating] = useState(cardProps.review_scores_rating);
+	const [bedType, setBedType] = useState(cardProps.bedType);
+	const [numberOfReviews, setNumberOfReviews] = useState(cardProps.numberOfReviews);
+	const [reviewScoresRating, setReviewScoresRating] = useState(cardProps.reviewScoresRating);
 	const [street, setStreet] = useState(cardProps.street);
 	const [description, setDescription] = useState(cardProps.description);
 
-	const [hostName, setHostName] = useState(cardProps.host_name);
-	const [hostPictureUrl, setHostPictureUrl] = useState(cardProps.host_picture_url);
-	const [hostSince, setHostSince] = useState(cardProps.host_since);
-	const [hostLocation, setHostLocation] = useState(cardProps.host_location);
+	const [hostName, setHostName] = useState(cardProps.hostName);
+	const [hostPictureUrl, setHostPictureUrl] = useState(cardProps.hostPictureUrl);
+	const [hostSince, setHostSince] = useState(cardProps.hostSince);
+	const [hostLocation, setHostLocation] = useState(cardProps.hostLocation);
 	const [hostAbout, setHostAbout] = useState('');
-	const [hostResponseTime, setHostResponseTime] = useState(cardProps.host_response_time);
-	const [hostResponseRate, setHostResponseRate] = useState(cardProps.host_response_time);
-	const [hostListingCount, setHostListingCount] = useState(cardProps.host_listings_count);
+	const [hostResponseTime, setHostResponseTime] = useState(cardProps.hostResponseTime);
+	const [hostResponseRate, setHostResponseRate] = useState(cardProps.hostResponseTime);
+	const [hostListingCount, setHostListingCount] = useState(cardProps.hostListingsCount);
 
 	const [amenities, setAmenities] = useState(cardProps.amenities);
 
@@ -129,7 +128,7 @@ function CardDetails() {
 		fetch('http://localhost:8080/api/v1/reviews')
 			.then((response) => response.json())
 			.then((data) => {
-				const filteredReviews = data.filter((review) => cardProps.id === review.listing_id);
+				const filteredReviews = data.filter((review) => cardProps.id === review.listingId);
 				setReviews(filteredReviews);
 			})
 			.catch((error) => {
@@ -179,7 +178,7 @@ function CardDetails() {
 			<div className=" grid gap-4">
 				<div className="block sm:grid grid-cols-2">
 					<button onClick={openDialog}>
-						<img className="h-56 max-w-full rounded-lg hover:opacity-60 sm:h-96" src={thumbnail_url} alt="" />
+						<img className="h-56 max-w-full rounded-lg hover:opacity-60 sm:h-96" src={thumbnailUrl} alt="" />
 					</button>
 					<div className="flex flex-col justify-center">
 						<p className="mb-4  text-3xl text-center leading-none tracking-tight text-gray-900 ">About this place</p>
@@ -209,7 +208,7 @@ function CardDetails() {
 								<Dialog onClose={closeDialog}>
 									<ul className="">
 										<li>
-											<img className="mb-10 rounded-lg" src={thumbnail_url} alt="" />
+											<img className="mb-10 rounded-lg" src={thumbnailUrl} alt="" />
 										</li>
 										<li>
 											<img className="my-10 rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg" alt="" />
@@ -351,7 +350,7 @@ function CardDetails() {
 					<div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
 						<div className="block">
 							<div className="md:flex-shrink-0">
-								<img className=" w-full h-  " src={thumbnail_url} alt="Room" />
+								<img className=" w-full h-  " src={thumbnailUrl} alt="Room" />
 							</div>
 
 							<div className="p-10">
@@ -456,7 +455,7 @@ function CardDetails() {
 				<div className="">
 					<div><p className=" text-xl leading-none tracking-tight text-gray-900 ">Reviews about this place</p></div>
 					<div className="sm:grid sm:grid-cols-2 sm:gap-4">
-						{reviews.map(({ listing_id, id, date, reviewer_id, reviewer_name, comments }) => (
+						{reviews.map(({id, comment,date,hostId,listingId,rating,renterId }) => (
 							<div key={id} className=" flex items-center justify-center">
 								<div className="">
 									<div className="bg-white max-w-xl rounded-2xl px-10 py-8 shadow-lg hover:shadow-2xl transition duration-500">
@@ -465,10 +464,13 @@ function CardDetails() {
 											<div className="">
 												<FaUser style={{ fontSize: '30px', color: '' }} />
 											</div>
-											<div className="text-sm font-semibold"> {reviewer_name} • <span className="font-normal"> {date}</span></div>
+											<div className="text-sm font-semibold"> {renterId} • <span className="font-normal"> {date}</span></div>
 										</div>
 										<div className="mt-4">
-											<p className="mt-4 text-md text-gray-600">{comments}</p>
+											<p className="mt-4 text-md text-gray-600">{comment}</p>
+										</div>
+										<div className="mt-4">
+											<p className="mt-4 text-md text-gray-600">Rating : {rating}</p>
 										</div>
 									</div>
 								</div>
