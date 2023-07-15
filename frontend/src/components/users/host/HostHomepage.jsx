@@ -13,22 +13,15 @@ const HostHomepage = () => {
       navigate('/newlisting')
     };
 
-    const NUM_RESULTS = 3;
+    const NUM_RESULTS = 13;
 
     React.useEffect(() => {
-        Papa.parse("/src/assets/listings.csv", {
-          download: true,
-          header: true,
-          complete: (results) => {
-            // Randomly select NUM_RESULTS rows from the CSV file
-            const shuffled = results.data.sort(() => 0.5 - Math.random());
-            const randomRows = shuffled.slice(0, NUM_RESULTS);
-            setRecent(randomRows);
-          },
-        });
-      }, []);
+      fetch("http://localhost:8080/api/v1/cards")
+        .then((response) => response.json())
+        .then((data) => setRecent(data.slice(10, NUM_RESULTS)))
+        .catch((error) => console.error(error));
+    }, []);
       
-
   return (
     <div className='flex flex-col space-y-16'>
         <div className='mt-10 justify-center  text-blue1 font-semibold hover:opacity-90 flex flex-col'>

@@ -17,7 +17,7 @@ function App() {
   const [loggedInUserId, setLoggedInUserId] = useState(
     parseInt(localStorage.getItem('loggedInUserId')) || null
   );
-  
+
   const [loggedInUserFirstName, setLoggedInUserFirstName] = useState(
     localStorage.getItem('loggedInFirstName') || null
   );
@@ -33,32 +33,11 @@ function App() {
   const [lastActivity, setLastActivity] = useState(Date.now());
 
   useEffect(() => {
+    let logoutTimer;
+  
     const resetActivityTimer = () => {
-      setLastActivity(Date.now());
-    };
-  
-    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll'];
-  
-    activityEvents.forEach((event) => {
-      window.addEventListener(event, resetActivityTimer);
-    });
-  
-    return () => {
-      activityEvents.forEach((event) => {
-        window.removeEventListener(event, resetActivityTimer);
-      });
-    };
-  }, []);
-
-
-  useEffect(() => {
-    const logoutTimeout = 10 * 60 * 1000; // 10 minutes timeout in milliseconds
-  
-    const checkActivity = () => {
-      const currentTime = Date.now();
-      const elapsedTime = currentTime - lastActivity;
-  
-      if (elapsedTime > logoutTimeout && loggedInUserType !== null) {
+      clearTimeout(logoutTimer);
+      logoutTimer = setTimeout(() => {
         handleLogout();
         Swal.fire({
           title: 'Logged Out',
@@ -66,15 +45,32 @@ function App() {
           icon: 'info',
           confirmButtonText: 'OK',
         });
-      }
+      }, 10 * 60 * 1000);
+      setLastActivity(Date.now());
     };
   
-    const activityCheckInterval = setInterval(checkActivity, 60000); // Check every minute
+    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll'];
+  
+    if (loggedInUserType) {
+      activityEvents.forEach((event) => {
+        window.addEventListener(event, resetActivityTimer);
+      });
+  
+      resetActivityTimer(); // Start the initial logout timer
+    }
   
     return () => {
-      clearInterval(activityCheckInterval);
+      clearTimeout(logoutTimer);
+  
+      if (loggedInUserType) {
+        activityEvents.forEach((event) => {
+          window.removeEventListener(event, resetActivityTimer);
+        });
+      }
     };
-  }, [lastActivity, loggedInUserType]);
+  }, [loggedInUserType]);
+  
+    
   
 
   const handleUserInfo = (id, firstName,email, userType) => {
@@ -134,12 +130,13 @@ function App() {
             </>
             )
           }
-          {loggedInUserType === 'Seeker' || 'PendingHost' && (
-            <>
-              <Route path="/" element={<SeekerHomepage />} />
-            </>
+          {(loggedInUserType === 'Seeker' || loggedInUserType === 'PendingHost') && (
+
+            <Route path="/" element={<SeekerHomepage />} />
+
             )
           }
+          
           {loggedInUserType === 'Admin' && (
             <>
               <Route path="/dashboard" element={<AdminHomepage />} />
