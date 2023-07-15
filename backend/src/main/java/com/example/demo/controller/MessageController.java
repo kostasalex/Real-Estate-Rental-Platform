@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.dao.MessageInterface;
+import com.example.demo.dao.UserInterface;
 import com.example.demo.model.Message;
+import com.example.demo.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-
+import java.util.Map;
 import java.util.List;
 
 @RestController
@@ -14,9 +16,11 @@ import java.util.List;
 public class MessageController {
 
     private final MessageInterface messageDao;
+    private final UserInterface userDao;
 
-    public MessageController(MessageInterface messageDao) {
+    public MessageController(MessageInterface messageDao, UserInterface userDao) {
         this.messageDao = messageDao;
+        this.userDao = userDao;
     }
 
     @PostMapping("/messages")
@@ -35,4 +39,11 @@ public class MessageController {
         List<Message> userMessages = messageDao.getUserMessages(userId);
         return ResponseEntity.ok(userMessages);
     }
+
+    @GetMapping("/messages/users/{loggedInUserId}")
+    public ResponseEntity<List<Map<String, Object>>> getUsers(@PathVariable("loggedInUserId") int loggedInUserId) {
+        List<Map<String, Object>> distinctUsers = userDao.getDistinctUsers(loggedInUserId);
+        return ResponseEntity.ok(distinctUsers);
+    }
+
 }

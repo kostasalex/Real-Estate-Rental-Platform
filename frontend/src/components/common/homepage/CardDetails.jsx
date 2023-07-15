@@ -76,7 +76,17 @@ function CardDetails() {
 	};
 
 	const openDialogHost = () => {
-		setIsOpenHost(true);
+		if(localStorage.getItem('loggedInUserType'))
+			setIsOpenHost(true);
+		else
+		{ 
+			Swal.fire({
+				title: 'Login or Sign Up',
+				html: 'You have to <a class = "text-lg text-blue1" href="/login">login</a> or <a class = "text-blue1" href="/signup">sign up</a> before you can contact the host.',
+				icon: 'info',
+				confirmButtonText: 'OK',
+			  });
+		}
 	};
 
 	const closeDialogHost = () => {
@@ -141,11 +151,45 @@ function CardDetails() {
 	const [question, setQuestion] = useState('');
 	const [questions, setQuestions] = useState([]);
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (question.trim() !== '') {
 			setQuestions([question, ...questions]);
 			setQuestion('');
+		}
+		try {
+		const response = await fetch('http://localhost:8080/api/v1/messages', {
+			method: 'POST',
+			headers: {
+			'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+			senderId: localStorage.getItem('loggedInUserId'),
+			recipientId: hostId, //! Need host id to send 
+			content: question,
+			}),
+		});
+	
+		if (response.ok) {
+			Swal.fire({
+			title: 'Message sent!',
+			text: 'Your message has been sent to the host.',
+			icon: 'success',
+			confirmButtonText: 'OK',
+			}).then(() => {
+			//navigate('/');
+			});
+		} else {
+			throw new Error('Failed to send message');
+		}
+		} catch (error) {
+		console.error('Error sending message:', error);
+		Swal.fire({
+			title: 'Error',
+			text: 'Failed to send message. Please try again later.',
+			icon: 'error',
+			confirmButtonText: 'OK',
+		});
 		}
 	};
 
