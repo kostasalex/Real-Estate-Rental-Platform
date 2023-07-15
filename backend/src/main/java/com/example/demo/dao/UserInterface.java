@@ -18,7 +18,9 @@ public interface UserInterface {
 
     int deleteUserByUserId(String userId);
 
-    int insertUser(String userId, User user);
+    int insertUser(User user);
 
     public Map<String, Object> authenticateUser(String email, String password);
+
+    int updateHostApplication(String userId, int hostApplication);
 }

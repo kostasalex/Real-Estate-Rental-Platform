@@ -14,6 +14,18 @@ function App() {
     localStorage.getItem('loggedInUserType') || null
   );
 
+  const [loggedInUserId, setLoggedInUserId] = useState(
+    localStorage.getItem('loggedInUserId') || null
+  );
+
+  const [loggedInUserFirstName, setLoggedInUserFirstName] = useState(
+    localStorage.getItem('loggedInFirstName') || null
+  );
+
+  const [loggedInUserEmail, setLoggedInUserEmail] = useState(
+    localStorage.getItem('loggedInFirstName') || null
+  );
+
   const [loggedInUser, setLoggedInUser] = useState(
     JSON.parse(localStorage.getItem('loggedInUser')) || {}
   );
@@ -65,24 +77,35 @@ function App() {
   }, [lastActivity, loggedInUserType]);
   
 
-  const handleUserType = (userType) => {
-    setLoggedInUserType(userType);
+  const handleUserInfo = (id, firstName,email, userType) => {
+    setLoggedInUserId(id);
+    setLoggedInUserEmail(email);
+    setLoggedInUserFirstName(firstName);
+    handleUserType(userType);
   };
+
+  const handleUserType = (userType) => {
+    localStorage.setItem('loggedInUserType', userType);
+    setLoggedInUserType(userType);
+  }
 
   const handleLogin = (userData) => {
     const { id, firstName, userType, email } = userData;
     // Save the user details to local storage
     console.log(id + " - " + firstName + " - " + userType + " - " + email);
     localStorage.setItem('loggedInUserId', id);
-    localStorage.setItem('loggedInUserName', firstName);
+    localStorage.setItem('loggedInFirstName', firstName);
     localStorage.setItem('loggedInUserEmail', email);
     localStorage.setItem('loggedInUserType', userType);
-    handleUserType(userType);
+    handleUserInfo(id, firstName,email, userType );
   };
 
   const handleLogout = () => {
     navigate('/');
     setLoggedInUserType(null);
+    localStorage.removeItem('loggedInUserId');
+    localStorage.removeItem('loggedInFirstName');
+    localStorage.removeItem('loggedInUserEmail');
     localStorage.removeItem('loggedInUserType');
   };
 
@@ -95,11 +118,11 @@ function App() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="App mt-20">
       {loggedInUserType === 'Admin' && <AdminDashboard />}
-        <Header loggedInUserType={loggedInUserType} handleLogout={handleLogout} handleUserType = {handleUserType} handleMessages={handleMessages}/>
+        <Header loggedInUserType={loggedInUserType} handleUserType = {handleUserType} loggedInUserId={loggedInUserId} handleLogout={handleLogout}  handleMessages={handleMessages}/>
         <Routes>
           {loggedInUserType && (
-            <Route path = "/messages" element={<Messages/>}/>
-          )}
+            <Route path = "/messages" element={<Messages loggedInUserId={loggedInUserId} loggedInFirstName = {loggedInUserFirstName} />}/>
+          )} 
           {loggedInUserType === 'Admin' && (
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           )}
@@ -111,7 +134,7 @@ function App() {
             </>
             )
           }
-          {loggedInUserType === 'Seeker' && (
+          {loggedInUserType === 'Seeker' || 'PendingHost' && (
             <>
               <Route path="/" element={<SeekerHomepage />} />
             </>

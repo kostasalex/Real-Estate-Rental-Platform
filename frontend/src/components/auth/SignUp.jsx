@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import Swal from 'sweetalert2';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -19,75 +19,86 @@ const SignUp = (props) => {
     };
 
     const [rentingPlace, setRentingPlace] = useState(toggle);
+    const [userType, setUserType] = useState(rentingPlace === false ? "Seeker" : "PendingHost");
+    const [hostApplication, setHostApplication] = useState(rentingPlace === false ? 0 : 1);
 
     const handleRentingPlaceToggle = () => {
         setRentingPlace(!rentingPlace);
     };
 
+    useEffect(() => {
+        setUserType(rentingPlace === false ? "Seeker" : "PendingHost");
+      }, [rentingPlace]);
+
+      useEffect(() => {
+        setHostApplication(rentingPlace === false ? 0 : 1);
+      }, [userType]);
+
     const onSubmit = async (values, actions) => {
-        let msg = '';
-        if (rentingPlace === true) {
-            msg = "\nHost Application Received. We will notify you as soon as it is approved.";
-        }
-    
-        try {
-            // Send the form data to the backend and handle the response
-            const response = await fetch('http://localhost:8080/api/v1/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(values)
-            });
-    
-            if (response.ok) {
-                Swal.fire({
-                    title: 'Welcome ' + values.Username + '!',
-                    text: msg,
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    /* Navigate previous paths */
-                    let userType = 'Seeker';
-                    if (rentingPlace) userType = 'Host';
-                    const userData = {
-                        id: values.id,
-                        firstName: values.Username,
-                        userType: userType,
-                        email: values.email
-                      };
-                      
+    let msg = '';
+    if (rentingPlace === true) {
+        msg = '\nHost Application Received. We will notify you as soon as it is approved.';
+    }
+    values.host_application = hostApplication;
 
-                    props.handleLogin(userData);
-                    navigate('/');
-                });
+    try {
+        // Send the form data to the backend and handle the response
+        const response = await fetch('http://localhost:8080/api/v1/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(values)
+        });
 
-            } else {
-                const errorMessage = await response.text(); // Extract the error message from the response body
-                Swal.fire({
-                    title: 'Error',
-                    text: errorMessage,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        } catch (error) {
-            console.error(error);
-            Swal.fire({
-                title: 'Error',
-                text: 'An error occurred while processing your request.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
+        if (response.ok) {
+        const data = await response.json(); // Parse the response as JSON
+        const userId = data.id; // Access the ID from the response
+
+        Swal.fire({
+            title: 'Welcome ' + values.first_name + '!',
+            text: msg,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then(() => {
+            /* Navigate previous paths */
+            const userData = {
+            id: userId, // Use the correct ID here
+            firstName: values.first_name,
+            userType: userType,
+            email: values.email
+            };
+
+            props.handleLogin(userData);
+            navigate('/');
+        });
+        } else {
+        const errorMessage = await response.text(); // Extract the error message from the response body
+        Swal.fire({
+            title: 'Error',
+            text: errorMessage,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
         }
+    } catch (error) {
+        console.error(error);
+        Swal.fire({
+        title: 'Error',
+        text: 'An error occurred while processing your request.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+        });
+    }
     };
+    
     
 
     const handleAdmin = () => {
         let userType = 'Admin';
         const userData = {
             id: values.id,
-            firstName: values.Username,
+            firstName: values.first_name,
             userType: userType,
             email: values.email
           };
@@ -104,7 +115,8 @@ const SignUp = (props) => {
             first_name: signup.firstNamePlaceholder,
             last_name: signup.lastNameLabelPlaceholder,
             phone_number: '699000000',
-            address: signup.addressPlaceholder
+            address: signup.addressPlaceholder,
+            host_application: hostApplication
         },
         validationSchema: registerSchema,
         onSubmit

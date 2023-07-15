@@ -11,26 +11,48 @@ import {useNavigate} from 'react-router-dom';
 const Header = (props) => {
     const navigate = useNavigate();
 
-    const becomeHostHandler = () => {
-
-        if(!props.loggedInUserType)navigate("signup", { state: { toggle: true }})
-        else{
-            console.log(props.loggedInUserType)
-            Swal.fire({
-                title: 'Application Received',
-                text: 'We will notify you as soon as it is approved',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                /* Navigate previous paths */
-                props.handleUserType("Host");
+    const becomeHostHandler = async () => {
+        if (!props.loggedInUserType) {
+            navigate("signup", { state: { toggle: true }});
+        } else {
+            try {
+            const response = await fetch("http://localhost:8080/api/v1/become-host", {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ userId: props.loggedInUserId }),
             });
+        
+            if (response.ok) {
+                Swal.fire({
+                title: "Application Received",
+                text: "We will notify you as soon as it is approved",
+                icon: "success",
+                confirmButtonText: "OK",
+                }).then(() => {
+                    handleUserType('PendingHost');
+                });
+            } else {
+                Swal.fire({
+                title: "Error",
+                text: "Failed to submit application",
+                icon: "error",
+                confirmButtonText: "OK",
+                });
+            }
+            } catch (error) {
+            console.error("Error:", error);
+            Swal.fire({
+                title: "Error",
+                text: "Failed to submit application",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            }
         }
-
-
-
-
     };
+        
 
 
     const rentHandler = () => {
@@ -70,17 +92,23 @@ const Header = (props) => {
                     <div className="flex justify-end relative mt-4">
                     
                     
-                            <div className="font-semibold inline-block hidden md:block py-2 px-3 opacity-70 hover:opacity-100 rounded-full" >
+                            <div className="font-semibold inline-block hidden md:block py-2 px-3 opacity-70 hover:opacity-100  rounded-full" >
                                 {
                                 (props.loggedInUserType === "Seeker" || !props.loggedInUserType)  && 
                                  (<div 
-                                    className="flex items-center relative cursor-pointer whitespace-nowrap"
+                                    className="flex items-center relative  cursor-pointer whitespace-nowrap"
                                     onClick= {becomeHostHandler}
                                     >
                                         Become a host
                                  </div>)}
+                                 {props.loggedInUserType === "PendingHost" && (<div 
+                                    className="flex items-center relative  whitespace-nowrap"
+                                    >
+                                        Applied For Host
+                                 </div>)
+                                }
                                 {props.loggedInUserType === "Host" && (<div 
-                                    className="flex items-center relative cursor-pointer whitespace-nowrap"
+                                    className="flex items-center relative  cursor-pointer whitespace-nowrap"
                                     onClick= {rentHandler}
                                     >
                                         Rent out Property

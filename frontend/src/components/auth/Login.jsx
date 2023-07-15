@@ -32,7 +32,7 @@ const Login = (props) => {
           ...userData,
           email: values.email
         };
-        
+        console.log(userData2);
         props.handleLogin(userData2);
         navigate('/');
       } else if (response.status === 401) {

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,23 +20,24 @@ public class UserController {
     }
 
     @PostMapping("/api/v1/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> registerUser(@RequestBody User user) {
         // Check if the user already exists
         if (userDao.selectUserByEmail(user.getEmail()).isPresent()) {
-            System.out.print(user.getEmail());
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("Email already registered. Please use a different email.");
+                    .body(Map.of("error", "Email already registered. Please use a different email."));
         }
 
         // You can perform additional validations on the user data here
 
         // Save the user to the database
-        int rowsAffected = userDao.insertUser(user.getId(), user);
-
-        if (rowsAffected > 0) {
-            return ResponseEntity.ok("User registered successfully");
+        int newUserId = userDao.insertUser(user);
+        if (newUserId > 0) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User registered successfully");
+            response.put("id", newUserId);
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to register user");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -47,6 +49,30 @@ public class UserController {
             return ResponseEntity.ok(userDetails);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+    @PostMapping("/api/v1/become-host")
+    public ResponseEntity<?> updateHostApplication(@RequestBody Map<String, String> payload) {
+        String userId = payload.get("userId");
+
+        int rowsAffected = userDao.updateHostApplication(userId, 1);
+        if (rowsAffected > 0) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/api/v1/approve-application")
+    public ResponseEntity<?> approveHostApplication(@RequestBody Map<String, String> payload) {
+        String userId = payload.get("userId");
+
+        int rowsAffected = userDao.updateHostApplication(userId, 2);
+        if (rowsAffected > 0) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

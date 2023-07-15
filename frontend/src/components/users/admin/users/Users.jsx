@@ -6,7 +6,6 @@ import userIcon from '/src/assets/user-icon.png';
 import Papa from 'papaparse';
 
 const Users = () => {
-  const NUM_RESULTS = 30;
   const MAX_RESULTS_PER_PAGE = 10;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,14 +13,16 @@ const Users = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isOpenUser, setIsOpenUser] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [num_results, setNum_Results] = useState(0);
 
   /* Read the data */
   useEffect(() => {
     fetch('http://localhost:8080/api/v1/users') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
       .then((response) => response.json())
       .then((data) => {
-        const usersData = data.slice(0, NUM_RESULTS);
+        const usersData = data
         setUsers(usersData);
+        setNum_Results(data.length);
       })
       .catch((error) => {
         console.error('Error fetching users:', error);
@@ -97,14 +98,61 @@ const Users = () => {
   };
   /************************************************ */
 
-  const approveHostApplication = (name) => {
-    Swal.fire({
-      title: `${name} application successfully approved!`,
-      icon: 'success',
-      confirmButtonText: 'OK',
-    }).then(() => {
+  const approveHostApplication = async (name, id) =>  {
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/approve-application", {
+          method: "POST",
+          headers: {
+          "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: id }),
+      });
+  
+      if (response.ok) {
+          Swal.fire({
+          title: `${name} application successfully approved!`,
+          icon: "success",
+          confirmButtonText: "OK",
+          }).then(() => {
+              handleUserType('Host');
+          });
+      } else {
+          Swal.fire({
+          title: "Error",
+          text: "Failed to approving application",
+          icon: "error",
+          confirmButtonText: "OK",
+          });
+
+      }
+      } catch (error) {
+      console.error("Error:", error);
+      Swal.fire({
+          title: "Error",
+          text: "Failed to approving application",
+          icon: "error",
+          confirmButtonText: "OK",
+      });
+      }
+
       setIsOpenUser(false);
-    });
+
+      fetch('http://localhost:8080/api/v1/users') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
+      .then((response) => response.json())
+      .then((data) => {
+        const usersData = data;
+        setUsers(usersData);
+        setNum_Results(data.length);
+      })
+      .catch((error) => {
+        console.error('Error fetching users:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to fetch users from the server.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      });
   };
 
   const iconStyle = 'h-10 w-10 rounded-full object-cover';
@@ -166,7 +214,7 @@ const Users = () => {
         </div>
         <div className="flex flex-col items-center border-t bg-white px-5 py-5 sm:flex-row sm:justify-between">
           <span className="text-xs text-gray-600 sm:text-sm">
-            Showing {(currentPage - 1) * MAX_RESULTS_PER_PAGE + 1} to {Math.min(users.length, currentPage * MAX_RESULTS_PER_PAGE)} of {NUM_RESULTS} Entries
+            Showing {(currentPage - 1) * MAX_RESULTS_PER_PAGE + 1} to {Math.min(users.length, currentPage * MAX_RESULTS_PER_PAGE)} of {num_results} Entries
           </span>
           <div className="mt-2 inline-flex sm:mt-0">
             {currentPage > 1 && (

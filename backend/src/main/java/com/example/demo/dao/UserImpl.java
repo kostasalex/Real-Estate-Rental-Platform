@@ -134,7 +134,8 @@ public class UserImpl implements UserInterface {
                     String firstName = rs.getString("first_name");
                     int hostApplication = rs.getInt("host_application");
                     String userType = (hostApplication == 2) ? "Host" : "Seeker";
-
+                    if (hostApplication == 1)
+                        userType = "PendingHost";
                     // Create a map to hold the user information
                     Map<String, Object> userMap = new HashMap<>();
                     userMap.put("id", id);
@@ -153,15 +154,12 @@ public class UserImpl implements UserInterface {
     }
 
     @Override
-    public int insertUser(String userId, User user) {
-
-        userId = generateUniqueId();
-
+    public int insertUser(User user) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
-                        "INSERT INTO users (email, password, address, register_date, is_admin, host_application, image_url, first_name, last_name, username, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
+                        "INSERT INTO users (email, password, address, register_date, is_admin, host_application, image_url, first_name, last_name, username, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS);) {
 
-            System.out.println(user);
             stmt.setString(1, user.getEmail());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getAddress());
@@ -170,20 +168,26 @@ public class UserImpl implements UserInterface {
             String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             stmt.setString(4, formattedDate);
             stmt.setInt(5, 0);
-            stmt.setInt(6, 0);
+            stmt.setString(6, user.getHostApplication());
             stmt.setString(7, user.getImageUrl());
             stmt.setString(8, user.getFirstName());
             stmt.setString(9, user.getLastName());
             stmt.setString(10, user.getUsername());
             stmt.setString(11, user.getPhoneNumber());
 
-            return stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1); // Return the generated user ID
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle the exception as needed
         }
 
-        return 0;
+        return 0; // Return 0 if the insertion fails
     }
 
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
@@ -204,14 +208,23 @@ public class UserImpl implements UserInterface {
                 registerDate, isAdmin, hostApplication, imageUrl);
     }
 
-    // private String generateUniqueId() {
-    // Random random = new Random();
-    // int id = random.nextInt(1000000); // Generate a random number within a range
-    // return Integer.toString(id);
-    // }
+    @Override
+    public int updateHostApplication(String userId, int hostApplication) {
+        int rowsAffected = 0;
 
-    private String generateUniqueId() {
-        return UUID.randomUUID().toString();
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("UPDATE users SET host_application = ? WHERE id = ?");) {
+            stmt.setInt(1, hostApplication);
+            stmt.setString(2, userId);
+
+            rowsAffected = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return rowsAffected;
     }
 
 }

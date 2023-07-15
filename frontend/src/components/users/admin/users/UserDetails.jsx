@@ -42,7 +42,7 @@ const UserDetails = ({ closeDialogUser, user, userIcon, approveHandle }) => {
           <button
             type="button"
             className="items-center mt-5 hover:shadow-xl hover:opacity-90 bg-blue1 rounded-xl px-2 py-1 text-white text-lg"
-            onClick={() => approveHandle(user.firstName)}
+            onClick={() => approveHandle(user.firstName, user.id)}
           >
             Approve
           </button>

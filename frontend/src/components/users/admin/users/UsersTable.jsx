@@ -16,7 +16,7 @@ const UsersTable = ({ users, rowClickHandler, iconStyle, userIcon }) => {
       </thead>
       <tbody>
         {users.map((user) => (
-          <tr key={user.id} onClick={() => rowClickHandler(user)}>
+          <tr className = "hover:bg-blue1/2 shadow-md cursor-pointer" key={user.id} onClick={() => rowClickHandler(user)}>
             <td className="px-6 py-4 whitespace-no-wrap">
               <div className="text-sm leading-5 font-medium text-gray-900">{user.id}</div>
             </td>
