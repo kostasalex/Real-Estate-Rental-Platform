@@ -14,6 +14,9 @@ public interface UserInterface {
 
     Optional<User> selectUserByEmail(String userEmail);
 
+    // Returns all users having send-receive message from UserId
+    List<Map<String, Object>> getDistinctUsers(int UserId);
+
     int updateUser(User user);
 
     int deleteUserByUserId(String userId);

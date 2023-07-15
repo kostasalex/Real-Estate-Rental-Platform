@@ -8,4 +8,5 @@ public interface MessageInterface {
     int insertMessage(Message message);
 
     List<Message> getUserMessages(int userId);
+
 }

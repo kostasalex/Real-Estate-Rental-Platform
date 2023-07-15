@@ -227,4 +227,34 @@ public class UserImpl implements UserInterface {
         return rowsAffected;
     }
 
+    @Override
+    public List<Map<String, Object>> getDistinctUsers(int userId) {
+        List<Map<String, Object>> users = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(
+                        "SELECT DISTINCT users.id, users.first_name, users.last_name FROM users JOIN messages ON users.id = messages.sender_id OR users.id = messages.recipient_id WHERE (messages.sender_id = ? OR messages.recipient_id = ?) AND users.id <> ?")) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, userId);
+            stmt.setInt(3, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String name = rs.getString("first_name");
+                    name += " " + rs.getString("last_name");
+
+                    Map<String, Object> userMap = new HashMap<>();
+                    userMap.put("id", id);
+                    userMap.put("name", name);
+
+                    users.add(userMap);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.print(users);
+        return users;
+    }
+
 }

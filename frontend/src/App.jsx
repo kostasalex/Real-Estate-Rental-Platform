@@ -15,9 +15,9 @@ function App() {
   );
 
   const [loggedInUserId, setLoggedInUserId] = useState(
-    localStorage.getItem('loggedInUserId') || null
+    parseInt(localStorage.getItem('loggedInUserId')) || null
   );
-
+  
   const [loggedInUserFirstName, setLoggedInUserFirstName] = useState(
     localStorage.getItem('loggedInFirstName') || null
   );
