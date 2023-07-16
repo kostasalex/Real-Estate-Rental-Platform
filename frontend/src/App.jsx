@@ -29,48 +29,7 @@ function App() {
   const [loggedInUser, setLoggedInUser] = useState(
     JSON.parse(localStorage.getItem('loggedInUser')) || {}
   );
-
-  const [lastActivity, setLastActivity] = useState(Date.now());
-
-  useEffect(() => {
-    let logoutTimer;
-  
-    const resetActivityTimer = () => {
-      clearTimeout(logoutTimer);
-      logoutTimer = setTimeout(() => {
-        handleLogout();
-        Swal.fire({
-          title: 'Logged Out',
-          text: 'You have been logged out due to inactivity.',
-          icon: 'info',
-          confirmButtonText: 'OK',
-        });
-      }, 10 * 60 * 1000);
-      setLastActivity(Date.now());
-    };
-  
-    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll'];
-  
-    if (loggedInUserType) {
-      activityEvents.forEach((event) => {
-        window.addEventListener(event, resetActivityTimer);
-      });
-  
-      resetActivityTimer(); // Start the initial logout timer
-    }
-  
-    return () => {
-      clearTimeout(logoutTimer);
-  
-      if (loggedInUserType) {
-        activityEvents.forEach((event) => {
-          window.removeEventListener(event, resetActivityTimer);
-        });
-      }
-    };
-  }, [loggedInUserType]);
-  
-    
+   
   
 
   const handleUserInfo = (id, firstName,email, userType) => {
