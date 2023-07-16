@@ -8,6 +8,10 @@ const Cards = ({listings}) => {
 
     const [currentPage, setCurrentPage] = useState(1);
 
+    React.useEffect(() => {
+        setCurrentPage(1);
+      }, [listings]);
+
 
     const nextPageHandle = () => {
         if (currentPage < totalPages()) {

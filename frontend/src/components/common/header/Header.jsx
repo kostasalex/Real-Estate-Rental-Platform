@@ -54,7 +54,6 @@ const Header = (props) => {
     };
         
 
-
     const rentHandler = () => {
 
         navigate('/newlisting')

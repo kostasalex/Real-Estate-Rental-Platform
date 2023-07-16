@@ -6,32 +6,24 @@ import Accommodates from '/src/components/common/inputs/Accommodates';
 import Suggestions from '/src/components/common/maps/Suggestions';
 import {BsFillArrowRightCircleFill} from 'react-icons/bs'
 import { FaTimes } from 'react-icons/fa';
-  //"Dummy" data in order to test the filters functionality
-  const options = [
-    {
-      category: "Location",
-      items: ["New York", "Paris", "Tokyo", "London", "Sydney"],
-    },
+import { MdClear } from 'react-icons/md';
 
-    {
-      category: "Persons",
-      items: ["1", "2", "3", "4", "5"],
-    },
-  ];
+function TabContent({ arrive, leave, activeTab, handleOptionSelect, location, guests }) {
 
+  console.log(activeTab);
 
-function TabContent({ arrive, leave, activeTab, handleOptionSelect}) {
+  const [accomError, setAccomError] = React.useState(false);
 
-  const [people, setPeople] = React.useState(1);
+  const [people, setPeople] = React.useState(guests ? guests : 1 );
 
   const accommodates = 20;
 
   const handleSelectSuggestion = (location) => {
-    console.log(location)
     handleOptionSelect(activeTab, location)
   }
 
   const handleIncrease = () => {
+    setAccomError(false)
 		if (accommodates!= null && people < accommodates) {
 			setPeople(people + 1);
 		}
@@ -42,6 +34,7 @@ function TabContent({ arrive, leave, activeTab, handleOptionSelect}) {
 	};
 
 	const handleDecrease = () => {
+    setAccomError(false)
 		if (people > 1) {
 			setPeople(people - 1);
 		}
@@ -53,46 +46,47 @@ function TabContent({ arrive, leave, activeTab, handleOptionSelect}) {
 
   const handleSearch = () => { 
     handleOptionSelect(activeTab, "");
-};
+  };
 
-
-
-  let activeOption
-  if(activeTab)
-    activeOption = options.find((option) => option.category === activeTab);
-  else return null;
 
   return (
     <nav
-    className="flex justify-center shadow-inner bg-blue0 py-4 duration-500 rounded-xl bg-gray-1500 top-20"
+    className="flex justify-center shadow-inner bg-blue0 py-4 duration-500  rounded-xl   top-24"
     >
       {activeTab === "Location" && (
         <div className='flex flex-col'>
 
           <Suggestions
             handleSelectSuggestion = {handleSelectSuggestion}
+            location = {location}
           />
         </div>
 
       )}
       
       {activeTab === "Persons" && (
-        <div className='flex flex-row items-center p-10 space-x-4'>
-          <div className=''>
-            <Accommodates 
-            handleIncrease = {handleIncrease} 
-            handleDecrease = {handleDecrease}
-            people = {people}
-            accommodates = {accommodates}/>
+        <div className='flex flex-col items-center'>
+          <div className='flex flex-row items-center p-8 space-x-4'>
+            <div >
+              <Accommodates 
+                handleIncrease = {handleIncrease} 
+                handleDecrease = {handleDecrease}
+                people = {people}
+                accommodates = {accommodates}
+                setPeople = {setPeople}
+                setAccomError = {setAccomError}
+                />
+            </div>
+            <div >
+              <button 
+                className='ml-4 rounded-lg bg-blue1 px-2 py-1 opacity-80 hover:opacity-100 font-semibold text-white'
+                onClick={() => handleOptionSelect(activeTab, people)}
+                >
+                  ok
+              </button>
+            </div>
           </div>
-          <div >
-            <button 
-              className='ml-4 rounded-lg bg-blue1 px-2 py-1 opacity-80 hover:opacity-100 font-semibold text-white'
-              onClick={() => handleOptionSelect(activeTab, people)}
-              >
-                ok
-            </button>
-          </div>
+          {accomError && (<div className='text-sm text-red-500' >Max persons: {accommodates} </div>)}
         </div>
 
 
@@ -109,41 +103,53 @@ function TabContent({ arrive, leave, activeTab, handleOptionSelect}) {
 
             </div>
           )}
-
-        {activeTab === "Search" && (
-          <button 
-            className='flex flex-row text-lg opacity-80 shadow-xl hover:opacity-100 hover:shadow-2xl bg-blue1 rounded-full py-3 px-4 m-10 text-white font-semibold items-center'
-            onClick={() =>  handleSearch()}
-            >
-            
-            <div className='mr-2 mb-1'>Search</div>
-            <BiSearch style={{ color: 'white', fontSize: '24px' }} />
-          </button>
-        )}
     </nav>
   );
 }
 
 
 
-export default function Filters({arrive, leave, handleSearch,handleOptionSelect,filters,activeTab,setActiveTab }) {
+export default function Filters({arrive, leave, handleSearch,handleOptionSelect,filters,activeTab,setActiveTab, location, guests, handleOptionRemove }) {
+
+  const [isFiltersEmpty, setIsFiltersEmpty] =  React.useState(false);
+
+  React.useEffect(() => {
+    const checkFiltersEmpty = () => {
+      setIsFiltersEmpty(filters.every(value => value === ""));
+    };
+
+    checkFiltersEmpty();
+  }, [filters]);
 
   const tabContentTitle =  {'Location': "Search Destination" , 'Date': "Add dates", 'Persons' : "Add persons" };
 
   function Tab({ label, index, isActive, onClick, Icon, entry }) {
   
     return (
-      <li
-        className={`cursor-pointer py-2 px-4 shadow-md rounded hover:opacity-100 transition rounded-3xl ${
-          isActive ? "bg-blue1 text-white shadow-2xl " : " opacity-60 text-gray-500"
-        }`}
-        onClick={() => onClick(index)}
-      >
-          <div className="flex-row flex items-center">
-            {Icon}
-            <div className=" ml-2 hidden md:block">  {entry ? entry : label}  </div>
-          </div>
-      </li>
+      <div className='flex-col flex justify-center items-center'>
+
+        <li
+          title = {"Select " + label}
+          className={`cursor-pointer py-2 px-4 shadow-md rounded hover:opacity-100  hover:font-bold transition rounded-3xl ${
+            isActive ? "bg-blue1 text-white shadow-2xl " : " opacity-60 text-gray-500"
+          }`}
+          onClick={() => onClick(index)}
+        >
+            <div className="flex-row flex items-center">
+              {Icon}
+              <div className=" ml-2 hidden md:block">  {entry ? entry : label}  </div>
+            </div>
+          
+        </li>
+        { (entry ) && 
+                (<span 
+                  title = {"Clear "+label}
+                  onClick={() => handleOptionRemove(label)}
+                  className='cursor-pointer flex   pb-1 mt-2 text-sm hover:shadow-inner hover:opacity-100 opacity-60 rounded-xl  text-white'>
+                    <MdClear  style={{ color: 'black', fontSize: '22px' }} />
+                </span>)}
+      </div>
+
     );
   }
   
@@ -172,22 +178,23 @@ export default function Filters({arrive, leave, handleSearch,handleOptionSelect,
             ))}
           </ul>
           <div 
-            className={"flex items-center justify-center relative bg-blue1 cursor-pointer p-2 border-4 border-white hover:border-blue1 rounded-full " +( (activeTab ==="Search" || !activeTab) && "animate-pulse")}
+            title = "Search"
+            className={"flex items-center justify-center relative bg-blue1 cursor-pointer p-2 border-4 border-white hover:border-blue1 rounded-full " +( ((activeTab ==="Search" || !activeTab) && !isFiltersEmpty) && "p-4 animate-pulse")}
             onClick={() =>  handleSearch()}>
             <BiSearch style={{ color: 'white', fontSize: '22px' }} />
           </div>
 
       </div>
       {activeTab && (
-        <div className="flex rounded-2xl  justify-center items-start  fixed inset inset-20">
-          <div className="bg-white text-lg text-blue1 font-semibold items-center shadow-2xl p-5 relative">
+        <div className={`flex rounded-2xl justify-center items-start bg-blue1/2 fixed ${activeTab === 'Location' ? 'lg:left-1/3' : 'lg:right-1/3'} top-32`}>
+          <div className="flex  flex-col  bg-white text-lg text-blue1 font-semibold items-center shadow-2xl p-5 left-2 rounded-lg relative top-2">
             <div
               className="text-black opacity-60 cursor-pointer hover:opacity-100 py-1 px-2 bg-red-50 rounded-full absolute top-2 right-2"
               onClick={() => setActiveTab("")}
             >
               <FaTimes />
             </div>
-            <div className="flex mb-10 justify-center">{tabContentTitle[activeTab]}</div>
+            <div className="flex mb-10  justify-center">{tabContentTitle[activeTab]}</div>
 
             <TabContent
               activeTab={activeTab}
@@ -195,6 +202,8 @@ export default function Filters({arrive, leave, handleSearch,handleOptionSelect,
               arrive={arrive}
               leave={leave}
               handleSearch = {handleSearch}
+              location = {location}
+              guests = {guests}
             />
           </div>
         </div>

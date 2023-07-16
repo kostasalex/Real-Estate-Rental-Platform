@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Accommodates = ({accommodates, handleDecrease, handleIncrease, people}) => {
+const Accommodates = ({accommodates, handleDecrease, handleIncrease, people, setPeople, setAccomError}) => {
   return (
     <div className="flex items-center">
         <label className="text-indigo-500 mr-2" htmlFor="accommodates">Accommodates:</label>
@@ -17,7 +17,17 @@ const Accommodates = ({accommodates, handleDecrease, handleIncrease, people}) =>
                 min="1"
                 max={accommodates}
                 value={people}
-                onChange={(e) => setPeople(Number(e.target.people))}
+                onChange={(e) => {
+                    const value = Number(e.target.value);
+                    if ((value >= 1 && value <= accommodates) || !value) {
+                      setAccomError(false)
+                      setPeople(value);
+                    }
+                    else {
+                            console.log("aCCOMS")
+                            setAccomError(true)
+                        }
+                }}
             />
             <button
                 className="px-3 py-1 bg-gray-100 text-gray-500 hover:text-gray-700 focus:outline-none"

@@ -178,7 +178,6 @@ public class CardImpl implements CardInterface {
         return rowsAffected;
     }
 
-    @Override
     public List<Card> searchCards(String filters) {
         List<Card> cards = new ArrayList<>();
 
@@ -189,8 +188,6 @@ public class CardImpl implements CardInterface {
             filtersJson = objectMapper.readTree(filters);
 
             String location = filtersJson.get("location").asText();
-            // String arrive = filtersJson.get("arrive").asText();
-            // String leave = filtersJson.get("leave").asText();
             String guests = filtersJson.get("guests").asText();
             String maxPrice = filtersJson.get("maxPrice").asText();
 
@@ -201,17 +198,12 @@ public class CardImpl implements CardInterface {
             queryBuilder.append("SELECT * FROM listings WHERE 1=1");
 
             if (!location.isEmpty()) {
-                queryBuilder.append(" AND street LIKE '%").append(location).append("%'");
+                // Split the location into individual words
+                String[] locationWords = location.split("\\s+");
+                for (String word : locationWords) {
+                    queryBuilder.append(" AND street LIKE '%").append(word).append("%'");
+                }
             }
-
-            /*
-             * if (!arrive.isEmpty() && !leave.isEmpty()) {
-             * // Assuming 'date' column is the check-in or check-out date
-             * queryBuilder.append(" AND (date >= '").append(arrive).
-             * append("' AND date <= '").append(leave)
-             * .append("')");
-             * }
-             */
 
             if (!guests.isEmpty()) {
                 // Assuming 'guests' column is the number of guests allowed
@@ -237,7 +229,11 @@ public class CardImpl implements CardInterface {
             if (!amenities.isEmpty()) {
                 queryBuilder.append(" AND (");
                 for (int i = 0; i < amenities.size(); i++) {
-                    queryBuilder.append("amenities LIKE '%").append(amenities.get(i)).append("%'");
+                    String amenity = amenities.get(i);
+                    String mappedAmenity = mapAmenity(amenity);
+
+                    queryBuilder.append("LOWER(amenities) LIKE '%").append(mappedAmenity.toLowerCase()).append("%'");
+
                     if (i < amenities.size() - 1) {
                         queryBuilder.append(" AND ");
                     }
@@ -266,6 +262,19 @@ public class CardImpl implements CardInterface {
         }
 
         return cards;
+    }
+
+    private String mapAmenity(String amenity) {
+        // Map the amenities to their corresponding values
+        if (amenity.equalsIgnoreCase("wifi")) {
+            return "Wireless Internet";
+        } else if (amenity.equalsIgnoreCase("airConditioning")) {
+            return "Air Conditioning";
+        }
+        // Add more mappings as needed
+
+        // If no mapping is found, return the original amenity
+        return amenity;
     }
 
     private List<String> getSelectedValues(JsonNode node) {

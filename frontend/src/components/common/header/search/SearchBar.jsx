@@ -2,9 +2,8 @@ import React from 'react'
 import { BiSearch } from 'react-icons/bi';
 
 const SearchBar = (props) => {
-
+    const [hasFilters, setHasFilters] = React.useState(props.filtersSelected && props.filtersSelected.some((filter) => filter !== ''));
     let displayMsg = "Start your search";
-    const hasFilters = props.filtersSelected && props.filtersSelected.some((filter) => filter !== '');
     const displayFilters = hasFilters && (
         <div className="flex lg:flex-row items-center space-x-2">
             {props.filtersSelected.map((filter, index) => (

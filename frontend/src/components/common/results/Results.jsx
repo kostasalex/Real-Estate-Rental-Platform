@@ -108,8 +108,10 @@ const Results = () => {
     let url = '/results/q?';
   
     if (searchBarFilters.location !== '') url += `&location=${searchBarFilters.location}`;
-    if (searchBarFilters.arrive !== '') url += `&arrive=${searchBarFilters.arrive}`;
-    if (searchBarFilters.leave !== '') url += `&leave=${searchBarFilters.leave}`;
+    if (searchBarFilters.arrive && searchBarFilters.leave){
+      url += `&arrive=${searchBarFilters.arrive}`;
+      url += `&leave=${searchBarFilters.leave}`;
+    } 
     if (searchBarFilters.guests !== '') url += `&guests=${searchBarFilters.guests}`;
     if (filters.maxPrice !== '') url += `&maxPrice=${filters.maxPrice}`;
     if (roomTypeFilters !== '') url += `&roomType=${roomTypeFilters}`;

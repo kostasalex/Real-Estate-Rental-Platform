@@ -53,6 +53,7 @@ const Search = () => {
         if(location || date || guests){
             setFiltersSelected([location  , date , persons]) 
         }
+
     }, [location, arrive, leave, guests, date]);
 
     const handleOptionSelect = (filter, option) => {
@@ -78,17 +79,62 @@ const Search = () => {
             break;
         case "Persons":
             setGuests(option);
-            setActiveTab("Search");
-            //handleSearch([location, homeType, arrive, leave ,guests]);
-            break;
-        case "Search":
             setActiveTab("");
-            handleSearch();
+            //handleSearch([location, homeType, arrive, leave ,guests]);
             break;
         default:
             break;
         }
     };
+
+
+    const handleOptionRemove = (filter) => {
+        let persons
+        if(guests)persons = guests + " persons"
+        console.log(filter)
+        switch (filter) {
+            case "Location":
+                setLocation("");
+                setFiltersSelected([""  , date , persons]) 
+                console.log(location);
+                break;
+            case "Date":
+                console.log("arrive- leave");
+                setArrive("");
+                setLeave(""); 
+                setDate("");
+                setFiltersSelected([location  , "" , persons]) 
+                console.log("2arrive- leave2");
+                break;
+            case "Persons":
+                setGuests("");
+                setFiltersSelected([location  , date , ""]) 
+                break;
+            default:
+                break;
+        }
+        let url
+        if(filter === "Date")
+            url =  removeParam("arrive");
+        else if (filter === "Persons") 
+            url = removeParam("guests");
+        else url = removeParam(filter);
+
+        navigate(url);
+    };
+
+
+    const removeParam = (parameter) => {
+        const param = parameter.toLowerCase();
+        console.log("removing: " + param);
+        const queryParams = new URLSearchParams(location_.search);
+        if(queryParams.get(param)){
+            queryParams.delete(param);
+            const newUrl = `${location_.pathname}?${queryParams.toString()}`;
+            console.log(newUrl);
+            return newUrl;
+        }
+    }
 
     const handleFiltersToggle= () => {
         setfiltersToggle(!filtersToggle);
@@ -135,6 +181,9 @@ const Search = () => {
                 setActiveTab = {setActiveTab}
                 arrive = {arrive}
                 leave = {leave}
+                location = {location}
+                guests = {guests}
+                handleOptionRemove = {handleOptionRemove}
                 />}  
         </div>
     )

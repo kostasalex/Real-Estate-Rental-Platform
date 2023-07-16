@@ -23,7 +23,15 @@ const UsersTable = ({ users, rowClickHandler, iconStyle, userIcon }) => {
             <td className="px-6 py-4 whitespace-no-wrap">
               <div className="flex items-center">
                 <div className="flex-shrink-0 h-10 w-10">
-                  <img className={iconStyle} src={user.imageUrl} alt="User" />
+                  <img
+                    className={iconStyle}
+                    src={user.imageUrl ? user.imageUrl : userIcon}
+                    alt= "User"
+                    onError={(e) => {
+                      e.target.src = userIcon;
+                      e.target.alt = 'User Icon';
+                    }}
+                  />
                 </div>
               </div>
             </td>

@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import Autosuggest from 'react-autosuggest';
 
-const Suggestions = ({ handleSelectSuggestion}) => {
+const Suggestions = ({ handleSelectSuggestion, location}) => {
 
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState(location);
+
     const searchTimeoutRef = useRef(null);
     const [suggestions, setSuggestions] = useState([]);
 
@@ -53,8 +54,13 @@ const Suggestions = ({ handleSelectSuggestion}) => {
         fetchSuggestions(query);
         }, 500);
     };
+    
 
-
+    const handleKeyDown = (event) => {
+      if (event.key === 'Enter') {
+        handleSelectSuggestion(searchQuery);
+      }
+    };
 
   const fetchSuggestions = async (query) => {
     const suggestions = await getSuggestions(query);
@@ -63,6 +69,7 @@ const Suggestions = ({ handleSelectSuggestion}) => {
 
   const inputProps = {
     value: searchQuery,
+    onKeyDown: handleKeyDown,
     onChange: handleSearchChange,
     placeholder: 'Enter a town',
     className: "j p-1 pl-3"
@@ -78,8 +85,8 @@ const Suggestions = ({ handleSelectSuggestion}) => {
   );
 
   return (
-    <div className="flex p-10 flex-col items-center text-gray-600 justify-center">
-        <div className="relative">
+    <div className="flex p-10 flex-col relative items-center text-gray-600 justify-center">
+        <div className="flex w-96 items-center justify-center">
           <Autosuggest
             suggestions={suggestions}
             onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
