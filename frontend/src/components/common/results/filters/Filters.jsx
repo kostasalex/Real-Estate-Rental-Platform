@@ -13,8 +13,11 @@ const Filters = ({filters, handleOptionSelect, handleMaxPriceChange}) => {
       }, [filters.maxPrice]);
 
     const handleUpdateMaxPrice = (value) => {
-        setMaxPriceInput(value);
+        const parsedValue = Math.max(0, Math.min(100000, parseInt(value) || 0));
+        setMaxPriceInput(parsedValue.toString());
         setToggleUpdate(true);
+
+
     };
 
     const handleUpdateButton = () => {

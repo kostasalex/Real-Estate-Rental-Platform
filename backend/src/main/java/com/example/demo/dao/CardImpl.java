@@ -210,7 +210,7 @@ public class CardImpl implements CardInterface {
                 queryBuilder.append(" AND accommodates >= ").append(guests);
             }
 
-            if (!maxPrice.isEmpty()) {
+            if (!maxPrice.isEmpty() && Integer.parseInt(maxPrice) > 0) {
                 // Assuming 'price' column is the price per night
                 queryBuilder.append(" AND price <= ").append(maxPrice);
             }

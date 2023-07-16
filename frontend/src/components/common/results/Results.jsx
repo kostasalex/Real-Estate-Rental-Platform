@@ -113,7 +113,7 @@ const Results = () => {
       url += `&leave=${searchBarFilters.leave}`;
     } 
     if (searchBarFilters.guests !== '') url += `&guests=${searchBarFilters.guests}`;
-    if (filters.maxPrice !== '') url += `&maxPrice=${filters.maxPrice}`;
+    if (filters.maxPrice !== '' && filters.maxPrice > 0) url += `&maxPrice=${filters.maxPrice}`;
     if (roomTypeFilters !== '') url += `&roomType=${roomTypeFilters}`;
     if (amenityFilters !== '') url += `&amenities=${amenityFilters}`;
 
