@@ -23,21 +23,19 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> registerUser(@RequestBody User user) {
         // Check if the user already exists
         if (userDao.selectUserByEmail(user.getEmail()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "Email already registered. Please use a different email."));
-        }
-
-        // You can perform additional validations on the user data here
-
-        // Save the user to the database
-        int newUserId = userDao.insertUser(user);
-        if (newUserId > 0) {
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "User registered successfully");
-            response.put("id", newUserId);
-            return ResponseEntity.ok(response);
+            response.put("error", "Email already registered. Please use a different email.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            int newUserId = userDao.insertUser(user);
+            if (newUserId > 0) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("message", "User registered successfully");
+                response.put("id", newUserId);
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
         }
     }
 

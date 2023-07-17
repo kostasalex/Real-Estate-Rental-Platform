@@ -73,13 +73,13 @@ const SignUp = (props) => {
             navigate('/');
         });
         } else {
-        const errorMessage = await response.text(); // Extract the error message from the response body
-        Swal.fire({
+            const errorMessage = await response.json(); // Parse the error message as JSON
+            Swal.fire({
             title: 'Error',
-            text: errorMessage,
+            text: errorMessage.error,
             icon: 'error',
             confirmButtonText: 'OK'
-        });
+            });
         }
     } catch (error) {
         console.error(error);
