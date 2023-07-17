@@ -16,3 +16,6 @@ export {default as AdminUsers} from './users/admin/users/Users';
 export {default as Navbar} from './common/navbars/Sidebar';
 export {default as AdminHomepage} from './users/admin/homepage/Homepage';
 export {default as Messages} from './common/messages/Messages'
+export {default as NotFound} from './common/notFound/NotFound'
+export {default as DashboardToggle} from './common/buttons/DashboardToggle'
+export {default as FiltersToggle} from './common/buttons/FiletersToggle'

@@ -13,7 +13,7 @@ import com.example.demo.model.Review;
 public class ReviewImpl implements ReviewInterface {
 
     // Database connection details
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/rentspot_db";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/airbnbdb";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "123456789";
 
