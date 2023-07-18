@@ -1,12 +1,8 @@
-import React, {useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 const Prices = ({ defaultGuestPrice, setDefaultGuestPrice, additionalGuestPrice, setAdditionalGuestPrice, maxGuests, setMaxGuests, setIsFormComplete }) => {
-
-  if (defaultGuestPrice !=0 && additionalGuestPrice !=0 && maxGuests !=0 && setIsFormComplete)
-    setIsFormComplete(true)
-
   useEffect(() => {
-    if (defaultGuestPrice != 0 && additionalGuestPrice != 0 && maxGuests != 0) {
+    if (defaultGuestPrice !== 0 && additionalGuestPrice !== 0 && maxGuests !== 0) {
       setIsFormComplete(true);
     } else {
       setIsFormComplete(false);
@@ -21,11 +17,9 @@ const Prices = ({ defaultGuestPrice, setDefaultGuestPrice, additionalGuestPrice,
     setter((prevValue) => Math.max(prevValue - 1, 0));
   };
 
-
   return (
     <div className="text-blue1">
       <div className='block text-xl sm:grid sm:grid-cols-2 sm:gap-y-20 sm:gap-x-80'>
-        
         <div className="">
           <p className="text-2xl mb-5">Min price for 1 Guest*</p>
           <div className="flex items-center ml-5">
@@ -34,7 +28,7 @@ const Prices = ({ defaultGuestPrice, setDefaultGuestPrice, additionalGuestPrice,
             </button>
             <span className="relative">
               <input
-                className="[appearance:textfield] w-20 text-center "
+                className="[appearance:textfield] w-20 text-center"
                 type="number"
                 min="1"
                 value={defaultGuestPrice}
@@ -56,7 +50,7 @@ const Prices = ({ defaultGuestPrice, setDefaultGuestPrice, additionalGuestPrice,
             </button>
             <span className="relative">
               <input
-                className="[appearance:textfield] w-20 text-center "
+                className="[appearance:textfield] w-20 text-center"
                 type="number"
                 min="1"
                 value={additionalGuestPrice}
@@ -78,7 +72,7 @@ const Prices = ({ defaultGuestPrice, setDefaultGuestPrice, additionalGuestPrice,
             </button>
             <span className="relative">
               <input
-                className="[appearance:textfield] w-20 text-center "
+                className="[appearance:textfield] w-20 text-center"
                 type="number"
                 min="1"
                 value={maxGuests}
@@ -92,7 +86,7 @@ const Prices = ({ defaultGuestPrice, setDefaultGuestPrice, additionalGuestPrice,
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Prices
+export default Prices;

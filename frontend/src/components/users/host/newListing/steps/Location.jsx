@@ -4,10 +4,6 @@ import Map from '/src/components/common/maps/Map';
 const Location = ({ formattedAddress, setFormattedAddress, accessingInfo, setAccessingInfo, setIsFormComplete }) => {
   const [searchQuery, setSearchQuery] = React.useState('Athens');
 
-  /* Temporary for testing */
-  if (searchQuery && accessingInfo)
-    setIsFormComplete(true)
-
   const formattedAddressHandler = (address) => {
     const { suburb, town, city, village } = address;
     let formattedAddress = suburb;
@@ -23,10 +19,12 @@ const Location = ({ formattedAddress, setFormattedAddress, accessingInfo, setAcc
   };
 
   React.useEffect(() => {
-    if (searchQuery && accessingInfo)
-      setIsFormComplete(true)
-    else (setIsFormComplete(false))
-  }, [searchQuery, accessingInfo]);
+    if (searchQuery && accessingInfo) {
+      setIsFormComplete(true);
+    } else {
+      setIsFormComplete(false);
+    }
+  }, [searchQuery, accessingInfo, setIsFormComplete]);
 
   return (
     <div className="text-blue1 mt-10">

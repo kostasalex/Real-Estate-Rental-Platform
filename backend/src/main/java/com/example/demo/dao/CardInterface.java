@@ -17,7 +17,7 @@ public interface CardInterface {
 
     int deleteCardByCardId(String carId);
 
-    int insertCard(String carId, Card card);
+    int insertCard(Card card);
 
     List<Card> searchCards(String filters);
 }

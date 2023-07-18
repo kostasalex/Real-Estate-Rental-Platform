@@ -129,7 +129,8 @@ public class CardImpl implements CardInterface {
     }
 
     @Override
-    public int insertCard(String cardId, Card card) {
+    public int insertCard(Card card) {
+        
         int rowsAffected = 0;
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
@@ -142,7 +143,7 @@ public class CardImpl implements CardInterface {
                                 "host_since, host_location, host_about, host_response_time, host_response_rate, host_listings_count) "
                                 +
                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
-            stmt.setString(1, cardId);
+            stmt.setString(1, card.getId());
             stmt.setString(2, card.getThumbnailUrl());
             stmt.setString(3, card.getMediumUrl());
             stmt.setFloat(4, card.getPrice());

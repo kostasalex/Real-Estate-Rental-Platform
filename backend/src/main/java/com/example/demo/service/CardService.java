@@ -45,6 +45,8 @@ public class CardService {
     }
 
     public int insertCard(Card card) {
-        return cardDao.insertCard(card.getId(), card);
+        return cardDao.insertCard(card);
     }
+
+    
 }

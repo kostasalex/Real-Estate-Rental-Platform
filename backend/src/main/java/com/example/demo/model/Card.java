@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Card {
 
-    private final String id;
+    private  String id;
     private final String thumbnailUrl;
     private final String mediumUrl;
     private final float price;
@@ -31,7 +31,11 @@ public class Card {
     private final int hostResponseRate;
     private final int hostListingsCount;
 
-    public Card(String id, String thumbnailUrl, String mediumUrl, float price, String roomType, int beds, int numberOfReviews, int reviewScoresRating, String street, String description, String name, String hostName, String hostPictureUrl, String amenities, int accommodates, int bathrooms, int bedrooms, String bedType, float longitude, float latitude, LocalDate hostSince, String hostLocation, String hostAbout, String hostResponseTime, int hostResponseRate, int hostListingsCount) {
+    public Card(String id, String thumbnailUrl, String mediumUrl, float price, String roomType, int beds,
+            int numberOfReviews, int reviewScoresRating, String street, String description, String name,
+            String hostName, String hostPictureUrl, String amenities, int accommodates, int bathrooms, int bedrooms,
+            String bedType, float longitude, float latitude, LocalDate hostSince, String hostLocation, String hostAbout,
+            String hostResponseTime, int hostResponseRate, int hostListingsCount) {
         this.id = id;
         this.thumbnailUrl = thumbnailUrl;
         this.mediumUrl = mediumUrl;
@@ -62,6 +66,11 @@ public class Card {
 
     public String getId() {
         return id;
+    }
+
+    // Add a setter for the id field
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getThumbnailUrl() {

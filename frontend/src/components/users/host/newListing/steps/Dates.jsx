@@ -1,22 +1,8 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHostDepartureDate,selectedDates,setSelectedDates, setIsFormComplete }) => {
-  
-  if ( selectedDates && setIsFormComplete)
-    setIsFormComplete(true)
-
-  useEffect(() => {
-    if (selectedDates.length !==0) {
-      setIsFormComplete(true);
-    } else {
-      setIsFormComplete(false);
-    }
-  }, [hostArrivalDate,hostDepartureDate,selectedDates, setIsFormComplete]);
-
-
-
+const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHostDepartureDate, selectedDates, setSelectedDates, setIsFormComplete }) => {
   const handleAddDates = () => {
     if (hostArrivalDate && hostDepartureDate) {
       const formattedDates = `${hostArrivalDate.toLocaleDateString()} - ${hostDepartureDate.toLocaleDateString()}`;
@@ -31,6 +17,14 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHost
     updatedDates.splice(index, 1);
     setSelectedDates(updatedDates);
   };
+
+  useEffect(() => {
+    if (selectedDates.length !== 0) {
+      setIsFormComplete(true);
+    } else {
+      setIsFormComplete(false);
+    }
+  }, [selectedDates, setIsFormComplete]);
 
   return (
     <div className="block sm:grid sm:grid-cols-2 sm:gap-4">

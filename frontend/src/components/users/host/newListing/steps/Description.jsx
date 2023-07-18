@@ -1,14 +1,12 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect } from 'react';
 
 const Description = ({ title, setTitle, listingDescription, setListingDescription, roomType, setRoomType, photos, setPhotos, rentalRules, setRentalRules, setIsFormComplete }) => {
-  if (title && listingDescription && roomType && photos && rentalRules && setIsFormComplete)
-    setIsFormComplete(true)
-  
   useEffect(() => {
-    if (title && listingDescription && roomType && photos.length > 0 && rentalRules)
+    if (title && listingDescription && roomType && photos.length > 0 && rentalRules) {
       setIsFormComplete(true);
-    else
+    } else {
       setIsFormComplete(false);
+    }
   }, [title, listingDescription, roomType, photos, rentalRules, setIsFormComplete]);
 
   const handleTitleChange = (event) => {

@@ -3,6 +3,14 @@ import React from 'react'
 const Amenities = ({ amenities, setAmenities, setIsFormComplete }) => {
   setIsFormComplete(true);
 
+
+  const handleCheckboxChange = (event, amenity) => {
+    setAmenities((prevAmenities) => ({
+      ...prevAmenities,
+      [amenity]: event.target.checked
+    }));
+  };
+
   return (
     <div className="text-blue1">
       <div className="mb-10">
