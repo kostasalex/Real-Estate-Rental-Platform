@@ -26,7 +26,7 @@ function App() {
   );
 
   const [loggedInUserEmail, setLoggedInUserEmail] = useState(
-    localStorage.getItem('loggedInFirstName') || null
+    localStorage.getItem('loggedInUserEmail') || null
   );
 
   const [loggedInUser, setLoggedInUser] = useState(
