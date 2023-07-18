@@ -4,8 +4,9 @@ import {FaUserCircle, FaUserCheck}  from "react-icons/fa";
 import {ImExit} from "react-icons/im"
 import {BsChatSquareTextFill} from "react-icons/bs"
 import {IoMdSettings} from "react-icons/io"
+import {MdSpaceDashboard} from "react-icons/md"
 
-const UserMenu = ({loggedInUserType, handleLogout, handleMessages}) => {
+const UserMenu = ({loggedInUserType, handleLogout, handleMessages, handleDashboard}) => {
 
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const menuRef = React.useRef(null);
@@ -87,7 +88,19 @@ const UserMenu = ({loggedInUserType, handleLogout, handleMessages}) => {
                                         className="mr-3 text-sm font-medium">
                                         Acount Settings 
                                     </div>
-                                </div>  
+                                </div> 
+                               {loggedInUserType === "Admin" && (
+                                <div className="flex cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                                    <div className='rounded-full p-1 mr-2'>
+                                        <MdSpaceDashboard/>
+                                    </div>
+                                    <div 
+                                        className="mr-3 text-sm font-medium"
+                                        onClick={() => handleDashboard()}>
+                                        Dashboard 
+                                    </div>
+                                </div>
+                               )}
                                 <div className="flex cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
                                     <div className='rounded-full p-1 mr-2'>
                                         <BsChatSquareTextFill/>

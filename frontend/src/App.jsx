@@ -1,14 +1,17 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Header, SeekerHomepage, HostHomepage, NewListing, Messages,  Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { Header, SeekerHomepage, DashboardToggle, HostHomepage, NotFound, NewListing, Messages,  Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
+import { Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import Swal from "sweetalert2";
+
 
 function App() {
 
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const [adminDashboardToggle, setAdminDashboardToggle] =  useState(false)
 
   const [loggedInUserType, setLoggedInUserType] = useState(
     localStorage.getItem('loggedInUserType') || null
@@ -64,16 +67,32 @@ function App() {
     localStorage.removeItem('loggedInUserType');
   };
 
-  
   const handleMessages = () => {
     navigate('/messages');
   };
 
+  const handleDashboard = () => {
+    navigate('/');
+  }
+
+  React.useEffect(() => {
+    setAdminDashboardToggle(location.pathname.startsWith('/dashboard'));
+  }, [location.pathname]);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="App mt-20">
-      {loggedInUserType === 'Admin' && <AdminDashboard />}
-        <Header loggedInUserType={loggedInUserType} handleUserType = {handleUserType} loggedInUserId={loggedInUserId} handleLogout={handleLogout}  handleMessages={handleMessages}/>
+        {loggedInUserType === 'Admin' && 
+          ( adminDashboardToggle ?  <AdminDashboard /> : <DashboardToggle handleDashboard={handleDashboard}/>
+        )}
+        <Header 
+          loggedInUserType={loggedInUserType} 
+          handleUserType = {handleUserType} 
+          loggedInUserId={loggedInUserId} 
+          handleLogout={handleLogout} 
+          handleMessages={handleMessages}
+          handleDashboard={handleDashboard}
+        />
         <Routes>
           {loggedInUserType && (
             <Route path = "/messages" element={<Messages loggedInUserId={loggedInUserId} loggedInFirstName = {loggedInUserFirstName} />}/>
@@ -106,10 +125,18 @@ function App() {
             </>
             )
           }
-          <Route path="/login" element={<Login handleLogin={handleLogin} />} />
-          <Route path="/signup" element={<SignUp handleLogin={handleLogin} />} />
+          <Route
+            path="/login"
+            element={loggedInUserType ? <Navigate to="/" replace /> : <Login handleLogin={handleLogin} />}
+          />
+          <Route
+            path="/signup"
+            element={loggedInUserType ? <Navigate to="/" replace /> : <SignUp handleLogin={handleLogin} />}
+          />
+          <Route path="*" element={<Navigate to="/notfound" replace />} />
           <Route path="/results/q?" element={<Results/>} />
           <Route path="/cards/:cardId" element={<CardDetails/>} />
+          <Route path="notfound" element={<NotFound />} />
         </Routes>
       </div>
     </LocalizationProvider>

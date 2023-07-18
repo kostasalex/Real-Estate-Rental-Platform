@@ -1,9 +1,9 @@
 import React from 'react';
-
+import {MdSpaceDashboard} from "react-icons/md"
 const Sidebar = ({ tabs,  handleTabClick, activeTab}) => {
 
   return (
-    <div className="bg-gray-900 min-h-screen z-10 pt-10 text-slate-300 md:w-64 w-32 fixed left-0  ">
+    <div className="bg-gray-900 min-h-screen z-10 pt-10 transform transition duration-700  text-slate-300 md:w-64 w-32 fixed left-0  ">
       <div className="w-full md:px-6">
         {tabs.map((tab, index) => (
           <div

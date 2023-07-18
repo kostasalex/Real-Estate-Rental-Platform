@@ -142,12 +142,13 @@ export default function Filters({arrive, leave, handleSearch,handleOptionSelect,
           
         </li>
         { (entry ) && 
-                (<span 
-                  title = {"Clear "+label}
-                  onClick={() => handleOptionRemove(label)}
-                  className='cursor-pointer flex   pb-1 mt-2 text-sm hover:shadow-inner hover:opacity-100 opacity-60 rounded-xl  text-white'>
-                    <MdClear  style={{ color: 'black', fontSize: '22px' }} />
-                </span>)}
+            (<span 
+              title = {"Clear "+label}
+              onClick={() => handleOptionRemove(label)}
+              className='cursor-pointer flex   pb-1 mt-2 text-sm hover:shadow-inner hover:opacity-100 opacity-60 rounded-xl  text-white'>
+                <MdClear  style={{ color: 'black', fontSize: '22px' }} />
+            </span>)
+        }
       </div>
 
     );

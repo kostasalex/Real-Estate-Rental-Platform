@@ -1,13 +1,13 @@
 import React from 'react';
 import Filters from './filters/Filters';
 import { useLocation } from 'react-router-dom';
-import { FaArrowAltCircleUp, FaArrowAltCircleDown } from 'react-icons/fa';
 import { BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import FiltersSelected from './filters/FiltersSelected';
 import Cards from './Cards';
 import Papa from "papaparse";
 import ScrollToTopButton from '../scrollToTopButton/ScrollToTopButton';
+import FiltersToggle from '/src/components/common/buttons/FiletersToggle';
 
 const Results = () => {
 
@@ -22,8 +22,17 @@ const Results = () => {
   
   /* Open/close filter section */
   const [filtersToggle, setFiltersToggle] = React.useState(true);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   const handleFilterToggle = () => {
     setFiltersToggle(!filtersToggle);
+    scrollToTop()
   };
 
 
@@ -195,18 +204,7 @@ const Results = () => {
             </button>
         </div>}
       <div className='fixed  top-36 left-1  justify-end xl:mr-32'>
-            <button 
-                className='flex flex-row  items-center  justify-end shadow-xl xl:mt-0 mt-20 bg-blue1 rounded-xl px-2 py-1 transition duration-300 transform hover:translate-y--2 text-white duration-300 transform hover:translate-y-2'
-                onClick={handleFilterToggle}>
-                <div className='mr-2   text-lg'>
-                    Filters
-                </div>
-                <div className=''>
-                  {filtersToggle ?  <FaArrowAltCircleUp style={{ fontSize: '20px' }} />
-                                :<FaArrowAltCircleDown style={{ fontSize: '20px' }} />}
-                </div>
-            
-            </button>
+        <FiltersToggle filtersToggle = {filtersToggle} handleFilterToggle = {handleFilterToggle}/>
       </div>
       <div className='mt-2 justify-center flex text-3xl'>
         <Cards listings = {listings}/>

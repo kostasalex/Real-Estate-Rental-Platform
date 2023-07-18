@@ -115,7 +115,7 @@ const Header = (props) => {
                                 }
                             </div>
                 
-                        <UserMenu loggedInUserType = {props.loggedInUserType} handleLogout = {props.handleLogout} handleMessages={props.handleMessages}/>
+                        <UserMenu loggedInUserType = {props.loggedInUserType} handleDashboard={props.handleDashboard} handleLogout = {props.handleLogout} handleMessages={props.handleMessages}/>
                     </div>
         
            
