@@ -36,7 +36,6 @@ public class CardController {
                     .body(Map.of("error", "Card already registered. Please use a different card."));
         }
 
-
         // Save the user to the database
         int newCardId = cardDao.insertCard(card);
         if (newCardId > 0) {
@@ -50,24 +49,26 @@ public class CardController {
     }
 
     // @PostMapping("/api/v1/cards")
-    // public ResponseEntity<Map<String, Object>> insertCard(@RequestBody Card card) {
-    //     // Generate a unique card ID or use any logic you prefer
-    //     String cardId = UUID.randomUUID().toString();
+    // public ResponseEntity<Map<String, Object>> insertCard(@RequestBody Card card)
+    // {
+    // // Generate a unique card ID or use any logic you prefer
+    // String cardId = UUID.randomUUID().toString();
 
-    //     int rowsAffected = cardDao.insertCard(cardId, card);
+    // int rowsAffected = cardDao.insertCard(cardId, card);
 
-    //     if (rowsAffected > 0) {
-    //         // Card inserted successfully
-    //         card.setId(cardId);
-    //         Map<String, Object> response = new HashMap<>();
-    //         response.put("message", "Card inserted successfully");
-    //         response.put("card", card);
-    //         return ResponseEntity.ok(response);
-    //     } else {
-    //         // Failed to insert card
-    //         Map<String, Object> response = new HashMap<>();
-    //         response.put("message", "Failed to insert card");
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-    //     }
+    // if (rowsAffected > 0) {
+    // // Card inserted successfully
+    // card.setId(cardId);
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("message", "Card inserted successfully");
+    // response.put("card", card);
+    // return ResponseEntity.ok(response);
+    // } else {
+    // // Failed to insert card
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("message", "Failed to insert card");
+    // return
+    // ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    // }
     // }
 }

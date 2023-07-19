@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -130,7 +131,7 @@ public class CardImpl implements CardInterface {
 
     @Override
     public int insertCard(Card card) {
-        
+
         int rowsAffected = 0;
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
@@ -191,12 +192,31 @@ public class CardImpl implements CardInterface {
             String location = filtersJson.get("location").asText();
             String guests = filtersJson.get("guests").asText();
             String maxPrice = filtersJson.get("maxPrice").asText();
+            String arrive = filtersJson.get("arrive").asText();
+            String leave = filtersJson.get("leave").asText();
 
             List<String> roomTypes = getSelectedValues(filtersJson.get("roomType"));
             List<String> amenities = getSelectedValues(filtersJson.get("amenities"));
 
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.append("SELECT * FROM listings WHERE 1=1");
+
+            if (!arrive.isEmpty() && !leave.isEmpty()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+                LocalDate arriveDate = LocalDate.parse(arrive, formatter);
+                LocalDate leaveDate = LocalDate.parse(leave, formatter);
+
+                queryBuilder.append(" AND id NOT IN (SELECT listings_id FROM bookings WHERE (");
+                queryBuilder.append("(departure_date >= '").append(arriveDate).append("' AND arrival_date <= '")
+                        .append(leaveDate).append("')");
+                queryBuilder.append(" OR ");
+                queryBuilder.append("(arrival_date <= '").append(arriveDate).append("' AND departure_date >= '")
+                        .append(leaveDate).append("')");
+                queryBuilder.append(" OR ");
+                queryBuilder.append("(arrival_date >= '").append(arriveDate).append("' AND departure_date <= '")
+                        .append(leaveDate).append("')");
+                queryBuilder.append("))");
+            }
 
             if (!location.isEmpty()) {
                 // Split the location into individual words
