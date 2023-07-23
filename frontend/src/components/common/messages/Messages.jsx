@@ -11,7 +11,7 @@ const Messages = ({loggedInUserId, loggedInFirstName}) => {
 
   const fetchUserMessages = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/messages/user/${userId}`);
+      const response = await fetch(`http://localhost:8080/messages/user/${userId}`);
       if (response.ok) {
         const messages = await response.json();
         setMessages(messages);
@@ -25,7 +25,7 @@ const Messages = ({loggedInUserId, loggedInFirstName}) => {
     }
     
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/messages/users/${userId}`);
+      const response = await fetch(`http://localhost:8080/messages/users/${userId}`);
       if (response.ok) {
         const users = await response.json();
         setUsers(users);
@@ -74,7 +74,7 @@ const Messages = ({loggedInUserId, loggedInFirstName}) => {
     };
   
     try {
-      const response = await fetch('http://localhost:8080/api/v1/messages', {
+      const response = await fetch('http://localhost:8080/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

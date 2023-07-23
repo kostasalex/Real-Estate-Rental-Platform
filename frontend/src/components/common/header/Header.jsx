@@ -16,7 +16,7 @@ const Header = (props) => {
             navigate("signup", { state: { toggle: true }});
         } else {
             try {
-            const response = await fetch("http://localhost:8080/api/v1/become-host", {
+            const response = await fetch("http://localhost:8080/become-host", {
                 method: "POST",
                 headers: {
                 "Content-Type": "application/json",

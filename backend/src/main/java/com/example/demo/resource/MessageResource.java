@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/messages/resource")
+@RequestMapping("/messages/resource")
 @CrossOrigin(origins = "http://localhost:8080")
 public class MessageResource {
 

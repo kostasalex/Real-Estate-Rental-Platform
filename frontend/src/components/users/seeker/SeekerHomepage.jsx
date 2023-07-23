@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Cards from '../Cards';
-import Papa from "papaparse";
 
 
 const SeekerHomepage = () => {
@@ -10,7 +9,7 @@ const SeekerHomepage = () => {
     const NUM_RESULTS2 = 10;
     
     React.useEffect(() => {
-      fetch("http://localhost:8080/api/v1/cards")
+      fetch("http://localhost:8080/cards")
         .then((response) => response.json())
         .then((data) => {
           setSuggested(data.slice(10, NUM_RESULTS));

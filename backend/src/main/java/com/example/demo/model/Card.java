@@ -4,38 +4,43 @@ import java.time.LocalDate;
 
 public class Card {
 
-    private  String id;
-    private final String thumbnailUrl;
-    private final String mediumUrl;
-    private final float price;
-    private final String roomType;
-    private final int beds;
-    private final int numberOfReviews;
-    private final int reviewScoresRating;
-    private final String street;
-    private final String description;
-    private final String name;
-    private final String hostName;
-    private final String hostPictureUrl;
-    private final String amenities;
-    private final int accommodates;
-    private final int bathrooms;
-    private final int bedrooms;
-    private final String bedType;
-    private final float longitude;
-    private final float latitude;
-    private final LocalDate hostSince;
-    private final String hostLocation;
-    private final String hostAbout;
-    private final String hostResponseTime;
-    private final int hostResponseRate;
-    private final int hostListingsCount;
+    private String id;
+    private String thumbnailUrl;
+    private String mediumUrl;
+    private float price;
+    private String roomType;
+    private int beds;
+    private int numberOfReviews;
+    private int reviewScoresRating;
+    private String street;
+    private String description;
+    private String name;
+    private String hostName;
+    private String hostPictureUrl;
+    private String amenities;
+    private int accommodates;
+    private int bathrooms;
+    private int bedrooms;
+    private String bed_type;
+    private float lng;
+    private float lat;
+    private LocalDate hostSince;
+    private String hostLocation;
+    private String hostAbout;
+    private String hostResponseTime;
+    private int hostResponseRate;
+    private int hostListingsCount;
+    private String hosts_id;
+
+    public Card() {
+    }
 
     public Card(String id, String thumbnailUrl, String mediumUrl, float price, String roomType, int beds,
             int numberOfReviews, int reviewScoresRating, String street, String description, String name,
-            String hostName, String hostPictureUrl, String amenities, int accommodates, int bathrooms, int bedrooms,
-            String bedType, float longitude, float latitude, LocalDate hostSince, String hostLocation, String hostAbout,
-            String hostResponseTime, int hostResponseRate, int hostListingsCount) {
+            String hostName, String hostPictureUrl, String amenities, int accommodates, int bathrooms,
+            int bedrooms, String bed_type, float lng, float lat, LocalDate hostSince,
+            String hostLocation, String hostAbout, String hostResponseTime, int hostResponseRate,
+            int hostListingsCount, String hosts_id) {
         this.id = id;
         this.thumbnailUrl = thumbnailUrl;
         this.mediumUrl = mediumUrl;
@@ -53,16 +58,18 @@ public class Card {
         this.accommodates = accommodates;
         this.bathrooms = bathrooms;
         this.bedrooms = bedrooms;
-        this.bedType = bedType;
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.bed_type = bed_type;
+        this.lng = lng;
+        this.lat = lat;
         this.hostSince = hostSince;
         this.hostLocation = hostLocation;
         this.hostAbout = hostAbout;
         this.hostResponseTime = hostResponseTime;
         this.hostResponseRate = hostResponseRate;
         this.hostListingsCount = hostListingsCount;
+        this.hosts_id = hosts_id;
     }
+
 
     public String getId() {
         return id;
@@ -138,15 +145,15 @@ public class Card {
     }
 
     public String getBedType() {
-        return bedType;
+        return bed_type;
     }
 
     public float getLongitude() {
-        return longitude;
+        return lng;
     }
 
     public float getLatitude() {
-        return latitude;
+        return lat;
     }
 
     public LocalDate getHostSince() {
@@ -171,6 +178,10 @@ public class Card {
 
     public int getHostListingsCount() {
         return hostListingsCount;
+    }
+
+    public String gethosts_id() {
+        return hosts_id;
     }
 
 }

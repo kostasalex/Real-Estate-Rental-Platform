@@ -5,7 +5,7 @@ const Cards = () => {
   const [listings, setListings] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/v1/cards")
+    fetch("http://localhost:8080/cards")
       .then((response) => response.json())
       .then((data) => setListings(data))
       .catch((error) => console.error(error));
@@ -34,9 +34,9 @@ const Cards = () => {
             accommodates={listing.accommodates}
             bathrooms={listing.bathrooms}
             bedrooms={listing.bedrooms}
-            bedType={listing.bedType}
-            longitude={listing.longitude}
-            latitude={listing.latitude}
+            bed_type={listing.bed_type}
+            lng={listing.lng}
+            lat={listing.lat}
             hostSince={listing.hostSince}
             hostLocation={listing.hostLocation}
             hostAbout={listing.hostAbout}

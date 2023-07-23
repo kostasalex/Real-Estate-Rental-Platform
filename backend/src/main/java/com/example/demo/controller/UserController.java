@@ -19,7 +19,7 @@ public class UserController {
         this.userDao = userDao;
     }
 
-    @PostMapping("/api/v1/register")
+    @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> registerUser(@RequestBody User user) {
         // Check if the user already exists
         if (userDao.selectUserByEmail(user.getEmail()).isPresent()) {
@@ -39,7 +39,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/api/v1/login")
+    @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User user) {
         // Check if the user exists and the credentials are correct
         Map<String, Object> userDetails = userDao.authenticateUser(user.getEmail(), user.getPassword());
@@ -50,7 +50,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/api/v1/become-host")
+    @PostMapping("/become-host")
     public ResponseEntity<?> updateHostApplication(@RequestBody Map<String, String> payload) {
         String userId = payload.get("userId");
 
@@ -62,7 +62,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/api/v1/approve-application")
+    @PostMapping("/approve-application")
     public ResponseEntity<?> approveHostApplication(@RequestBody Map<String, String> payload) {
         String userId = payload.get("userId");
 

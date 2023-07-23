@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Header, SeekerHomepage, DashboardToggle, HostHomepage, NotFound, NewListing, Messages,  Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
+import { Header, SeekerHomepage, DashboardToggle, HostHomepage, NotFound, NewListing, Messages, Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
 import { Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -11,7 +11,7 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [adminDashboardToggle, setAdminDashboardToggle] =  useState(false)
+  const [adminDashboardToggle, setAdminDashboardToggle] = useState(false)
 
   const [loggedInUserType, setLoggedInUserType] = useState(
     localStorage.getItem('loggedInUserType') || null
@@ -32,10 +32,10 @@ function App() {
   const [loggedInUser, setLoggedInUser] = useState(
     JSON.parse(localStorage.getItem('loggedInUser')) || {}
   );
-   
-  
 
-  const handleUserInfo = (id, firstName,email, userType) => {
+
+
+  const handleUserInfo = (id, firstName, email, userType) => {
     setLoggedInUserId(id);
     setLoggedInUserEmail(email);
     setLoggedInUserFirstName(firstName);
@@ -55,7 +55,7 @@ function App() {
     localStorage.setItem('loggedInFirstName', firstName);
     localStorage.setItem('loggedInUserEmail', email);
     localStorage.setItem('loggedInUserType', userType);
-    handleUserInfo(id, firstName,email, userType );
+    handleUserInfo(id, firstName, email, userType);
   };
 
   const handleLogout = () => {
@@ -82,39 +82,35 @@ function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="App mt-20">
-        {loggedInUserType === 'Admin' && 
-          ( adminDashboardToggle ?  <AdminDashboard /> : <DashboardToggle handleDashboard={handleDashboard}/>
-        )}
-        <Header 
-          loggedInUserType={loggedInUserType} 
-          handleUserType = {handleUserType} 
-          loggedInUserId={loggedInUserId} 
-          handleLogout={handleLogout} 
+        {loggedInUserType === 'Admin' &&
+          (adminDashboardToggle ? <AdminDashboard /> : <DashboardToggle handleDashboard={handleDashboard} />
+          )}
+        <Header
+          loggedInUserType={loggedInUserType}
+          handleUserType={handleUserType}
+          loggedInUserId={loggedInUserId}
+          handleLogout={handleLogout}
           handleMessages={handleMessages}
           handleDashboard={handleDashboard}
         />
         <Routes>
           {loggedInUserType && (
-            <Route path = "/messages" element={<Messages loggedInUserId={loggedInUserId} loggedInFirstName = {loggedInUserFirstName} />}/>
-          )} 
+            <Route path="/messages" element={<Messages loggedInUserId={loggedInUserId} loggedInFirstName={loggedInUserFirstName} />} />
+          )}
           {loggedInUserType === 'Admin' && (
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           )}
-          {loggedInUserType === null && <Route path="/" element={<Cards/>} />}
+          {loggedInUserType === null && <Route path="/" element={<Cards />} />}
           {loggedInUserType === 'Host' && (
             <>
               <Route path="/" element={<HostHomepage />} />
-              <Route path="/newlisting" element={<NewListing />} />
+              <Route path="/newlisting" element={<NewListing loggedInUserId={loggedInUserId} />} />
             </>
-            )
-          }
+          )}
           {(loggedInUserType === 'Seeker' || loggedInUserType === 'PendingHost') && (
-
             <Route path="/" element={<SeekerHomepage />} />
+          )}
 
-            )
-          }
-          
           {loggedInUserType === 'Admin' && (
             <>
               <Route path="/dashboard" element={<AdminHomepage />} />
@@ -123,7 +119,7 @@ function App() {
               <Route path="/dashboard/reviews" element={<AdminReviews />} />
               <Route path="/dashboard/users" element={<AdminUsers />} />
             </>
-            )
+          )
           }
           <Route
             path="/login"
@@ -134,8 +130,8 @@ function App() {
             element={loggedInUserType ? <Navigate to="/" replace /> : <SignUp handleLogin={handleLogin} />}
           />
           <Route path="*" element={<Navigate to="/notfound" replace />} />
-          <Route path="/results/q?" element={<Results/>} />
-          <Route path="/cards/:cardId" element={<CardDetails/>} />
+          <Route path="/results/q?" element={<Results />} />
+          <Route path="/cards/:cardId" element={<CardDetails />} />
           <Route path="notfound" element={<NotFound />} />
         </Routes>
       </div>

@@ -43,7 +43,7 @@ const SignUp = (props) => {
 
     try {
         // Send the form data to the backend and handle the response
-        const response = await fetch('http://localhost:8080/api/v1/register', {
+        const response = await fetch('http://localhost:8080/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

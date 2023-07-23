@@ -34,7 +34,7 @@ function CardDetails() {
 	const [accommodates, setAccommodates] = useState(cardProps.accommodates);
 	const [bathrooms, setBathrooms] = useState(cardProps.bathrooms);
 	const [bedrooms, setBedrooms] = useState(cardProps.bedrooms);
-	const [bedType, setBedType] = useState(cardProps.bedType);
+	const [bed_type, setBedType] = useState(cardProps.bed_type);
 	const [numberOfReviews, setNumberOfReviews] = useState(cardProps.numberOfReviews);
 	const [reviewScoresRating, setReviewScoresRating] = useState(cardProps.reviewScoresRating);
 	const [street, setStreet] = useState(cardProps.street);
@@ -51,8 +51,8 @@ function CardDetails() {
 
 	const [amenities, setAmenities] = useState(cardProps.amenities);
 
-	const [longitude, setLongitude] = useState(cardProps.longitude);
-	const [latitude, setLatitude] = useState(cardProps.latitude);
+	const [lng, setLongitude] = useState(cardProps.lng);
+	const [lat, setLatitude] = useState(cardProps.lat);
 
 	const [people, setPeople] = useState(1);
 	const [isOpen, setIsOpen] = useState(false);
@@ -135,7 +135,7 @@ function CardDetails() {
 	}, [accommodates, arrivalDate, departureDate]);
 
 	useEffect(() => {
-		fetch('http://localhost:8080/api/v1/reviews')
+		fetch('http://localhost:8080/reviews')
 			.then((response) => response.json())
 			.then((data) => {
 				const filteredReviews = data.filter((review) => cardProps.id === review.listingId);
@@ -158,7 +158,7 @@ function CardDetails() {
 			setQuestion('');
 		}
 		try {
-		const response = await fetch('http://localhost:8080/api/v1/messages', {
+		const response = await fetch('http://localhost:8080/messages', {
 			method: 'POST',
 			headers: {
 			'Content-Type': 'application/json',
@@ -382,9 +382,9 @@ function CardDetails() {
 
 					{/* map */}
 					<div className="relative">
-						<MapContainer center={[latitude, longitude]} zoom={13} style={{ height: '400px', width: '100%' }} className="z-0">
+						<MapContainer center={[lat, lng]} zoom={13} style={{ height: '400px', width: '100%' }} className="z-0">
 							<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-							<Marker position={[latitude, longitude]} />
+							<Marker position={[lat, lng]} />
 						</MapContainer>
 					</div>
 				</div>
