@@ -61,7 +61,7 @@ public class ReviewImpl implements ReviewInterface {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
-                        "UPDATE reviews SET rating = ?, comment = ?, date = ?, renter_id = ?, listings_id = ?, host_id = ? WHERE id = ?");) {
+                        "UPDATE reviews SET rating = ?, comment = ?, date = ?, renters_id = ?, listings_id = ?, hosts_id = ? WHERE id = ?");) {
             stmt.setFloat(1, review.getRating());
             stmt.setString(2, review.getComment());
             stmt.setString(3, review.getDate());
@@ -123,7 +123,7 @@ public class ReviewImpl implements ReviewInterface {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
-                        "INSERT INTO reviews (id, rating, comment, date, renter_id, listings_id, host_id) VALUES (?, ?, ?, ?, ?, ?, ?)");) {
+                        "INSERT INTO reviews (id, rating, comment, date, renters_id, listings_id, hosts_id) VALUES (?, ?, ?, ?, ?, ?, ?)");) {
             stmt.setString(1, review.getId());
             stmt.setFloat(2, review.getRating());
             stmt.setString(3, review.getComment());
@@ -146,9 +146,9 @@ public class ReviewImpl implements ReviewInterface {
         float rating = rs.getFloat("rating");
         String comment = rs.getString("comment");
         String date = rs.getString("date");
-        String renterId = rs.getString("renter_id");
+        String renterId = rs.getString("renters_id");
         String listingsId = rs.getString("listings_id");
-        String hostId = rs.getString("host_id");
+        String hostId = rs.getString("hosts_id");
 
         return new Review(id, rating, comment, date, renterId, listingsId, hostId);
     }
