@@ -51,8 +51,8 @@ function CardDetails() {
 
 	const [amenities, setAmenities] = useState(cardProps.amenities);
 
-	const [lng, setLongitude] = useState(cardProps.lng);
-	const [lat, setLatitude] = useState(cardProps.lat);
+	const [lng, setLongitude] = useState(cardProps.longitude);
+	const [lat, setLatitude] = useState(cardProps.latitude);
 
 	const [people, setPeople] = useState(1);
 	const [isOpen, setIsOpen] = useState(false);

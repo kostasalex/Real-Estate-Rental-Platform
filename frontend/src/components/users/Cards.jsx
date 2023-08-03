@@ -26,8 +26,8 @@ const Cards = ({listings}) => {
                 bathrooms={listing.bathrooms}
                 bedrooms={listing.bedrooms}
                 bed_type={listing.bed_type}
-                lng={listing.lng}
-                lat={listing.lat}
+                longitude={listing.longitude}
+                latitude={listing.latitude}
                 hostSince={listing.hostSince}
                 hostLocation={listing.hostLocation}
                 hostAbout={listing.hostAbout}
