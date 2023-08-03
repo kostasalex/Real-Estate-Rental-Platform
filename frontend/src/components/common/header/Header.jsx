@@ -31,7 +31,7 @@ const Header = (props) => {
                 icon: "success",
                 confirmButtonText: "OK",
                 }).then(() => {
-                    handleUserType('PendingHost');
+                    props.handleUserType('PendingHost');
                 });
             } else {
                 Swal.fire({
@@ -91,23 +91,24 @@ const Header = (props) => {
                     <div className="flex justify-end relative mt-4">
                     
                     
-                            <div className="font-semibold inline-block hidden md:block py-2 px-3 opacity-70 hover:opacity-100  rounded-full" >
+                            <div className="font-semibold inline-block hidden md:block py-2 px-3 opacity-70   rounded-full" >
                                 {
                                 (props.loggedInUserType === "Seeker" || !props.loggedInUserType)  && 
                                  (<div 
-                                    className="flex items-center relative  cursor-pointer whitespace-nowrap"
+                                    className="flex items-center relative  cursor-pointer hover:shadow-xl whitespace-nowrap"
                                     onClick= {becomeHostHandler}
                                     >
                                         Become a host
                                  </div>)}
                                  {props.loggedInUserType === "PendingHost" && (<div 
-                                    className="flex items-center relative  whitespace-nowrap"
+                                    className="flex items-center relative whitespace-nowrap"
+                                    title = "Waiting For Host Approval"
                                     >
                                         Applied For Host
                                  </div>)
                                 }
                                 {props.loggedInUserType === "Host" && (<div 
-                                    className="flex items-center relative  cursor-pointer whitespace-nowrap"
+                                    className="flex items-center relative  cursor-pointer  hover:shadow-xl whitespace-nowrap"
                                     onClick= {rentHandler}
                                     >
                                         Rent out Property
