@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Header, SeekerHomepage, DashboardToggle, HostHomepage, NotFound, NewListing, Messages, Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
+import { Header, SeekerHomepage, DashboardToggle, HostHomepage, Footer, NotFound, NewListing, Messages, Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
 import { Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -134,6 +134,7 @@ function App() {
           <Route path="/cards/:cardId" element={<CardDetails />} />
           <Route path="notfound" element={<NotFound />} />
         </Routes>
+        <Footer />
       </div>
     </LocalizationProvider>
 
