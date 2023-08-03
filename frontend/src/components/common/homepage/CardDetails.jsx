@@ -43,6 +43,7 @@ function CardDetails() {
 	const [hostName, setHostName] = useState(cardProps.hostName);
 	const [hostPictureUrl, setHostPictureUrl] = useState(cardProps.hostPictureUrl);
 	const [hostSince, setHostSince] = useState(cardProps.hostSince);
+	const [hostsId, setHostsId] = useState(cardProps.hosts_id);
 	const [hostLocation, setHostLocation] = useState(cardProps.hostLocation);
 	const [hostAbout, setHostAbout] = useState('');
 	const [hostResponseTime, setHostResponseTime] = useState(cardProps.hostResponseTime);
@@ -152,20 +153,21 @@ function CardDetails() {
 	const [questions, setQuestions] = useState([]);
 
 	const handleSubmit = async (e) => {
+		console.log(hostsId)
 		e.preventDefault();
 		if (question.trim() !== '') {
 			setQuestions([question, ...questions]);
 			setQuestion('');
 		}
 		try {
-		const response = await fetch('http://localhost:8080/messages', {
+		const response = await fetch('http://localhost:8080/api/v1/messages', {
 			method: 'POST',
 			headers: {
 			'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
 			senderId: localStorage.getItem('loggedInUserId'),
-			recipientId: hostId, //! Need host id to send 
+			recipientId: hostsId, //! Need host id to send 
 			content: question,
 			}),
 		});

@@ -34,6 +34,7 @@ const Cards = ({listings}) => {
                 hostResponseTime={listing.hostResponseTime}
                 hostResponseRate={listing.hostResponseRate}
                 hostListingsCount={listing.hostListingsCount}
+                hosts_id = {listing.hosts_id}
             />
             ))}
             </div>

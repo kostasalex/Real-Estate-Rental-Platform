@@ -74,7 +74,7 @@ const Messages = ({loggedInUserId, loggedInFirstName}) => {
     };
   
     try {
-      const response = await fetch('http://localhost:8080/messages', {
+      const response = await fetch('http://localhost:8080/api/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
