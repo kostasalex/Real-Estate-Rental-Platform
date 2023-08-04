@@ -15,7 +15,7 @@ const SignUp = (props) => {
     const toggle = location?.state?.toggle || false;
 
     const navigateToLogIn = () => {
-        navigate('/login');
+        navigate('/login', { state: { from: location.state.from } });
     };
 
     const [rentingPlace, setRentingPlace] = useState(toggle);
@@ -59,7 +59,8 @@ const SignUp = (props) => {
             title: 'Welcome ' + values.first_name + '!',
             text: msg,
             icon: 'success',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
+            timer: 3000
         }).then(() => {
             /* Navigate previous paths */
             const userData = {
@@ -70,7 +71,7 @@ const SignUp = (props) => {
             };
 
             props.handleLogin(userData);
-            navigate('/');
+            navigate(location.state?.from || '/');
         });
         } else {
             const errorMessage = await response.json(); // Parse the error message as JSON
@@ -78,7 +79,8 @@ const SignUp = (props) => {
             title: 'Error',
             text: errorMessage.error,
             icon: 'error',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
+            showCloseButton: true
             });
         }
     } catch (error) {

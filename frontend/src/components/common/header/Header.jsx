@@ -30,6 +30,7 @@ const Header = (props) => {
                 text: "We will notify you as soon as it is approved",
                 icon: "success",
                 confirmButtonText: "OK",
+                showCloseButton: true,
                 }).then(() => {
                     props.handleUserType('PendingHost');
                 });
@@ -39,6 +40,7 @@ const Header = (props) => {
                 text: "Failed to submit application",
                 icon: "error",
                 confirmButtonText: "OK",
+                showCloseButton: true,
                 });
             }
             } catch (error) {

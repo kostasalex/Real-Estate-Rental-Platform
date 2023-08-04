@@ -6,8 +6,13 @@ import 'leaflet/dist/leaflet.css';
 import { DatePicker } from '@mui/x-date-pickers';
 import Swal from "sweetalert2";
 import { FaUser } from "react-icons/fa";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function CardDetails() {
+
+	const location = useLocation();
+	const navigate = useNavigate();
+
 	const cardProps = JSON.parse(localStorage.getItem("cardProps"));
 	const [arrivalDate, setArrivalDate] = useState(null);
 	const [departureDate, setDepartureDate] = useState(null);
@@ -78,17 +83,27 @@ function CardDetails() {
 
 	const openDialogHost = () => {
 		if(localStorage.getItem('loggedInUserType'))
-			setIsOpenHost(true);
-		else
-		{ 
-			Swal.fire({
-				title: 'Login or Sign Up',
-				html: 'You have to <a class = "text-lg text-blue1" href="/login">login</a> or <a class = "text-blue1" href="/signup">sign up</a> before you can contact the host.',
-				icon: 'info',
-				confirmButtonText: 'OK',
-			  });
+		  setIsOpenHost(true);
+		else { 
+		  Swal.fire({
+			title: 'Login or Sign Up',
+			html: 'You have to login or sign up before you can contact the host.',
+			icon: 'info',
+			confirmButtonText: 'Login',
+			showCancelButton: true,
+			cancelButtonText: 'Sign Up',
+			showCloseButton: true,
+		  }).then((result) => {
+			if (result.isConfirmed) {
+			  navigate('/login', { state: { from: location.pathname } });  // Pass current page as state
+			} else if (result.isDismissed && result.dismiss !== Swal.DismissReason.close) {
+			  navigate('/signup', { state: { from: location.pathname } });  // Pass current page as state
+			}
+		  });
 		}
-	};
+	  };
+	  
+	
 
 	const closeDialogHost = () => {
 		setIsOpenHost(false);
@@ -118,14 +133,32 @@ function CardDetails() {
 	};
 
 	function postHandler() {
-		Swal.fire({
-			title: 'Reservation successfull!',
-			text: 'The host is notified about your booking.',
-			icon: 'success',
-			confirmButtonText: 'OK'
-		}).then(() => {
-			navigate('/');
-		});
+		if(localStorage.getItem('loggedInUserType'))
+			Swal.fire({
+				title: 'Reservation successfull!',
+				text: 'The host is notified about your booking.',
+				icon: 'success',
+				confirmButtonText: 'OK'
+			}).then(() => {
+				navigate('/');
+			});
+		else { 
+		  Swal.fire({
+			title: 'Login or Sign Up',
+			html: 'You have to login or sign up before booking.',
+			icon: 'info',
+			confirmButtonText: 'Login',
+			showCancelButton: true,
+			cancelButtonText: 'Sign Up',
+			showCloseButton: true,
+		  }).then((result) => {
+			if (result.isConfirmed) {
+			  navigate('/login', { state: { from: location.pathname } });  // Pass current page as state
+			} else if (result.isDismissed && result.dismiss !== Swal.DismissReason.close) {
+			  navigate('/signup', { state: { from: location.pathname } });  // Pass current page as state
+			}
+		  });
+		}
 	}
 
 	useEffect(() => {
