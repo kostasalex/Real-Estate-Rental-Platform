@@ -81,7 +81,7 @@ function App() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="App mt-20">
+      <div className="App mt-20 flex pb-40 flex-col min-h-screen">
         {loggedInUserType === 'Admin' &&
           (adminDashboardToggle ? <AdminDashboard /> : <DashboardToggle handleDashboard={handleDashboard} />
           )}
@@ -93,47 +93,49 @@ function App() {
           handleMessages={handleMessages}
           handleDashboard={handleDashboard}
         />
-        <Routes>
-          {loggedInUserType && (
-            <Route path="/messages" element={<Messages loggedInUserId={loggedInUserId} loggedInFirstName={loggedInUserFirstName} />} />
-          )}
-          {loggedInUserType === 'Admin' && (
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          )}
-          {loggedInUserType === null && <Route path="/" element={<Cards />} />}
-          {loggedInUserType === 'Host' && (
-            <>
-              <Route path="/" element={<HostHomepage />} />
-              <Route path="/newlisting" element={<NewListing loggedInUserId={loggedInUserId} />} />
-            </>
-          )}
-          {(loggedInUserType === 'Seeker' || loggedInUserType === 'PendingHost') && (
-            <Route path="/" element={<SeekerHomepage />} />
-          )}
+        <div className="flex-grow">
+          <Routes>
+            {loggedInUserType && (
+              <Route path="/messages" element={<Messages loggedInUserId={loggedInUserId} loggedInFirstName={loggedInUserFirstName} />} />
+            )}
+            {loggedInUserType === 'Admin' && (
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            )}
+            {loggedInUserType === null && <Route path="/" element={<Cards />} />}
+            {loggedInUserType === 'Host' && (
+              <>
+                <Route path="/" element={<HostHomepage />} />
+                <Route path="/newlisting" element={<NewListing loggedInUserId={loggedInUserId} />} />
+              </>
+            )}
+            {(loggedInUserType === 'Seeker' || loggedInUserType === 'PendingHost') && (
+              <Route path="/" element={<SeekerHomepage />} />
+            )}
 
-          {loggedInUserType === 'Admin' && (
-            <>
-              <Route path="/dashboard" element={<AdminHomepage />} />
-              <Route path="/dashboard/bookings" element={<AdminBookings />} />
-              <Route path="/dashboard/listings" element={<AdminListings />} />
-              <Route path="/dashboard/reviews" element={<AdminReviews />} />
-              <Route path="/dashboard/users" element={<AdminUsers />} />
-            </>
-          )
-          }
-          <Route
-            path="/login"
-            element={loggedInUserType ? <Navigate to="/" replace /> : <Login handleLogin={handleLogin} />}
-          />
-          <Route
-            path="/signup"
-            element={loggedInUserType ? <Navigate to="/" replace /> : <SignUp handleLogin={handleLogin} />}
-          />
-          <Route path="*" element={<Navigate to="/notfound" replace />} />
-          <Route path="/results/q?" element={<Results />} />
-          <Route path="/cards/:cardId" element={<CardDetails />} />
-          <Route path="notfound" element={<NotFound />} />
-        </Routes>
+            {loggedInUserType === 'Admin' && (
+              <>
+                <Route path="/dashboard" element={<AdminHomepage />} />
+                <Route path="/dashboard/bookings" element={<AdminBookings />} />
+                <Route path="/dashboard/listings" element={<AdminListings />} />
+                <Route path="/dashboard/reviews" element={<AdminReviews />} />
+                <Route path="/dashboard/users" element={<AdminUsers />} />
+              </>
+            )
+            }
+            <Route
+              path="/login"
+              element={loggedInUserType ? <Navigate to="/" replace /> : <Login handleLogin={handleLogin} />}
+            />
+            <Route
+              path="/signup"
+              element={loggedInUserType ? <Navigate to="/" replace /> : <SignUp handleLogin={handleLogin} />}
+            />
+            <Route path="*" element={<Navigate to="/notfound" replace />} />
+            <Route path="/results/q?" element={<Results />} />
+            <Route path="/cards/:cardId" element={<CardDetails />} />
+            <Route path="notfound" element={<NotFound />} />
+          </Routes>
+        </div>
         <Footer />
       </div>
     </LocalizationProvider>
