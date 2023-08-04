@@ -48,7 +48,7 @@ const UsersTable = ({ users, rowClickHandler, iconStyle, userIcon }) => {
             </td>
             <td className="px-6 py-4 whitespace-no-wrap">
               <div className="text-sm leading-5 font-medium justify-center flex text-gray-900">
-                {user.hostApplication === '1' && 'Yes'}
+                {user.hostApplication === '1' && 'Pending'}
                 {user.hostApplication === '0' && 'No'}
                 {user.hostApplication === '2' && 'Approved'}
               </div>

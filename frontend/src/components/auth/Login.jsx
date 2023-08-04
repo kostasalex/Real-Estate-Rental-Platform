@@ -52,6 +52,7 @@ const Login = (props) => {
           text: 'Invalid email or password',
           icon: 'error',
           confirmButtonText: 'OK',
+          showCloseButton: true
         });
       } else {
         // Other server errors
