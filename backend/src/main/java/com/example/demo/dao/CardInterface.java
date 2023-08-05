@@ -20,4 +20,10 @@ public interface CardInterface {
     int insertCardImp(Card card);
 
     List<Card> searchCards(String filters);
+
+    List<String> getDistinctCountries();
+
+    List<String> getDistinctCities();
+
+    List<String> getDistinctStreets();
 }

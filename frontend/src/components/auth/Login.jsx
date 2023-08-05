@@ -34,16 +34,17 @@ const Login = (props) => {
           email: values.email
         };
         console.log(userData2);
+        /* Navigate previous paths */
         props.handleLogin(userData2);
+        navigate(location.state?.from || '/');
         Swal.fire({
           title: 'Welcome ' + userData2.firstName + '!',
           icon: 'success',
           confirmButtonText: 'OK',
           timer: 3000
         }).then(() => {
-            /* Navigate previous paths */
+            
             props.handleLogin(userData);
-            navigate(location.state?.from || '/');
         });
       } else if (response.status === 401) {
         // User not found or incorrect credentials

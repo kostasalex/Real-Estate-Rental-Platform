@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import { FaUser } from "react-icons/fa";
 import { useNavigate, useLocation } from 'react-router-dom';
 
+
 function CardDetails() {
 
 	const location = useLocation();

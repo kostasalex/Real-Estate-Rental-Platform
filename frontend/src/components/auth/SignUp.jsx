@@ -52,26 +52,25 @@ const SignUp = (props) => {
         });
 
         if (response.ok) {
-        const data = await response.json(); // Parse the response as JSON
-        const userId = data.id; // Access the ID from the response
-
-        Swal.fire({
-            title: 'Welcome ' + values.first_name + '!',
-            text: msg,
-            icon: 'success',
-            confirmButtonText: 'OK',
-            timer: 3000
-        }).then(() => {
-            /* Navigate previous paths */
-            const userData = {
-            id: userId, // Use the correct ID here
-            firstName: values.first_name,
-            userType: userType,
-            email: values.email
-            };
-
-            props.handleLogin(userData);
+            const data = await response.json(); // Parse the response as JSON
+            const userId = data.id; // Access the ID from the response
             navigate(location.state?.from || '/');
+            Swal.fire({
+                title: 'Welcome ' + values.first_name + '!',
+                text: msg,
+                icon: 'success',
+                confirmButtonText: 'OK',
+                timer: 3000
+            }).then(() => {
+                /* Navigate previous paths */
+                const userData = {
+                id: userId, // Use the correct ID here
+                firstName: values.first_name,
+                userType: userType,
+                email: values.email
+                };
+
+                props.handleLogin(userData);
         });
         } else {
             const errorMessage = await response.json(); // Parse the error message as JSON

@@ -347,4 +347,53 @@ public class CardImpl implements CardInterface {
 				lng, lat, hostSince, hostLocation, hostAbout, hostResponseTime, hostResponseRate,
 				hostListingsCount, hostId);
 	}
+
+	public List<String> getDistinctCountries() {
+		List<String> countries = new ArrayList<>();
+		String query = "SELECT DISTINCT TRIM(SUBSTRING_INDEX(street, ',', -1)) AS country FROM listings";
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(query)) {
+			while (rs.next()) {
+				countries.add(rs.getString("country"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// Handle the exception as needed
+		}
+		return countries;
+	}
+
+	public List<String> getDistinctCities() {
+		List<String> cities = new ArrayList<>();
+		String query = "SELECT DISTINCT TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(street, ',', -3), ',', 1)) AS city FROM listings";
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(query)) {
+			while (rs.next()) {
+				cities.add(rs.getString("city"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// Handle the exception as needed
+		}
+		return cities;
+	}
+
+	public List<String> getDistinctStreets() {
+		List<String> streets = new ArrayList<>();
+		String query = "SELECT DISTINCT TRIM(SUBSTRING_INDEX(street, ',', 1)) AS street FROM listings";
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(query)) {
+			while (rs.next()) {
+				streets.add(rs.getString("street"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// Handle the exception as needed
+		}
+		return streets;
+	}
+
 }
