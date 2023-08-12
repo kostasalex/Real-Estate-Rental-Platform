@@ -7,28 +7,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dao.CardInterface;
 import com.example.demo.model.Card;
-import com.example.demo.service.CardService;
 
 @RestController
 @RequestMapping(path = "api/v1/cards")
-
 public class CardResource {
 
-    private CardService cardService;
+    private CardInterface cardInterface;
 
-    public CardResource(CardService cardService) {
-        this.cardService = cardService;
+    public CardResource(CardInterface cardInterface) {
+        this.cardInterface = cardInterface;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Card> fetchCards() {
-        return cardService.getAllCards();
+        return cardInterface.selectAllCards();
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "{cardId}")
     public Card fetchCard(@PathVariable("cardId") String cardId) {
-        return cardService.getCard(cardId).orElse(null);
+        return cardInterface.selectCardByCardId(cardId).orElse(null);
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/countries")
+    public List<String> getCountries() {
+        return cardInterface.getDistinctCountries();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/cities")
+    public List<String> getCities() {
+        return cardInterface.getDistinctCities();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/streets")
+    public List<String> getStreets() {
+        return cardInterface.getDistinctStreets();
+    }
 }

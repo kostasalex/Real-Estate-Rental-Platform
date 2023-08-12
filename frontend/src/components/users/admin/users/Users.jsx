@@ -8,10 +8,14 @@ import Papa from 'papaparse';
 const Users = () => {
   const MAX_RESULTS_PER_PAGE = 10;
 
+  const [showAll, setShowAll] = useState(true);
+  const [showPending, setShowPending] = useState(false);
+  const [showApproved, setShowApproved] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isOpenUser, setIsOpenUser] = useState(false);
+  const [allFilteredUsers, setAllFilteredUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [num_results, setNum_Results] = useState(0);
 
@@ -46,12 +50,45 @@ const Users = () => {
   };
   /*************************** */
 
-  /* Handle pages */
+  /* User Filters */
+  const showAllUsers = () => {
+    setShowAll(true);
+    setShowPending(false);
+    setShowApproved(false);
+  };
+
+  const showPendingUsers = () => {
+    setShowAll(false);
+    setShowPending(true);
+    setShowApproved(false);
+  };
+
+  const showApprovedUsers = () => {
+    setShowAll(false);
+    setShowPending(false);
+    setShowApproved(true);
+  };
+  /******************************/
+
+  /* Handle filtered users */
+  useEffect(() => {
+    let filtered = users;
+    if (showPending) {
+      filtered = users.filter(user => user.hostApplication === '1');
+    } else if (showApproved) {
+      filtered = users.filter(user => user.hostApplication === '2');
+    }
+    setAllFilteredUsers(filtered);
+    setNum_Results(filtered.length);
+  }, [users, showAll, showPending, showApproved]);
+
+
+  /* handle pages */
   useEffect(() => {
     const start = (currentPage - 1) * MAX_RESULTS_PER_PAGE;
     const end = start + MAX_RESULTS_PER_PAGE;
-    setFilteredUsers(users.slice(start, end));
-  }, [currentPage, users]);
+    setFilteredUsers(allFilteredUsers.slice(start, end));
+  }, [currentPage, allFilteredUsers]);
 
   const totalPages = () => {
     return users ? Math.ceil(users.length / MAX_RESULTS_PER_PAGE) : 1;
@@ -72,7 +109,7 @@ const Users = () => {
 
   /** Handle download data  **/
   const downloadCSV = () => {
-    const csv = Papa.unparse(users);
+    const csv = Papa.unparse(allFilteredUsers);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
@@ -85,7 +122,7 @@ const Users = () => {
   };
 
   const downloadJSON = () => {
-    const json = JSON.stringify(users, null, 2);
+    const json = JSON.stringify(allFilteredUsers, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
@@ -159,45 +196,70 @@ const Users = () => {
 
   return (
     <div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
-      <div className="flex items-center justify-between pb-6">
-        <div>
+      <div className="flex flex-col  pb-6">
+        <div className='p-2 pb-10 items-start'>
           <h2 className="font-semibold text-gray-700">User Accounts</h2>
           <span className="text-sm text-gray-500">View accounts of registered users and approve applications</span>
         </div>
-        <div className="ml-10 space-x-8 flex flex-rows lg:ml-40">
-          <button
-            className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700"
-            onClick={downloadCSV}
+        <div className='flex justify-between'>
+
+        <div className="flex space-x-2 ml-2 bg-gray-200 rounded-full">
+          <button 
+              onClick={showAllUsers} 
+              className={`px-4 py-2 rounded-2xl ${showAll ? "bg-blue-600 text-white" : "bg-gray-200 text-black"}`}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="h-4 w-4"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" />
-            </svg>
-            CSV
+              All
           </button>
-          <button
-            className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700"
-            onClick={downloadJSON}
+          <button 
+              onClick={showPendingUsers} 
+              className={`px-4 py-2 rounded-2xl ${showPending ? "bg-blue-600 text-white" : "bg-gray-200 text-black"}`}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="h-4 w-4"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" />
-            </svg>
-            JSON
+              Pending
+          </button>
+          <button 
+              onClick={showApprovedUsers} 
+              className={`px-4 py-2 rounded-2xl ${showApproved ? "bg-blue-600 text-white" : "bg-gray-200 text-black"}`}
+          >
+              Approved
           </button>
         </div>
+
+          <div className='flex justify-end space-x-4 '>
+              <button
+                className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700"
+                onClick={downloadCSV}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" />
+                </svg>
+                CSV
+              </button>
+              <button
+                className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700"
+                onClick={downloadJSON}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" />
+                </svg>
+                JSON
+              </button>
+          </div>
+        </div>
+
       </div>
       <div className="overflow-y-hidden rounded-lg border">
         <div className="overflow-x-auto">

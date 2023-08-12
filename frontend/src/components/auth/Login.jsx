@@ -3,14 +3,15 @@ import { login } from '/src/assets/constants';
 import { useFormik } from 'formik';
 import { loginSchema } from '/src/schemas';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import backgroundImage from '/src/assets/auth.png';
 
 const Login = (props) => {
+  const location = useLocation();
   const navigate = useNavigate();
 
   const navigateToSignUp = () => {
-    navigate('/signup');
+    navigate('/signup', { state: { from: location.state.from } });
   };
 
 
@@ -33,8 +34,18 @@ const Login = (props) => {
           email: values.email
         };
         console.log(userData2);
+        /* Navigate previous paths */
         props.handleLogin(userData2);
-        navigate('/');
+        navigate(location.state?.from || '/');
+        Swal.fire({
+          title: 'Welcome ' + userData2.firstName + '!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          timer: 3000
+        }).then(() => {
+            
+            props.handleLogin(userData);
+        });
       } else if (response.status === 401) {
         // User not found or incorrect credentials
         Swal.fire({
@@ -42,6 +53,7 @@ const Login = (props) => {
           text: 'Invalid email or password',
           icon: 'error',
           confirmButtonText: 'OK',
+          showCloseButton: true
         });
       } else {
         // Other server errors

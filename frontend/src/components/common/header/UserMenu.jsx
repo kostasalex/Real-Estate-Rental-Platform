@@ -101,6 +101,7 @@ const UserMenu = ({loggedInUserType, handleLogout, handleMessages, handleDashboa
                                     </div>
                                 </div>
                                )}
+                                {loggedInUserType != "Admin" && (
                                 <div className="flex cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
                                     <div className='rounded-full p-1 mr-2'>
                                         <BsChatSquareTextFill/>
@@ -110,7 +111,8 @@ const UserMenu = ({loggedInUserType, handleLogout, handleMessages, handleDashboa
                                         onClick={() => handleMessages()}>
                                         Messages 
                                     </div>
-                                </div>  
+                                </div> 
+                                )} 
                                 <div className="flex  items-center cursor-pointer px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                                 onClick={() => handleLogout()}>
 

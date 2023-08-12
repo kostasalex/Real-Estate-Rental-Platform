@@ -11,7 +11,7 @@ const Messages = ({loggedInUserId, loggedInFirstName}) => {
 
   const fetchUserMessages = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:8080/messages/user/${userId}`);
+      const response = await fetch(`http://localhost:8080/api/v1/messages/user/${userId}`);
       if (response.ok) {
         const messages = await response.json();
         setMessages(messages);
@@ -25,7 +25,7 @@ const Messages = ({loggedInUserId, loggedInFirstName}) => {
     }
     
     try {
-      const response = await fetch(`http://localhost:8080/messages/users/${userId}`);
+      const response = await fetch(`http://localhost:8080/api/v1/messages/users/${userId}`);
       if (response.ok) {
         const users = await response.json();
         setUsers(users);
@@ -74,7 +74,7 @@ const Messages = ({loggedInUserId, loggedInFirstName}) => {
     };
   
     try {
-      const response = await fetch('http://localhost:8080/messages', {
+      const response = await fetch('http://localhost:8080/api/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const Messages = ({loggedInUserId, loggedInFirstName}) => {
       });
   
       if (response.ok) {
-        // Message sent successfully, update the state or fetch the updated messages
+        // Message send successfully, update the state or fetch the updated messages
         fetchUserMessages(loggedInUserId);
         setNewMessage('');
       } else {
@@ -195,15 +195,26 @@ const Messages = ({loggedInUserId, loggedInFirstName}) => {
                   </div>
                 </div>
                 <div className="ml-4">
-                    <button
-                      onClick={handleSendMessage}
-                      className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 mt-2"
-                    >
-                    <span>Send</span>
-                    <span className="ml-2">
-                      <TbSend />
-                    </span>
-                  </button>
+                  {users.length ?
+                    (<button
+                        onClick={handleSendMessage}
+                        className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 mt-2"
+                      >
+                      <span>Send</span>
+                      <span className="ml-2">
+                        <TbSend />
+                      </span>
+                    </button>) 
+                    :
+                    (<div
+                        className="flex items-center justify-center bg-gray-400 border-1 border-gray-800 rounded-xl text-white px-4 py-1 mt-2"
+                      >
+                      <span>Send</span>
+                      <span className="ml-2">
+                        <TbSend />
+                      </span>
+                    </div>) 
+                  }
                 </div>
               </div>
             </div>

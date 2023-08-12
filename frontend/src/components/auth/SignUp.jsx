@@ -15,7 +15,7 @@ const SignUp = (props) => {
     const toggle = location?.state?.toggle || false;
 
     const navigateToLogIn = () => {
-        navigate('/login');
+        navigate('/login', { state: { from: location.state.from } });
     };
 
     const [rentingPlace, setRentingPlace] = useState(toggle);
@@ -52,25 +52,25 @@ const SignUp = (props) => {
         });
 
         if (response.ok) {
-        const data = await response.json(); // Parse the response as JSON
-        const userId = data.id; // Access the ID from the response
+            const data = await response.json(); // Parse the response as JSON
+            const userId = data.id; // Access the ID from the response
+            navigate(location.state?.from || '/');
+            Swal.fire({
+                title: 'Welcome ' + values.first_name + '!',
+                text: msg,
+                icon: 'success',
+                confirmButtonText: 'OK',
+                timer: 3000
+            }).then(() => {
+                /* Navigate previous paths */
+                const userData = {
+                id: userId, // Use the correct ID here
+                firstName: values.first_name,
+                userType: userType,
+                email: values.email
+                };
 
-        Swal.fire({
-            title: 'Welcome ' + values.first_name + '!',
-            text: msg,
-            icon: 'success',
-            confirmButtonText: 'OK'
-        }).then(() => {
-            /* Navigate previous paths */
-            const userData = {
-            id: userId, // Use the correct ID here
-            firstName: values.first_name,
-            userType: userType,
-            email: values.email
-            };
-
-            props.handleLogin(userData);
-            navigate('/');
+                props.handleLogin(userData);
         });
         } else {
             const errorMessage = await response.json(); // Parse the error message as JSON
@@ -78,7 +78,8 @@ const SignUp = (props) => {
             title: 'Error',
             text: errorMessage.error,
             icon: 'error',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
+            showCloseButton: true
             });
         }
     } catch (error) {

@@ -6,8 +6,14 @@ import 'leaflet/dist/leaflet.css';
 import { DatePicker } from '@mui/x-date-pickers';
 import Swal from "sweetalert2";
 import { FaUser } from "react-icons/fa";
+import { useNavigate, useLocation } from 'react-router-dom';
+
 
 function CardDetails() {
+
+	const location = useLocation();
+	const navigate = useNavigate();
+
 	const cardProps = JSON.parse(localStorage.getItem("cardProps"));
 	const [arrivalDate, setArrivalDate] = useState(null);
 	const [departureDate, setDepartureDate] = useState(null);
@@ -43,6 +49,7 @@ function CardDetails() {
 	const [hostName, setHostName] = useState(cardProps.hostName);
 	const [hostPictureUrl, setHostPictureUrl] = useState(cardProps.hostPictureUrl);
 	const [hostSince, setHostSince] = useState(cardProps.hostSince);
+	const [hostsId, setHostsId] = useState(cardProps.hosts_id);
 	const [hostLocation, setHostLocation] = useState(cardProps.hostLocation);
 	const [hostAbout, setHostAbout] = useState('');
 	const [hostResponseTime, setHostResponseTime] = useState(cardProps.hostResponseTime);
@@ -51,8 +58,8 @@ function CardDetails() {
 
 	const [amenities, setAmenities] = useState(cardProps.amenities);
 
-	const [lng, setLongitude] = useState(cardProps.lng);
-	const [lat, setLatitude] = useState(cardProps.lat);
+	const [lng, setLongitude] = useState(cardProps.longitude);
+	const [lat, setLatitude] = useState(cardProps.latitude);
 
 	const [people, setPeople] = useState(1);
 	const [isOpen, setIsOpen] = useState(false);
@@ -77,17 +84,27 @@ function CardDetails() {
 
 	const openDialogHost = () => {
 		if(localStorage.getItem('loggedInUserType'))
-			setIsOpenHost(true);
-		else
-		{ 
-			Swal.fire({
-				title: 'Login or Sign Up',
-				html: 'You have to <a class = "text-lg text-blue1" href="/login">login</a> or <a class = "text-blue1" href="/signup">sign up</a> before you can contact the host.',
-				icon: 'info',
-				confirmButtonText: 'OK',
-			  });
+		  setIsOpenHost(true);
+		else { 
+		  Swal.fire({
+			title: 'Login or Sign Up',
+			html: 'You have to login or sign up before you can contact the host.',
+			icon: 'info',
+			confirmButtonText: 'Login',
+			showCancelButton: true,
+			cancelButtonText: 'Sign Up',
+			showCloseButton: true,
+		  }).then((result) => {
+			if (result.isConfirmed) {
+			  navigate('/login', { state: { from: location.pathname } });  // Pass current page as state
+			} else if (result.isDismissed && result.dismiss !== Swal.DismissReason.close) {
+			  navigate('/signup', { state: { from: location.pathname } });  // Pass current page as state
+			}
+		  });
 		}
-	};
+	  };
+	  
+	
 
 	const closeDialogHost = () => {
 		setIsOpenHost(false);
@@ -117,14 +134,32 @@ function CardDetails() {
 	};
 
 	function postHandler() {
-		Swal.fire({
-			title: 'Reservation successfull!',
-			text: 'The host is notified about your booking.',
-			icon: 'success',
-			confirmButtonText: 'OK'
-		}).then(() => {
-			navigate('/');
-		});
+		if(localStorage.getItem('loggedInUserType'))
+			Swal.fire({
+				title: 'Reservation successfull!',
+				text: 'The host is notified about your booking.',
+				icon: 'success',
+				confirmButtonText: 'OK'
+			}).then(() => {
+				navigate('/');
+			});
+		else { 
+		  Swal.fire({
+			title: 'Login or Sign Up',
+			html: 'You have to login or sign up before booking.',
+			icon: 'info',
+			confirmButtonText: 'Login',
+			showCancelButton: true,
+			cancelButtonText: 'Sign Up',
+			showCloseButton: true,
+		  }).then((result) => {
+			if (result.isConfirmed) {
+			  navigate('/login', { state: { from: location.pathname } });  // Pass current page as state
+			} else if (result.isDismissed && result.dismiss !== Swal.DismissReason.close) {
+			  navigate('/signup', { state: { from: location.pathname } });  // Pass current page as state
+			}
+		  });
+		}
 	}
 
 	useEffect(() => {
@@ -152,20 +187,21 @@ function CardDetails() {
 	const [questions, setQuestions] = useState([]);
 
 	const handleSubmit = async (e) => {
+		console.log(hostsId)
 		e.preventDefault();
 		if (question.trim() !== '') {
 			setQuestions([question, ...questions]);
 			setQuestion('');
 		}
 		try {
-		const response = await fetch('http://localhost:8080/messages', {
+		const response = await fetch('http://localhost:8080/api/v1/messages', {
 			method: 'POST',
 			headers: {
 			'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
 			senderId: localStorage.getItem('loggedInUserId'),
-			recipientId: hostId, //! Need host id to send 
+			recipientId: hostsId, //! Need host id to send 
 			content: question,
 			}),
 		});
