@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class MessageImpl implements MessageInterface {
