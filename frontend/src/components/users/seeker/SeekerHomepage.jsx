@@ -9,7 +9,7 @@ const SeekerHomepage = () => {
     const NUM_RESULTS2 = 10;
     
     React.useEffect(() => {
-      fetch("http://localhost:8080/cards")
+      fetch("https://localhost:8443/cards")
         .then((response) => response.json())
         .then((data) => {
           setSuggested(data.slice(10, NUM_RESULTS));

@@ -16,7 +16,7 @@ const HostHomepage = () => {
     const NUM_RESULTS = 13;
 
     React.useEffect(() => {
-      fetch("http://localhost:8080/cards")
+      fetch("https://localhost:8443/cards")
         .then((response) => response.json())
         .then((data) => setRecent(data.slice(10, NUM_RESULTS)))
         .catch((error) => console.error(error));

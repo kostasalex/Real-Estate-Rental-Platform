@@ -11,7 +11,7 @@ const Listings = () => {
   const [filteredListings, setFilteredListings] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/cards')
+    fetch('https://localhost:8443/cards')
       .then((response) => response.json())
       .then((data) => {
         const processedListings = data.map((listing) => ({

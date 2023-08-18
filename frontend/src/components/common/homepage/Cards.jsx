@@ -5,7 +5,7 @@ const Cards = () => {
   const [listings, setListings] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/cards")
+    fetch("https://localhost:8443/cards")
       .then((response) => response.json())
       .then((data) => setListings(data))
       .catch((error) => console.error(error));

@@ -11,7 +11,7 @@ const Reviews = () => {
   const [filteredReviews, setFilteredReviews] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/reviews')
+    fetch('https://localhost:8443/reviews')
       .then((response) => response.json())
       .then((data) => {
         setReviews(data.slice(0, NUM_RESULTS));

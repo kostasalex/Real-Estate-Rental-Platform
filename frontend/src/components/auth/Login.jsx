@@ -18,7 +18,7 @@ const Login = (props) => {
   const onSubmit = async (values, actions) => {
     console.log('Form submitted');
     try {
-      const response = await fetch('http://localhost:8080/login', {
+      const response = await fetch('https://localhost:8443/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

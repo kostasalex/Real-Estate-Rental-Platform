@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const Details = ({ beds, setBeds, bathrooms, setBathrooms, bedrooms, setBedrooms, bed_type, setbed_type, size, setSize, setIsFormComplete }) => {
+const Details = ({ beds, setBeds, bathrooms, setBathrooms, bedrooms, setBedrooms, bed_type, setBedType, size, setSize, setIsFormComplete }) => {
   useEffect(() => {
     if (beds !== 0 && bathrooms !== 0 && bedrooms !== 0 && size !== 0) {
       setIsFormComplete(true);
@@ -17,9 +17,10 @@ const Details = ({ beds, setBeds, bathrooms, setBathrooms, bedrooms, setBedrooms
     setter((prevValue) => Math.max(prevValue - 1, 0));
   };
 
-  const handBedTypeChange = (event) => {
-		setbed_type(event.target.value);
+  const handleBedTypeChange = (event) => {
+		setBedType(event.target.value);
 	};
+
   return (
     <div className="text-blue1">
       <div className='block text-xl sm:grid sm:grid-cols-2 sm:gap-y-20 sm:gap-x-80'>
@@ -81,19 +82,19 @@ const Details = ({ beds, setBeds, bathrooms, setBathrooms, bedrooms, setBedrooms
           </div>
         </div>
 
-				<div className="mb-10">
+        <div className="mb-10">
 					<p className='text-2xl'>Bed Type*</p>
 					<textarea
-						maxLength={100}
+						maxLength={1500}
 						id="bed type"
 						rows="4"
 						className="block p-2.5 py-5 mt-5 w-96 text-sm text-blue1 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
 						placeholder="Double"
 						value={bed_type}
-						onChange={handBedTypeChange}
+						onChange={handleBedTypeChange}
 					></textarea>
-					<label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900">
-						Max characters 100
+					<label htmlFor="bedtype" className="block mb-2 text-sm font-medium text-gray-900">
+						Max characters 20
 					</label>
 				</div>
 

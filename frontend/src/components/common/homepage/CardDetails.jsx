@@ -170,7 +170,7 @@ function CardDetails() {
 	}, [accommodates, arrivalDate, departureDate]);
 
 	useEffect(() => {
-		fetch('http://localhost:8080/reviews')
+		fetch('https://localhost:8443/reviews')
 			.then((response) => response.json())
 			.then((data) => {
 				const filteredReviews = data.filter((review) => cardProps.id === review.listingId);
@@ -194,7 +194,7 @@ function CardDetails() {
 			setQuestion('');
 		}
 		try {
-		const response = await fetch('http://localhost:8080/api/v1/messages', {
+		const response = await fetch('https://localhost:8443/api/v1/messages', {
 			method: 'POST',
 			headers: {
 			'Content-Type': 'application/json',

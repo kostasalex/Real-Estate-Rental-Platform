@@ -68,7 +68,7 @@ const Results = () => {
     const allFilters = JSON.stringify({ ...searchBarFilters, ...filters });
     console.log(allFilters);
     try {
-      const response = await fetch('http://localhost:8080/search', {
+      const response = await fetch('https://localhost:8443/search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -21,7 +21,7 @@ const Users = () => {
 
   /* Read the data */
   useEffect(() => {
-    fetch('http://localhost:8080/users') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
+    fetch('https://localhost:8443/users') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
       .then((response) => response.json())
       .then((data) => {
         const usersData = data
@@ -137,7 +137,7 @@ const Users = () => {
 
   const approveHostApplication = async (name, id) =>  {
     try {
-      const response = await fetch("http://localhost:8080/approve-application", {
+      const response = await fetch("https://localhost:8443/approve-application", {
           method: "POST",
           headers: {
           "Content-Type": "application/json",
@@ -174,7 +174,7 @@ const Users = () => {
 
       setIsOpenUser(false);
 
-      fetch('http://localhost:8080/users') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
+      fetch('https://localhost:8443/users') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
       .then((response) => response.json())
       .then((data) => {
         const usersData = data;

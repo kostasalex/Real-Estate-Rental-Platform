@@ -43,11 +43,12 @@ const NewListing = ({ hosts_id }) => {
 				hosts_id: hosts_id, // Include the hosts_id as hosts_id in the request body
 				lat: values.lat,
 				lng: values.lng,
+				bed_type: values.bed_type,
 			};
 
 			console.log('Request JSON:', JSON.stringify(requestBody, null, 2)); // Log the JSON that will be sent to the server
 
-			const response = await fetch('http://localhost:8080/cards', {
+			const response = await fetch('https://localhost:8443/cards', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -75,7 +76,6 @@ const NewListing = ({ hosts_id }) => {
 						accommodates: values.accommodates,
 						bathrooms: values.bathrooms,
 						bedrooms: values.bedrooms,
-						bed_type: values.bed_type,
 						numberOfReviews: 2, //values.numberOfReviews,
 						reviewScoresRating: 2, // values.reviewScoresRating,
 						street: values.street,
@@ -144,7 +144,7 @@ const NewListing = ({ hosts_id }) => {
 	const [beds, setBeds] = useState(0);
 	const [bathrooms, setBathrooms] = useState(0);
 	const [bedrooms, setBedrooms] = useState(0);
-	const [bed_type, setbed_type] = useState('Double');
+	const [bed_type, setBedType] = useState('');
 	const [size, setSize] = useState(0);
 
 	// Dates Step State
@@ -216,7 +216,7 @@ const NewListing = ({ hosts_id }) => {
 						bedrooms={bedrooms}
 						setBedrooms={setBedrooms}
 						bed_type={bed_type}
-						setbed_type={setbed_type}
+						setBedType={setBedType}
 						size={size}
 						setSize={setSize}
 						setIsFormComplete={setIsFormComplete}
@@ -339,7 +339,6 @@ const NewListing = ({ hosts_id }) => {
 									// numberOfReviews,
 									// reviewScoresRating, 
 									// street,
-									description,
 									// lng,
 									// lat,
 									// amenities,

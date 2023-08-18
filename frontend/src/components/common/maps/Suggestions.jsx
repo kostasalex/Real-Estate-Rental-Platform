@@ -50,7 +50,7 @@ const Suggestions = ({ handleSelectSuggestion, location }) => {
 
     const fetchSuggestions = async (tab) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/v1/cards/${tab}`);
+            const response = await axios.get(`https://localhost:8443/api/v1/cards/${tab}`);
             setSuggestions(response.data);
         } catch (error) {
             console.error('Error occurred:', error);
