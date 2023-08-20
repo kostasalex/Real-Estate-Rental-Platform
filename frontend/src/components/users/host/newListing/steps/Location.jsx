@@ -2,25 +2,20 @@ import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import Map from '/src/components/common/maps/Map';
 
-const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstreet, accessingInfo, setAccessingInfo, setIsFormComplete }) => {
-	const [searchQuery, setSearchQuery] = useState('Athens');
-
+const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstreet, accessingInfo, setAccessingInfo, setIsFormComplete,
+	country, setCountry, postcode, setPostCode, city, setCity, road, setRoad}) => {
+	
+	const [isSaved, setIsSaved] = useState(false);
 
 	const streetHandler = (address) => {
-		const { suburb, town, city, village } = address;
-		let street = suburb;
-		if (!street) street = town;
-		if (!street) street = city;
-		if (!street) street = village;
-		setstreet(street);
-		setSearchQuery(street);
+		console.log(address);
+		setstreet(address);
 	};
 
 	const handleLatLon = (lat,lon) => {
-		let latitude = lat;
-		let longitude = lon;
-		setLatitude(latitude); // Set latitude state from the address
-		setLongitude(longitude); // Set longitude state from the address
+		setLatitude(lat); // Set latitude state from the address
+		setLongitude(lon); // Set longitude state from the address
+		console.log("lat long:" + latitude + " " +longitude );
 	}
 
 	const handleAccessingInfoChange = (event) => {
@@ -28,25 +23,36 @@ const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstree
 	};
 
 	useEffect(() => {
-		if (searchQuery && accessingInfo) {
+		if (isSaved &&  country && postcode && city && road && accessingInfo) {
 			setIsFormComplete(true);
 		} else {
 			setIsFormComplete(false);
 		}
-	}, [searchQuery, accessingInfo, setIsFormComplete, longitude, latitude]);
+	}, [isSaved, country, postcode, city, road, accessingInfo]);
 
 	return (
 		<div className="text-blue1 mt-10">
 			<div className='block text-xl sm:grid sm:grid-cols-2 sm:gap-y-20 sm:gap-x-80'>
-				<div className="flex z-0">
+				<div className="flex flex-col text-black justify-center ">
+					<label htmlFor="addressInfo" className="mb-4 block text-xl justify-center text-gray-700">
+							Location info
+					</label>
 					<Map
 						streetHandler={streetHandler}
 						street={street}
-						searchQuery={searchQuery}
-						setSearchQuery={setSearchQuery}
 						latitude={latitude} // Pass latitude as prop
 						longitude={longitude} // Pass longitude as prop
 						handleLatLon = {handleLatLon}
+						country = {country}
+						setCountry = {setCountry} // Default to Athens, Greece
+						postcode = {postcode} 
+						setPostCode = {setPostCode}
+						city = {city}
+						setCity = {setCity}
+						road = {road}
+						setRoad = {setRoad}
+						isSaved = {isSaved}
+						setIsSaved = {setIsSaved}
 					/>
 				</div>
 				<div className="flex justify-center mx-auto">

@@ -22,8 +22,8 @@ public class Card {
     private int bathrooms;
     private int bedrooms;
     private String bed_type;
-    private float lng;
-    private float lat;
+    private float longitude;
+    private float latitude;
     private LocalDate hostSince;
     private String hostLocation;
     private String hostAbout;
@@ -32,13 +32,10 @@ public class Card {
     private int hostListingsCount;
     private String hosts_id;
 
-    public Card() {
-    }
-
     public Card(String id, String thumbnailUrl, String mediumUrl, float price, String roomType, int beds,
             int numberOfReviews, int reviewScoresRating, String street, String description, String name,
             String hostName, String hostPictureUrl, String amenities, int accommodates, int bathrooms,
-            int bedrooms, String bed_type, float lng, float lat, LocalDate hostSince,
+            int bedrooms, String bed_type, float longitude, float latitude, LocalDate hostSince,
             String hostLocation, String hostAbout, String hostResponseTime, int hostResponseRate,
             int hostListingsCount, String hosts_id) {
         this.id = id;
@@ -59,8 +56,8 @@ public class Card {
         this.bathrooms = bathrooms;
         this.bedrooms = bedrooms;
         this.bed_type = bed_type;
-        this.lng = lng;
-        this.lat = lat;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.hostSince = hostSince;
         this.hostLocation = hostLocation;
         this.hostAbout = hostAbout;
@@ -69,7 +66,6 @@ public class Card {
         this.hostListingsCount = hostListingsCount;
         this.hosts_id = hosts_id;
     }
-
 
     public String getId() {
         return id;
@@ -144,16 +140,16 @@ public class Card {
         return bedrooms;
     }
 
-    public String getBedType() {
+    public String getbed_type() {
         return bed_type;
     }
 
     public float getLongitude() {
-        return lng;
+        return longitude;
     }
 
     public float getLatitude() {
-        return lat;
+        return latitude;
     }
 
     public LocalDate getHostSince() {

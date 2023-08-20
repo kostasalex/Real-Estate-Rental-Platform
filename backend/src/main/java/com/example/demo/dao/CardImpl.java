@@ -91,7 +91,7 @@ public class CardImpl implements CardInterface {
 			stmt.setInt(14, card.getAccommodates());
 			stmt.setInt(15, card.getBathrooms());
 			stmt.setInt(16, card.getBedrooms());
-			stmt.setString(17, card.getBedType());
+			stmt.setString(17, card.getbed_type());
 			stmt.setFloat(18, card.getLongitude());
 			stmt.setFloat(19, card.getLatitude());
 			stmt.setDate(20, Date.valueOf(card.getHostSince()));
@@ -132,14 +132,15 @@ public class CardImpl implements CardInterface {
 
 	public int insertCardImp(Card card) {
 		int rowsAffected = 0;
+		System.out.println(card.toString());
 		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-			 PreparedStatement stmt = conn.prepareStatement(
-					 "INSERT INTO listings (thumbnail_url, medium_url, price, room_type, beds, number_of_reviews, review_scores_rating, street, description, name, host_name, "
-							 +
-							 "host_picture_url, amenities, accommodates, bathrooms, bedrooms, bed_type, longitude, latitude, host_since, host_location, host_about, host_response_time, "
-							 +
-							 "host_response_rate, host_listings_count, hosts_id, id) " +
-							 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
+				PreparedStatement stmt = conn.prepareStatement(
+						"INSERT INTO listings (thumbnail_url, medium_url, price, room_type, beds, number_of_reviews, review_scores_rating, street, description, name, host_name, "
+								+
+								"host_picture_url, amenities, accommodates, bathrooms, bedrooms, bed_type, longitude, latitude, host_since, host_location, host_about, host_response_time, "
+								+
+								"host_response_rate, host_listings_count, hosts_id) " +
+								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
 			stmt.setString(1, card.getThumbnailUrl());
 			stmt.setString(2, card.getMediumUrl());
 			stmt.setFloat(3, card.getPrice());
@@ -156,10 +157,10 @@ public class CardImpl implements CardInterface {
 			stmt.setInt(14, card.getAccommodates());
 			stmt.setInt(15, card.getBathrooms());
 			stmt.setInt(16, card.getBedrooms());
-			stmt.setString(17, card.getBedType());
+			stmt.setString(17, card.getbed_type());
 			stmt.setFloat(18, card.getLongitude());
 			stmt.setFloat(19, card.getLatitude());
-	
+
 			// Handle the case when hostSince is null
 			LocalDate hostSince = card.getHostSince();
 			if (hostSince != null) {
@@ -167,22 +168,21 @@ public class CardImpl implements CardInterface {
 			} else {
 				stmt.setNull(20, Types.DATE); // Set the field as NULL in the database
 			}
-	
+
 			stmt.setString(21, card.getHostLocation());
 			stmt.setString(22, card.getHostAbout());
 			stmt.setString(23, card.getHostResponseTime());
 			stmt.setInt(24, card.getHostResponseRate());
 			stmt.setInt(25, card.getHostListingsCount());
 			stmt.setString(26, card.gethosts_id());
-			stmt.setString(27, card.getId()); // Add the missing parameter for card.getId()
-	
+
 			rowsAffected = stmt.executeUpdate();
-	
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// Handle the exception as needed
 		}
-	
+
 		return rowsAffected;
 	}
 
@@ -332,8 +332,8 @@ public class CardImpl implements CardInterface {
 		int bathrooms = rs.getInt("bathrooms");
 		int bedrooms = rs.getInt("bedrooms");
 		String bed_type = rs.getString("bed_type");
-		float lng = rs.getFloat("longitude");
-		float lat = rs.getFloat("latitude");
+		float longitude = rs.getFloat("longitude");
+		float latitude = rs.getFloat("latitude");
 		String hostLocation = rs.getString("host_location");
 		String hostAbout = rs.getString("host_about");
 		String hostResponseTime = rs.getString("host_response_time");
@@ -341,14 +341,14 @@ public class CardImpl implements CardInterface {
 		int hostListingsCount = rs.getInt("host_listings_count");
 		String hostId = rs.getString("hosts_id");
 
-		 // Handle the case when host_since is null
-		 Date hostSinceDate = rs.getDate("host_since");
-		 LocalDate hostSince = (hostSinceDate != null) ? hostSinceDate.toLocalDate() : null;
-	 
-		 return new Card(id, thumbnailUrl, mediumUrl, price, roomType, beds, numberOfReviews, reviewScoresRating, street,
-				 description, name, hostName, hostPictureUrl, amenities, accommodates, bathrooms, bedrooms, bed_type,
-				 lng, lat, hostSince, hostLocation, hostAbout, hostResponseTime, hostResponseRate,
-				 hostListingsCount, hostId);
+		// Handle the case when host_since is null
+		Date hostSinceDate = rs.getDate("host_since");
+		LocalDate hostSince = (hostSinceDate != null) ? hostSinceDate.toLocalDate() : null;
+
+		return new Card(id, thumbnailUrl, mediumUrl, price, roomType, beds, numberOfReviews, reviewScoresRating, street,
+				description, name, hostName, hostPictureUrl, amenities, accommodates, bathrooms, bedrooms, bed_type,
+				longitude, latitude, hostSince, hostLocation, hostAbout, hostResponseTime, hostResponseRate,
+				hostListingsCount, hostId);
 	}
 
 	public List<String> getDistinctCountries() {

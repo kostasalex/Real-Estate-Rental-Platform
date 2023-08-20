@@ -33,17 +33,17 @@ const NewListing = ({ hosts_id }) => {
 			const amenities = Array.from(values.amenities);
 
 			// Generate a random cardId
-			const cardId = Math.floor(Math.random() * 10000);
+			//const cardId = Math.floor(Math.random() * 10000);
 			const hosts_id = Math.floor(Math.random() * 10000);
-
+			console.log("the lat value is: " + values.latitude);
 			const requestBody = {
 				...values,
-				amenities: `{${amenities.join(',')}}`,
-				id: cardId,
-				hosts_id: hosts_id, // Include the hosts_id as hosts_id in the request body
-				lat: values.lat,
-				lng: values.lng,
-				bed_type: values.bed_type,
+				latitude: parseFloat(values.latitude),
+				longitude: parseFloat(values.longitude),
+				hosts_id: hosts_id, 
+				amenities: `{${amenities.join(',')}}`
+				//id: cardId,
+				// Include the hosts_id as hosts_id in the request body
 			};
 
 			console.log('Request JSON:', JSON.stringify(requestBody, null, 2)); // Log the JSON that will be sent to the server
@@ -80,12 +80,12 @@ const NewListing = ({ hosts_id }) => {
 						reviewScoresRating: 2, // values.reviewScoresRating,
 						street: values.street,
 						description: values.description,
-						lng: values.lng,
-						lat: values.lat,
+						longitude: values.longitude,
+						latitude: values.latitude,
 						amenities: values.amenities,
 						hosts_id: hosts_id, // Include the hosts_id as hosts_id in the cardData object
 						beds: values.beds,
-						name: values.title,
+						name: values.name,
 						roomType: values.roomType,
 					};
 
@@ -122,15 +122,19 @@ const NewListing = ({ hosts_id }) => {
 	}, [step]);
 
 	// Location Step State
-	const [street, setstreet] = useState('');
-	const [accessingInfo, setAccessingInfo] = useState('');
-	const [lat, setLatitude] = useState(''); // Add lat state
-	const [lng, setLongitude] = useState(''); // Add lng state
+	const [street, setstreet] = useState('athens');
+	const [accessingInfo, setAccessingInfo] = useState('true');
+	const [latitude, setLatitude] = useState(null); // Add lat state
+	const [longitude, setLongitude] = useState(''); // Add lng state
+	const [country, setCountry] = useState(''); // Default to Athens, Greece
+	const [postcode, setPostCode] = useState('');
+	const [city, setCity] = useState('');
+	const [road, setRoad] = useState('');
 
 	// Description Step State
-	const [title, setTitle] = useState('');
-	const [description, setdescription] = useState('');
-	const [roomType, setroomType] = useState('');
+	const [name, setName] = useState('name');
+	const [description, setdescription] = useState('description');
+	const [roomType, setroomType] = useState('roomtype');
 	const [photos, setPhotos] = useState([]);
 	const [rentalRules, setRentalRules] = useState({
 		children: false,
@@ -141,21 +145,21 @@ const NewListing = ({ hosts_id }) => {
 	});
 
 	// Details Step State
-	const [beds, setBeds] = useState(0);
-	const [bathrooms, setBathrooms] = useState(0);
-	const [bedrooms, setBedrooms] = useState(0);
+	const [beds, setBeds] = useState(3);
+	const [bathrooms, setBathrooms] = useState(2);
+	const [bedrooms, setBedrooms] = useState(2);
 	const [bed_type, setBedType] = useState('');
-	const [size, setSize] = useState(0);
+	const [size, setSize] = useState(10);
 
 	// Dates Step State
 	const [hostArrivalDate, setHostArrivalDate] = useState(new Date()); // Set default value to the current date
 	const [hostDepartureDate, setHostDepartureDate] = useState(new Date()); // Set default value to the current date
-	const [selectedDates, setSelectedDates] = useState([]);
+	const [selectedDates, setSelectedDates] = useState(["8/19/2023 - 8/19/2023"]);
 
 	// Prices Step State
-	const [price, setprice] = useState(0);
-	const [additionalGuestPrice, setAdditionalGuestPrice] = useState(0);
-	const [accommodates, setaccommodates] = useState(0);
+	const [price, setprice] = useState(10);
+	const [additionalGuestPrice, setAdditionalGuestPrice] = useState(20);
+	const [accommodates, setaccommodates] = useState(3);
 
 	// Amenities Step State
 	const [amenities, setAmenities] = useState(new Set()); // Initialize as a Set
@@ -172,6 +176,12 @@ const NewListing = ({ hosts_id }) => {
 		'Elevator'
 	];
 
+	useEffect(() => {
+		console.log("from new listings")
+		console.log(latitude)
+		console.log(longitude)
+	}, [latitude, longitude]);
+
 	return (
 		<div className="p-5">
 			<Stepper steps={steps} currentStep={step} />
@@ -184,17 +194,25 @@ const NewListing = ({ hosts_id }) => {
 						accessingInfo={accessingInfo}
 						setAccessingInfo={setAccessingInfo}
 						setIsFormComplete={setIsFormComplete}
-						lat={lat}
-						lng={lng}
+						latitude={latitude}
+						longitude={longitude}
 						setLatitude={setLatitude}
 						setLongitude={setLongitude}
+						country = {country}
+						setCountry = {setCountry} // Default to Athens, Greece
+						postcode = {postcode} 
+						setPostCode = {setPostCode}
+						city = {city}
+						setCity = {setCity}
+						road = {road}
+						setRoad = {setRoad}
 					/>
 				)}
 
 				{step === 2 && (
 					<Description
-						title={title}
-						setTitle={setTitle}
+						title={name}
+						setTitle={setName}
 						description={description}
 						setdescription={setdescription}
 						roomType={roomType}
@@ -314,7 +332,7 @@ const NewListing = ({ hosts_id }) => {
 									// Pass all the required form values here
 									street,
 									accessingInfo,
-									title,
+									name,
 									description,
 									roomType,
 									photos,
@@ -326,10 +344,12 @@ const NewListing = ({ hosts_id }) => {
 									price,
 									additionalGuestPrice,
 									accommodates,
-									lat,
-									lng,
-									amenities,
 									bed_type,
+									latitude,
+									longitude,
+									hosts_id,
+									amenities
+									
 									// id,
 									// thumbnailUrl,
 									// mediumUrl,
@@ -342,7 +362,7 @@ const NewListing = ({ hosts_id }) => {
 									// lng,
 									// lat,
 									// amenities,
-									hosts_id, 
+								
 									// beds,
 									// name,
 									// hostName, 

@@ -63,7 +63,8 @@ public class Application {
         if (result == 1) {
             return card;
         } else {
-            // Handle the error case, such as throwing an exception or returning an appropriate response
+            // Handle the error case, such as throwing an exception or returning an
+            // appropriate response
             return null;
         }
     }

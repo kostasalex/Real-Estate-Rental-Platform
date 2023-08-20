@@ -5,6 +5,7 @@ import com.example.demo.model.Card;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
@@ -30,12 +31,13 @@ public class CardController {
 
     @PostMapping("/insertCard")
     public ResponseEntity<Map<String, Object>> insertCard(@RequestBody Card card) {
-        // Check if the user already exists
+
+        // System.out.println(card.toString());
         if (cardDao.selectCardByCardId(card.getId()).isPresent()) {
+
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("error", "Card already registered. Please use a different card."));
         }
-
 
         int newCardId = cardDao.insertCardImp(card);
         if (newCardId > 0) {
@@ -48,5 +50,4 @@ public class CardController {
         }
     }
 
-    
 }

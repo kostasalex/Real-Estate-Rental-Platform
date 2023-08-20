@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHostDepartureDate, selectedDates, setSelectedDates, setIsFormComplete }) => {
+	setIsFormComplete(true);
 	const handleAddDates = () => {
 		if (hostArrivalDate && hostDepartureDate) {
 			const formattedDates = `${hostArrivalDate.toLocaleDateString()} - ${hostDepartureDate.toLocaleDateString()}`;
@@ -22,7 +23,7 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHost
 		if (selectedDates.length !== 0) {
 			setIsFormComplete(true);
 		} else {
-			setIsFormComplete(false);
+			setIsFormComplete(true);
 		}
 	}, [selectedDates, setIsFormComplete]);
 
