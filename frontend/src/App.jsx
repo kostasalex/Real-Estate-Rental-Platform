@@ -81,7 +81,7 @@ function App() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="App mt-20 flex pb-40 flex-col min-h-screen">
+      <div className="App mt-20 flex flex-grow pb-40 flex-col min-h-screen">
         {loggedInUserType === 'Admin' &&
           (adminDashboardToggle ? <AdminDashboard /> : <DashboardToggle handleDashboard={handleDashboard} />
           )}

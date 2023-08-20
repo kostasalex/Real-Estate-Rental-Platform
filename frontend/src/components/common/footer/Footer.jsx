@@ -3,7 +3,7 @@ import dit from '/src/assets/dit.png';
 
 const Footer = () => {
   return (
-    <footer className=" bg-gray-100  border-2 border-t fixed bottom-0 w-full">
+    <footer className=" bg-gray-100  border-2 border-t relative -bottom-40 flex  w-full">
         <div className="container flex flex-col items-center justify-between px-6 py-8 mx-auto lg:flex-row">
             <a href="https://www.di.uoa.gr/" target="_blank" rel="noopener noreferrer">
                 <img className="w-auto h-12" src={dit} alt=""/>
