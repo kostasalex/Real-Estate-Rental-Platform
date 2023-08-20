@@ -276,9 +276,9 @@ public class CardImpl implements CardInterface {
 		// Map the amenities to their corresponding values
 		if (amenity.equalsIgnoreCase("TV")) {
 			return "TV";
-		} else if (amenity.equalsIgnoreCase("Internet")) {
+		} else if (amenity.equalsIgnoreCase("wifi")) {
 			return "Wireless Internet";
-		} else if (amenity.equalsIgnoreCase("Air_Conditioning")) {
+		} else if (amenity.equalsIgnoreCase("airconditioning")) {
 			return "Air Conditioning";
 		} else if (amenity.equalsIgnoreCase("Kitchen")) {
 			return "Kitchen";
