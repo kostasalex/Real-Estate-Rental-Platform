@@ -31,13 +31,15 @@ public class Card {
     private int hostResponseRate;
     private int hostListingsCount;
     private String hosts_id;
+    private String rentalRules;
+    private int size;
 
     public Card(String id, String thumbnailUrl, String mediumUrl, float price, String roomType, int beds,
             int numberOfReviews, int reviewScoresRating, String street, String description, String name,
             String hostName, String hostPictureUrl, String amenities, int accommodates, int bathrooms,
             int bedrooms, String bed_type, float longitude, float latitude, LocalDate hostSince,
             String hostLocation, String hostAbout, String hostResponseTime, int hostResponseRate,
-            int hostListingsCount, String hosts_id) {
+            int hostListingsCount, String hosts_id, String rentalRules, int size) {
         this.id = id;
         this.thumbnail_url = thumbnailUrl;
         this.medium_url = mediumUrl;
@@ -65,6 +67,8 @@ public class Card {
         this.hostResponseRate = hostResponseRate;
         this.hostListingsCount = hostListingsCount;
         this.hosts_id = hosts_id;
+        this.rentalRules = rentalRules;
+        this.size = size;
     }
 
     public String getId() {
@@ -178,6 +182,14 @@ public class Card {
 
     public String gethosts_id() {
         return hosts_id;
+    }
+
+    public String getRentalRules() {
+        return rentalRules;
+    }
+
+    public int getSize() {
+        return size;
     }
 
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { UploadPhotos } from '/src/components';
 
-const Description = ({ title, setTitle, description, setdescription, roomType, setroomType, photos, setPhotos, rentalRules, setRentalRules, setIsFormComplete }) => {
+const Description = ({ title, setTitle, description, setdescription, roomType, setroomType, photos, setPhotos, rentalRules, setRentalRules, rentalRulesList, setIsFormComplete }) => {
 
 	useEffect(() => {
 		if (title && description && roomType && photos.length > 0 && rentalRules) {
@@ -23,6 +23,17 @@ const Description = ({ title, setTitle, description, setdescription, roomType, s
 		setroomType(event.target.value);
 	};
 
+	const handleCheckboxChange = (event, rule) => {
+		setRentalRules((prevRules) => {
+		  const updatedRules = new Set(prevRules);
+		  if (event.target.checked) {
+			updatedRules.add(rule);
+		  } else {
+			updatedRules.delete(rule);
+		  }
+		  return updatedRules;
+		});
+	  };
 
 	return (
 		<div className="text-blue1">
@@ -104,59 +115,23 @@ const Description = ({ title, setTitle, description, setdescription, roomType, s
 					</div>
 				</div>
 
-				<div className="mb-10">
-					<p className='text-2xl'>Rental Rules</p>
-					<div className="flex flex-col gap-2">
-						<div className="mt-5 flex items-center justify-between">
-							<label htmlFor="children" className='text-md text-gray-700'>Suitable for children (2-12 years)</label>
+				<div className="mb-10 ">
+					<p className='text-2xl mb-5 '>Rental Rules</p>
+					<div className="flex flex-col  gap-">
+						{rentalRulesList.map((rule) => (
+							<div className="flex items-center justify-between" key={rule}>
+							<label htmlFor={rule} className="text-md text-gray-700">
+								{rule}
+							</label>
 							<input
 								type="checkbox"
-								id="children"
+								id={rule}
 								className="ml-2"
-								checked={rentalRules.children}
-								onChange={(e) => setRentalRules({ ...rentalRules, children: e.target.checked })}
+								checked={rentalRules.has(rule)}
+								onChange={(e) => handleCheckboxChange(e, rule)}
 							/>
-						</div>
-						<div className="flex items-center justify-between">
-							<label htmlFor="infants" className='text-md text-gray-700'>Appropriate for infants (under 2 years)</label>
-							<input
-								type="checkbox"
-								id="infants"
-								className="ml-2"
-								checked={rentalRules.infants}
-								onChange={(e) => setRentalRules({ ...rentalRules, infants: e.target.checked })}
-							/>
-						</div>
-						<div className="flex items-center justify-between">
-							<label htmlFor="pets" className='text-md text-gray-700'>Acceptable for pets</label>
-							<input
-								type="checkbox"
-								id="pets"
-								className="ml-2"
-								checked={rentalRules.pets}
-								onChange={(e) => setRentalRules({ ...rentalRules, pets: e.target.checked })}
-							/>
-						</div>
-						<div className="flex items-center justify-between">
-							<label htmlFor="smoking" className='text-md text-gray-700'>Smoking allowed</label>
-							<input
-								type="checkbox"
-								id="smoking"
-								className="ml-2"
-								checked={rentalRules.smoking}
-								onChange={(e) => setRentalRules({ ...rentalRules, smoking: e.target.checked })}
-							/>
-						</div>
-						<div className="flex items-center justify-between">
-							<label htmlFor="events" className='text-md text-gray-700'>Events or parties allowed</label>
-							<input
-								type="checkbox"
-								id="events"
-								className="ml-2"
-								checked={rentalRules.events}
-								onChange={(e) => setRentalRules({ ...rentalRules, events: e.target.checked })}
-							/>
-						</div>
+							</div>
+						))}
 					</div>
 				</div>
 			</div>

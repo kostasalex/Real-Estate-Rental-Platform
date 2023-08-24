@@ -139,8 +139,8 @@ public class CardImpl implements CardInterface {
 								+
 								"host_picture_url, amenities, accommodates, bathrooms, bedrooms, bed_type, longitude, latitude, host_since, host_location, host_about, host_response_time, "
 								+
-								"host_response_rate, host_listings_count, hosts_id) " +
-								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
+								"host_response_rate, host_listings_count, hosts_id, rentalRules, size) " +
+								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
 			stmt.setString(1, card.getthumbnail_url());
 			stmt.setString(2, card.getmedium_url());
 			stmt.setFloat(3, card.getPrice());
@@ -175,7 +175,8 @@ public class CardImpl implements CardInterface {
 			stmt.setInt(24, card.getHostResponseRate());
 			stmt.setInt(25, card.getHostListingsCount());
 			stmt.setString(26, card.gethosts_id());
-
+			stmt.setString(27, card.getRentalRules());
+			stmt.setInt(28, card.getSize());
 			rowsAffected = stmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -340,6 +341,8 @@ public class CardImpl implements CardInterface {
 		int hostResponseRate = rs.getInt("host_response_rate");
 		int hostListingsCount = rs.getInt("host_listings_count");
 		String hostId = rs.getString("hosts_id");
+		String rentalRules = rs.getString("rentalRules");
+		int size = rs.getInt("size");
 
 		// Handle the case when host_since is null
 		Date hostSinceDate = rs.getDate("host_since");
@@ -348,7 +351,7 @@ public class CardImpl implements CardInterface {
 		return new Card(id, thumbnailUrl, mediumUrl, price, roomType, beds, numberOfReviews, reviewScoresRating, street,
 				description, name, hostName, hostPictureUrl, amenities, accommodates, bathrooms, bedrooms, bed_type,
 				longitude, latitude, hostSince, hostLocation, hostAbout, hostResponseTime, hostResponseRate,
-				hostListingsCount, hostId);
+				hostListingsCount, hostId, rentalRules, size);
 	}
 
 	public List<String> getDistinctCountries() {

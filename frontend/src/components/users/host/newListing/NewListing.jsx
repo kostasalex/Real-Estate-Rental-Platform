@@ -48,7 +48,8 @@ const NewListing = ({ hosts_id }) => {
 				hosts_id: hosts_id, 
 				amenities: `{${amenities.join(',')}}`,
 				thumbnail_url: Array.isArray(uploadedImageUrls) ? uploadedImageUrls[0] : uploadedImageUrls,
-				medium_url: Array.isArray(uploadedImageUrls) ? uploadedImageUrls.join(',') : uploadedImageUrls
+				medium_url: Array.isArray(uploadedImageUrls) ? uploadedImageUrls.join(',') : uploadedImageUrls,
+				rentalRules: `{${Array.from(rentalRules).join(',')}}`,
 				//id: cardId,
 				// Include the hosts_id as hosts_id in the request body
 			};
@@ -143,13 +144,14 @@ const NewListing = ({ hosts_id }) => {
 	const [description, setdescription] = useState('description');
 	const [roomType, setroomType] = useState('roomtype');
 	const [photos, setPhotos] = useState([]);
-	const [rentalRules, setRentalRules] = useState({
-		children: false,
-		infants: false,
-		pets: false,
-		smoking: false,
-		events: false
-	});
+
+	const rentalRulesList = [
+		'Acceptable for pets',
+  		'Smoking allowed',
+		'Events or parties allowed',
+	];
+
+	const [rentalRules, setRentalRules] = useState(new Set());
 
 	// Details Step State
 	const [beds, setBeds] = useState(3);
@@ -172,13 +174,10 @@ const NewListing = ({ hosts_id }) => {
 	const [amenities, setAmenities] = useState(new Set()); // Initialize as a Set
 	const amenitiesList = [
 		'TV',
-		'Internet',
-		'Air_Conditioning',
+		'Wireless Internet',
+		'Air Conditioning',
 		'Kitchen',
-		'Heating',
-		'Family_Kid_Friendly',
-		'Washer',
-		'Shampoo',
+		'Pool',
 		'Parking',
 		'Elevator'
 	];
@@ -229,6 +228,7 @@ const NewListing = ({ hosts_id }) => {
 						rentalRules={rentalRules}
 						setRentalRules={setRentalRules}
 						setIsFormComplete={setIsFormComplete}
+						rentalRulesList = {rentalRulesList}
 					/>
 				)}
 
@@ -343,7 +343,6 @@ const NewListing = ({ hosts_id }) => {
 									description,
 									roomType,
 									photos,
-									rentalRules,
 									beds,
 									bathrooms,
 									bedrooms,
@@ -355,7 +354,9 @@ const NewListing = ({ hosts_id }) => {
 									latitude,
 									longitude,
 									hosts_id,
-									amenities
+									size,
+									amenities,
+									rentalRules
 									
 									// id,
 									// thumbnailUrl,
