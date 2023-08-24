@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { UploadPhotos } from '/src/components';
 
 const Description = ({ title, setTitle, description, setdescription, roomType, setroomType, photos, setPhotos, rentalRules, setRentalRules, setIsFormComplete }) => {
+
 	useEffect(() => {
 		if (title && description && roomType && photos.length > 0 && rentalRules) {
 			setIsFormComplete(true);
@@ -19,21 +21,6 @@ const Description = ({ title, setTitle, description, setdescription, roomType, s
 
 	const handleroomTypeChange = (event) => {
 		setroomType(event.target.value);
-	};
-
-	const handlePhotosChange = (event) => {
-		const selectedPhotos = Array.from(event.target.files).filter((file) =>
-			file.type.startsWith('image/')
-		);
-		setPhotos(selectedPhotos);
-	};
-
-	const removePhoto = (index) => {
-		setPhotos((prevPhotos) => {
-			const updatedPhotos = [...prevPhotos];
-			updatedPhotos.splice(index, 1);
-			return updatedPhotos;
-		});
 	};
 
 
@@ -175,42 +162,13 @@ const Description = ({ title, setTitle, description, setdescription, roomType, s
 			</div>
 			<div className="mb-10">
 				<p className="text-2xl">Photos of the Listing*</p>
-				<form className="mt-5">
-					<div className="mb-4">
-						<label htmlFor="upload" className="my-2 block text-gray-700 font-medium">
-							Upload Photos
-						</label>
-						<input
-							type="file"
-							id="upload"
-							accept="image/*"
-							multiple
-							className="mt-1"
-							onChange={handlePhotosChange}
-						/>
-						<p className="text-sm text-gray-500">Accepted file types: JPEG, PNG</p>
-					</div>
-				</form>
-
-				<div className="block sm:grid sm:grid-cols-6 sm:gap-4 mt-4">
-					{photos.map((photo, index) => (
-						<div key={index} className="relative">
-							<img
-								src={URL.createObjectURL(photo)}
-								alt={`Photo ${index + 1}`}
-								className="object-cover w-full h-40 rounded-lg"
-							/>
-							<div
-								className="absolute top-1 right-1 flex items-center justify-center w-6 h-6 bg-gray-800 rounded-full text-white text-xs cursor-pointer"
-								onClick={() => removePhoto(index)}
-							>
-								<span className="text-white">X</span>
-							</div>
-						</div>
-					))}
-				</div>
-			</div>
-		</div>
+				<UploadPhotos
+					photos={photos}
+					setPhotos={setPhotos}
+					numOfPhotos = {3}
+				/>
+            </div>
+        </div>
 	);
 };
 

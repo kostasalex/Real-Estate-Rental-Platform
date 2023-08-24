@@ -5,8 +5,8 @@ import java.time.LocalDate;
 public class Card {
 
     private String id;
-    private String thumbnailUrl;
-    private String mediumUrl;
+    private String thumbnail_url;
+    private String medium_url;
     private float price;
     private String roomType;
     private int beds;
@@ -39,8 +39,8 @@ public class Card {
             String hostLocation, String hostAbout, String hostResponseTime, int hostResponseRate,
             int hostListingsCount, String hosts_id) {
         this.id = id;
-        this.thumbnailUrl = thumbnailUrl;
-        this.mediumUrl = mediumUrl;
+        this.thumbnail_url = thumbnailUrl;
+        this.medium_url = mediumUrl;
         this.price = price;
         this.roomType = roomType;
         this.beds = beds;
@@ -76,12 +76,12 @@ public class Card {
         this.id = id;
     }
 
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
+    public String getthumbnail_url() {
+        return thumbnail_url;
     }
 
-    public String getMediumUrl() {
-        return mediumUrl;
+    public String getmedium_url() {
+        return medium_url;
     }
 
     public float getPrice() {

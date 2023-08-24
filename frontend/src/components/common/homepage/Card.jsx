@@ -19,7 +19,7 @@ function Card(props) {
 					<article className="mb-4 overflow-hidden rounded-xl border text-gray-700 shadow-md duration-500 ease-in-out hover:shadow-xl">
 						<a target="_blank" onClick={handleClick} >
 							<div className="">
-								<img src={props.mediumUrl} alt="" className="object-fill h-48 w-96" />
+								<img src={props.thumbnailUrl} alt="" className="object-fill h-48 w-96" />
 							</div>
 
 							<div className="p-4">

@@ -75,8 +75,8 @@ public class CardImpl implements CardInterface {
 								"longitude = ?, latitude = ?, host_since = ?, host_location = ?, host_about = ?, host_response_time = ?, "
 								+
 								"host_response_rate = ?, host_listings_count = ?, hosts_id = ? WHERE id = ?");) {
-			stmt.setString(1, card.getThumbnailUrl());
-			stmt.setString(2, card.getMediumUrl());
+			stmt.setString(1, card.getthumbnail_url());
+			stmt.setString(2, card.getmedium_url());
 			stmt.setFloat(3, card.getPrice());
 			stmt.setString(4, card.getRoomType());
 			stmt.setInt(5, card.getBeds());
@@ -141,8 +141,8 @@ public class CardImpl implements CardInterface {
 								+
 								"host_response_rate, host_listings_count, hosts_id) " +
 								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");) {
-			stmt.setString(1, card.getThumbnailUrl());
-			stmt.setString(2, card.getMediumUrl());
+			stmt.setString(1, card.getthumbnail_url());
+			stmt.setString(2, card.getmedium_url());
 			stmt.setFloat(3, card.getPrice());
 			stmt.setString(4, card.getRoomType());
 			stmt.setInt(5, card.getBeds());

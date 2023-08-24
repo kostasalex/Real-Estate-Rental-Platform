@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Card from "./Card";
-
 const Cards = () => {
   const [listings, setListings] = useState([]);
 
@@ -18,8 +17,8 @@ const Cards = () => {
           <Card
             key={index}
             id={listing.id}
-            thumbnailUrl={listing.thumbnailUrl}
-            mediumUrl={listing.mediumUrl}
+            thumbnailUrl={listing.thumbnail_url}
+            mediumUrl={listing.medium_url}
             price={listing.price}
             roomType={listing.roomType}
             beds={listing.beds}

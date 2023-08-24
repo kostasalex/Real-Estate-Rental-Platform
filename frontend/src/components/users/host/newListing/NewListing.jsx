@@ -3,12 +3,13 @@ import Stepper from './Stepper';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { Description, Location, Prices, Dates, Details, Amenities } from './steps';
+import useCloudinaryUpload from '/src/hooks/useCloudinaryUpload';
 
 const NewListing = ({ hosts_id }) => {
 	const navigate = useNavigate();
 
 
-	const [step, setStep] = useState(1);
+	const [step, setStep] = useState(2);
 	const [steps, setSteps] = useState([
 		'Location',
 		'Description',
@@ -27,7 +28,11 @@ const NewListing = ({ hosts_id }) => {
 		setStep(step - 1);
 	}
 
+	const { uploadedUrls, handleUpload } = useCloudinaryUpload();
+
+
 	const postHandler = async (values) => {
+		const uploadedImageUrls = await handleUpload(photos);
 		try {
 			// Create an array from the Set of selected amenities
 			const amenities = Array.from(values.amenities);
@@ -41,7 +46,9 @@ const NewListing = ({ hosts_id }) => {
 				latitude: parseFloat(values.latitude),
 				longitude: parseFloat(values.longitude),
 				hosts_id: hosts_id, 
-				amenities: `{${amenities.join(',')}}`
+				amenities: `{${amenities.join(',')}}`,
+				thumbnail_url: Array.isArray(uploadedImageUrls) ? uploadedImageUrls[0] : uploadedImageUrls,
+				medium_url: Array.isArray(uploadedImageUrls) ? uploadedImageUrls.join(',') : uploadedImageUrls
 				//id: cardId,
 				// Include the hosts_id as hosts_id in the request body
 			};
