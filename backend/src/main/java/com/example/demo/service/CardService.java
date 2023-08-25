@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,18 @@ public class CardService {
         this.cardDao = cardDao;
     }
 
-    public List<Card> getAllCards() {
-        return cardDao.selectAllCards();
+public List<Card> getAllCards(Optional<String> hosts_id) {
+    List<Card> cards = cardDao.selectAllCards();
+
+    if (hosts_id.isPresent() && !hosts_id.get().isEmpty()) {
+        return cards.stream()
+                .filter(card -> hosts_id.get().equals(card.gethosts_id()))
+                .collect(Collectors.toList());
     }
+
+    return cards;
+}
+
 
     public Optional<Card> getCard(String cardId) {
         return cardDao.selectCardByCardId(cardId);

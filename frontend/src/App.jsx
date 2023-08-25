@@ -104,7 +104,7 @@ function App() {
             {loggedInUserType === null && <Route path="/" element={<Cards />} />}
             {loggedInUserType === 'Host' && (
               <>
-                <Route path="/" element={<HostHomepage />} />
+                <Route path="/" element={<HostHomepage hosts_id={loggedInUserId} />} />
                 <Route path="/newlisting" element={<NewListing loggedInUserId={loggedInUserId} />} />
               </>
             )}

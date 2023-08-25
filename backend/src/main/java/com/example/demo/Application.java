@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,8 +43,8 @@ public class Application {
 
     @GetMapping("/cards")
     @ResponseBody
-    public List<Card> fetchCards() {
-        return cardService.getAllCards();
+    public List<Card> fetchCards(@RequestParam(name = "hosts_id", required = false) String hosts_id) {
+        return cardService.getAllCards(Optional.ofNullable(hosts_id));
     }
 
     @GetMapping("/users")

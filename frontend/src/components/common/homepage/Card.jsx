@@ -4,7 +4,7 @@ function Card(props) {
 	const handleClick = () => {
 		localStorage.setItem("cardProps", JSON.stringify(props));
 		const newTab = window.open(`/cards/${props.id}`, "_blank");
-	}
+	};
 	const maxRating = 100; // Maximum rating on the original scale
 	const targetMaxRating = 5; // Maximum rating on the 5-point scale
 
@@ -12,6 +12,11 @@ function Card(props) {
 
 	const roundedRating = Math.round(convertedRating * 10) / 10;
 
+	// Check if the listing is from the current logged-in host
+	const isCurrentHostListing = props.hosts_id === props.currentHostsId;
+	console.log("Host " +props.hosts_id)
+	console.log("Cur " +props.currentHostsId)
+	console.log(isCurrentHostListing)
 	return (
 		<div className="w-[450px] h-[500px] mb-4 cursor-pointer ">
 			<section className="flex flex-col items-center bg-white">
@@ -31,7 +36,7 @@ function Card(props) {
 									<li className="mr-4 flex items-center text-left">
 										<i className="mr-2 text-2xl text-blue-600">
 											<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="h-5 w-5" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M10.38 13.08A1 1 0 0 0 10 13H6a1 1 0 0 0 0 2h1.59l-5.3 5.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L9 16.41V18a1 1 0 0 0 2 0v-4a1 1 0 0 0-.08-.38a1 1 0 0 0-.54-.54ZM10 5a1 1 0 0 0-1 1v1.59l-5.29-5.3a1 1 0 0 0-1.42 1.42L7.59 9H6a1 1 0 0 0 0 2h4a1 1 0 0 0 .38-.08a1 1 0 0 0 .54-.54A1 1 0 0 0 11 10V6a1 1 0 0 0-1-1Zm3.62 5.92A1 1 0 0 0 14 11h4a1 1 0 0 0 0-2h-1.59l5.3-5.29a1 1 0 1 0-1.42-1.42L15 7.59V6a1 1 0 0 0-2 0v4a1 1 0 0 0 .08.38a1 1 0 0 0 .54.54ZM16.41 15H18a1 1 0 0 0 0-2h-4a1 1 0 0 0-.38.08a1 1 0 0 0-.54.54A1 1 0 0 0 13 14v4a1 1 0 0 0 2 0v-1.59l5.29 5.3a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42Z" /></svg>
-											</i>
+										</i>
 										<span className="text-sm">{props.roomType}</span>
 									</li>
 
@@ -41,6 +46,18 @@ function Card(props) {
 											></i>
 										<span className="text-sm">{props.beds} Bed(s)</span>
 									</li>
+
+									{/* Render the "Edit" button only if it's the current host's listing */}
+									{isCurrentHostListing && (
+										<li className="flex items-center text-left">
+											<button
+												className="ml-2 text-blue-600 text-sm"
+												onClick={() => handleEditListing(props.id)}
+											>
+												Edit
+											</button>
+										</li>
+									)}
 								</ul>
 								<ul className="m-0 flex list-none items-center justify-between px-0 pt-6 pb-0">
 									<li className="text-left">

@@ -1,10 +1,14 @@
 package com.example.demo.resource;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dao.CardInterface;
@@ -21,8 +25,20 @@ public class CardResource {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Card> fetchCards() {
-        return cardInterface.selectAllCards();
+    public List<Card> fetchCards(@RequestParam(name = "hosts_id", required = false) String hosts_id) {
+        List<Card> cards = cardInterface.selectAllCards();
+        
+        if (hosts_id == null || hosts_id.isEmpty()) {
+            return cards;
+        }
+        
+        try {
+            return cards.stream()
+                    .filter(card -> hosts_id.equals(card.gethosts_id()))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new IllegalStateException("Invalid", e);
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "{cardId}")
