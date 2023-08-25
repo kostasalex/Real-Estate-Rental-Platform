@@ -185,8 +185,12 @@ const Results = () => {
     
     setHasFilters(amenities || maxPrice || roomType);
   }
-
-
+  const renamedListingsArray = listings.map(listing => ({
+    ...listing,
+    mediumUrl: listing.medium_url,
+    thumbnailUrl: listing.thumbnail_url
+    // Optionally you can delete the old keys as well, but you'd need to handle that differently
+}));
 
   return (
     <div >
@@ -207,7 +211,7 @@ const Results = () => {
         <FiltersToggle filtersToggle = {filtersToggle} handleFilterToggle = {handleFilterToggle}/>
       </div>
       <div className='mt-2 justify-center flex text-3xl'>
-        <Cards listings = {listings}/>
+        <Cards listings={renamedListingsArray} />
       </div>
 
     </div>
