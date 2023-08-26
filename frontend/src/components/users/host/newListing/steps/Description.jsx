@@ -3,6 +3,12 @@ import { UploadPhotos } from '/src/components';
 
 const Description = ({ title, setTitle, description, setdescription, roomType, setroomType, photos, setPhotos, rentalRules, setRentalRules, rentalRulesList, setIsFormComplete }) => {
 
+	if (title && description && roomType && photos.length > 0 && rentalRules) {
+		setIsFormComplete(true);
+	} else {
+		setIsFormComplete(false);
+	}
+	
 	useEffect(() => {
 		if (title && description && roomType && photos.length > 0 && rentalRules) {
 			setIsFormComplete(true);

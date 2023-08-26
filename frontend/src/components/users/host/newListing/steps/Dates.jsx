@@ -2,16 +2,50 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHostDepartureDate, selectedDates, setSelectedDates, setIsFormComplete }) => {
+const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, 
+	setHostDepartureDate, selectedDates, setSelectedDates, setIsFormComplete }) => {
+
 	setIsFormComplete(true);
-	const handleAddDates = () => {
-		if (hostArrivalDate && hostDepartureDate) {
-			const formattedDates = `${hostArrivalDate.toLocaleDateString()} - ${hostDepartureDate.toLocaleDateString()}`;
-			setSelectedDates([...selectedDates, formattedDates]);
-			setHostArrivalDate(null);
-			setHostDepartureDate(null);
-		}
-	};
+
+	const [errorMsg, setErrorMsg] = useState('')
+
+	const isDateInRange = (date, startDate, endDate) => {
+		return date >= startDate && date <= endDate;
+	}
+	
+	const doRangesOverlap = (start1, end1, start2, end2) => {
+		return isDateInRange(start1, start2, end2) || isDateInRange(end1, start2, end2);
+	}
+	
+const handleAddDates = () => {
+    if (hostArrivalDate && hostDepartureDate) {
+        if (hostArrivalDate.getTime() < hostDepartureDate.getTime()) {
+            let overlap = false;
+            for (let range of selectedDates) {
+                const [startStr, endStr] = range.split(' - ');
+                const startDate = new Date(startStr);
+                const endDate = new Date(endStr);
+                if (doRangesOverlap(hostArrivalDate, hostDepartureDate, startDate, endDate)) {
+                    overlap = true;
+                    break;
+                }
+            }
+
+            if (overlap) {
+                setErrorMsg('The selected date range overlaps with an existing date range. Please select a different date range.');
+            } else {
+                setErrorMsg('');
+                const formattedDates = `${hostArrivalDate.toLocaleDateString()} - ${hostDepartureDate.toLocaleDateString()}`;
+                setSelectedDates([...selectedDates, formattedDates]);
+                setHostArrivalDate(null);
+                setHostDepartureDate(null);
+            }
+        } else {
+            setErrorMsg('The start date should be before the end date. Please select a valid date range.');
+        }
+    }
+};
+
 
 	const handleDeleteDate = (index) => {
 		const updatedDates = [...selectedDates];
@@ -19,13 +53,6 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHost
 		setSelectedDates(updatedDates);
 	};
 
-	useEffect(() => {
-		if (selectedDates.length !== 0) {
-			setIsFormComplete(true);
-		} else {
-			setIsFormComplete(true);
-		}
-	}, [selectedDates, setIsFormComplete]);
 
 	// Set default arrival and departure dates to the current date
 	const defaultArrivalDate = new Date();
@@ -37,15 +64,17 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHost
 	const departureDate = hostDepartureDate || defaultDepartureDate;
 
 	return (
-		<div className="block sm:grid sm:grid-cols-2 sm:gap-4">
-			<div>
+		
+        <div className="block sm:grid sm:grid-cols-2 sm:gap-4 h-full flex items-center justify-center py-10">
+            <div className=''>
+                <p className='text-center mb-8'>Specify if there are dates when your listing will be unavailable.</p>
 				<div className="my-5">
 					<label className="text-indigo-500" htmlFor="hostArrivalDate">
-						Arrival Date:
+						Start of Unavailability:
 					</label>
 					<DatePicker
 						id="hostArrivalDate"
-						minDate={departureDate}
+						minDate={new Date(arrivalDate.getTime() + 24*60*60*1000)}
 						selected={arrivalDate}
 						onChange={(date) => setHostArrivalDate(date)}
 						dateFormat="dd/MM/yyyy"
@@ -55,7 +84,7 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHost
 
 				<div className="my-5">
 					<label className="text-indigo-500" htmlFor="hostDepartureDate">
-						Departure Date:
+						End of Unavailability:
 					</label>
 					<DatePicker
 						id="hostDepartureDate"
@@ -66,11 +95,12 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHost
 							}
 						}}
 						dateFormat="dd/MM/yyyy"
-						minDate={arrivalDate}
+						minDate={new Date(arrivalDate.getTime() + 24*60*60*1000)}
 						disabled={!arrivalDate}
 						placeholderText="Select departure date"
 					/>
 				</div>
+				<div className='text-sm text-red-500'>{errorMsg}</div>
 
 				<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded mt-4" onClick={handleAddDates}>
 					Add Dates
@@ -78,8 +108,8 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, setHost
 			</div>
 
 			<div>
-				<div className="mb-2 mt-5">
-					<p className="text-indigo-500">Selected Dates:</p>
+				<div className="mb-2">
+					<p className="text-indigo-500">Unavailable dates:</p>
 					{selectedDates.length > 0 ? (
 						selectedDates.map((dates, index) => (
 							<div key={index} className="flex items-center my-3">

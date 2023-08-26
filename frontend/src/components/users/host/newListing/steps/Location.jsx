@@ -22,6 +22,7 @@ const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstree
 		setAccessingInfo(event.target.value);
 	};
 
+	
 	useEffect(() => {
 		if (isSaved &&  country && postcode && city && road && accessingInfo) {
 			setIsFormComplete(true);

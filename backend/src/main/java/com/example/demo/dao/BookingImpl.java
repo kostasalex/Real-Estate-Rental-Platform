@@ -123,7 +123,8 @@ public class BookingImpl implements BookingInterface {
         Integer listingsId = rs.getInt("listings_id");
         Date departureDate = rs.getDate("departure_date");
         Date arrivalDate = rs.getDate("arrival_date");
+        Integer trueBooking = rs.getInt("trueBooking");
 
-        return new Booking(id, hostsId, rentersId, listingsId, departureDate, arrivalDate);
+        return new Booking(id, hostsId, rentersId, listingsId, departureDate, arrivalDate, trueBooking);
     }
 }

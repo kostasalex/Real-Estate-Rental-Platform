@@ -1,6 +1,13 @@
 import React, { useEffect } from 'react';
 
 const Prices = ({ price, setprice, additionalGuestPrice, setAdditionalGuestPrice, accommodates, setaccommodates, setIsFormComplete }) => {
+
+	if (parseFloat(price) !== 0 && parseFloat(additionalGuestPrice) !== 0 && accommodates !== 0) {
+		setIsFormComplete(true);
+	} else {
+		setIsFormComplete(false);
+	}
+	
 	useEffect(() => {
 		if (parseFloat(price) !== 0 && parseFloat(additionalGuestPrice) !== 0 && accommodates !== 0) {
 			setIsFormComplete(true);

@@ -1,8 +1,15 @@
 import React, { useEffect } from 'react';
 
 const Details = ({ beds, setBeds, bathrooms, setBathrooms, bedrooms, setBedrooms, bed_type, setBedType, size, setSize, setIsFormComplete }) => {
+ 
+  if (beds !== 0 && bathrooms !== 0 && bedrooms !== 0 && size !== 0 && bed_type) {
+    setIsFormComplete(true);
+  } else {
+    setIsFormComplete(false);
+  }
+
   useEffect(() => {
-    if (beds !== 0 && bathrooms !== 0 && bedrooms !== 0 && size !== 0) {
+    if (beds !== 0 && bathrooms !== 0 && bedrooms !== 0 && size !== 0 && bed_type !== 0) {
       setIsFormComplete(true);
     } else {
       setIsFormComplete(false);

@@ -9,7 +9,7 @@ const NewListing = ({ hosts_id }) => {
 	const navigate = useNavigate();
 
 
-	const [step, setStep] = useState(2);
+	const [step, setStep] = useState(5);
 	const [steps, setSteps] = useState([
 		'Location',
 		'Description',
@@ -39,13 +39,13 @@ const NewListing = ({ hosts_id }) => {
 
 			// Generate a random cardId
 			//const cardId = Math.floor(Math.random() * 10000);
-			const hosts_id = Math.floor(Math.random() * 10000);
+			//const hosts_id = Math.floor(Math.random() * 10000);
 			console.log("the lat value is: " + values.latitude);
 			const requestBody = {
 				...values,
 				latitude: parseFloat(values.latitude),
 				longitude: parseFloat(values.longitude),
-				hosts_id: hosts_id, 
+				hosts_id: localStorage.getItem('loggedInUserId'),
 				amenities: `{${amenities.join(',')}}`,
 				thumbnail_url: Array.isArray(uploadedImageUrls) ? uploadedImageUrls[0] : uploadedImageUrls,
 				medium_url: Array.isArray(uploadedImageUrls) ? uploadedImageUrls.join(',') : uploadedImageUrls,
@@ -130,19 +130,19 @@ const NewListing = ({ hosts_id }) => {
 	}, [step]);
 
 	// Location Step State
-	const [street, setstreet] = useState('athens');
-	const [accessingInfo, setAccessingInfo] = useState('true');
+	const [street, setstreet] = useState('');
+	const [accessingInfo, setAccessingInfo] = useState('');
 	const [latitude, setLatitude] = useState(null); // Add lat state
-	const [longitude, setLongitude] = useState(''); // Add lng state
+	const [longitude, setLongitude] = useState(null); // Add lng state
 	const [country, setCountry] = useState(''); // Default to Athens, Greece
 	const [postcode, setPostCode] = useState('');
 	const [city, setCity] = useState('');
 	const [road, setRoad] = useState('');
 
 	// Description Step State
-	const [name, setName] = useState('name');
-	const [description, setdescription] = useState('description');
-	const [roomType, setroomType] = useState('roomtype');
+	const [name, setName] = useState('');
+	const [description, setdescription] = useState('');
+	const [roomType, setroomType] = useState('');
 	const [photos, setPhotos] = useState([]);
 
 	const rentalRulesList = [
@@ -154,21 +154,21 @@ const NewListing = ({ hosts_id }) => {
 	const [rentalRules, setRentalRules] = useState(new Set());
 
 	// Details Step State
-	const [beds, setBeds] = useState(3);
-	const [bathrooms, setBathrooms] = useState(2);
-	const [bedrooms, setBedrooms] = useState(2);
+	const [beds, setBeds] = useState(0);
+	const [bathrooms, setBathrooms] = useState(0);
+	const [bedrooms, setBedrooms] = useState(0);
 	const [bed_type, setBedType] = useState('');
-	const [size, setSize] = useState(10);
+	const [size, setSize] = useState(0);
 
 	// Dates Step State
-	const [hostArrivalDate, setHostArrivalDate] = useState(new Date()); // Set default value to the current date
-	const [hostDepartureDate, setHostDepartureDate] = useState(new Date()); // Set default value to the current date
-	const [selectedDates, setSelectedDates] = useState(["8/19/2023 - 8/19/2023"]);
+	const [hostArrivalDate, setHostArrivalDate] = useState(); // Set default value to the current date
+	const [hostDepartureDate, setHostDepartureDate] = useState(); // Set default value to the current date
+	const [selectedDates, setSelectedDates] = useState('');
 
 	// Prices Step State
-	const [price, setprice] = useState(10);
-	const [additionalGuestPrice, setAdditionalGuestPrice] = useState(20);
-	const [accommodates, setaccommodates] = useState(3);
+	const [price, setprice] = useState(0);
+	const [additionalGuestPrice, setAdditionalGuestPrice] = useState(0);
+	const [accommodates, setaccommodates] = useState(1);
 
 	// Amenities Step State
 	const [amenities, setAmenities] = useState(new Set()); // Initialize as a Set
@@ -327,16 +327,16 @@ const NewListing = ({ hosts_id }) => {
 					)}
 
 					{steps.length === step && (
-						<button
-							className="text-base  ml-2  hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer 
-              hover:bg-blue1  
-              bg-blue1 
-              text-blue0 
-              border duration-200 ease-in-out 
-              border-blue1 transition"
+						isFormComplete ? (
+							<button
+								className="text-base  ml-2  hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer 
+								hover:bg-blue1  
+								bg-blue1 
+								text-blue0 
+								border duration-200 ease-in-out 
+								border-blue1 transition"
 							onClick={() =>
 								postHandler({
-									// Pass all the required form values here
 									street,
 									accessingInfo,
 									name,
@@ -357,34 +357,28 @@ const NewListing = ({ hosts_id }) => {
 									size,
 									amenities,
 									rentalRules
-									
-									// id,
-									// thumbnailUrl,
-									// mediumUrl,
-									// price,
-									// bathrooms,
-									// bedrooms,
-									// numberOfReviews,
-									// reviewScoresRating, 
-									// street,
-									// lng,
-									// lat,
-									// amenities,
+								}
 								
-									// beds,
-									// name,
-									// hostName, 
-									// hostPictureUrl,
-									// hostSince,
-									// hostLocation,
-									//hostAbout,
-									// hostResponseTime,
-									// hostResponseRate,
-								})
+								)
 							}
 						>
 							Post
-						</button>
+						</button>)
+					:(
+						<button
+						className="text-base  ml-2  flex justify-center px-4 py-2 rounded font-bold cursor-not-allowed 
+							bg-gray-50 
+							text-gray-500
+							border-2
+							border-gray-500
+							duration-200 ease-in-out 
+							transition"
+								disabled
+					>
+						Post
+					</button>)
+
+						
 					)}
 				</div>
 			</div>

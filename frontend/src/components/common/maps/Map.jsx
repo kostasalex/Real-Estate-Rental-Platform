@@ -66,6 +66,7 @@ const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPost
 		  const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${inputValue}&limit=5`);
 		  const data = await response.json();
 		  const names = data.map(item => extractNameFromDisplayName(item.display_name, indexFromEnd));
+		  console.log(data)
 		  setFunction(names);
 		} catch (error) {
 		  console.error('Error occurred during fetching data:', error);

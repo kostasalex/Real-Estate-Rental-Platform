@@ -9,15 +9,17 @@ public class Booking {
     private final Integer listingsId;
     private final Date departureDate;
     private final Date arrivalDate;
+    private final Integer trueBooking;
 
     public Booking(Integer id, Integer hostsId, Integer rentersId, Integer listingsId, Date departureDate,
-            Date arrivalDate) {
+            Date arrivalDate, Integer trueBooking) {
         this.id = id;
         this.hostsId = hostsId;
         this.rentersId = rentersId;
         this.listingsId = listingsId;
         this.departureDate = departureDate;
         this.arrivalDate = arrivalDate;
+        this.trueBooking = trueBooking;
     }
 
     public Integer getId() {
@@ -44,4 +46,7 @@ public class Booking {
         return arrivalDate;
     }
 
+    public Integer getTrueBooking() {
+        return trueBooking;
+    }
 }
