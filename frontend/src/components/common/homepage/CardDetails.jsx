@@ -228,7 +228,7 @@ function CardDetails() {
 		});
 		}
 	};
-
+	console.log(hostPictureUrl)
 
 	return (
 

@@ -8,6 +8,8 @@ import { FiSearch } from 'react-icons/fi';
 import { GoHome } from 'react-icons/go';
 import { signup } from '/src/assets/constants';
 import { registerSchema } from '/src/schemas';
+import { UploadPhotos } from '/src/components';
+import useCloudinaryUpload from '/src/hooks/useCloudinaryUpload';
 
 const SignUp = (props) => {
     const navigate = useNavigate();
@@ -17,10 +19,11 @@ const SignUp = (props) => {
     const navigateToLogIn = () => {
         navigate('/login', { state: { from: location.state.from } });
     };
-
+	const { uploadedUrl, handleUpload } = useCloudinaryUpload();
     const [rentingPlace, setRentingPlace] = useState(toggle);
     const [userType, setUserType] = useState(rentingPlace === false ? "Seeker" : "PendingHost");
     const [hostApplication, setHostApplication] = useState(rentingPlace === false ? 0 : 1);
+	const [photo, setPhoto] = useState([]);
 
     const handleRentingPlaceToggle = () => {
         setRentingPlace(!rentingPlace);
@@ -40,15 +43,19 @@ const SignUp = (props) => {
         msg = '\nHost Application Received. We will notify you as soon as it is approved.';
     }
     values.host_application = hostApplication;
-
+    const uploadedImageUrl = await handleUpload(photo);
     try {
+        const requestBody = {
+            ...values,
+            image_url : uploadedImageUrl,
+        };
         // Send the form data to the backend and handle the response
         const response = await fetch('https://localhost:8443/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(values)
+        body: JSON.stringify(requestBody)
         });
 
         if (response.ok) {
@@ -117,7 +124,7 @@ const SignUp = (props) => {
             last_name: signup.lastNameLabelPlaceholder,
             phone_number: '699000000',
             address: signup.addressPlaceholder,
-            host_application: hostApplication
+            host_application: hostApplication,
         },
         validationSchema: registerSchema,
         onSubmit
@@ -270,18 +277,25 @@ const SignUp = (props) => {
                                     placeholder={signup.confirmPasswordPlaceholder} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                                 {errors.passwordConfirmation && touched.passwordConfirmation && <p className="text-red-700 text-sm">{errors.passwordConfirmation}</p>}
                             </div>
+                            <UploadPhotos
+                                    photos={photo}
+                                    setPhotos={setPhoto}
+                                    numOfPhotos = {1}
+                            />
+                            <div className='mt-28'>
+                                <button
+                                    className="flex items-center justify-between w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                                    type="submit">
+                                    <span>{signup.submitButtonLabel}</span>
 
-                            <button
-                                className="flex items-center justify-between w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-                                type="submit">
-                                <span>{signup.submitButtonLabel}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 rtl:-scale-x-100" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd"
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clipRule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
 
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 rtl:-scale-x-100" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd"
-                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                        clipRule="evenodd" />
-                                </svg>
-                            </button>
                             <p className='pt-3'>Already have an account? &nbsp;
                                 <button className='underline text-blue-500' onClick={navigateToLogIn}><span >{signup.loginButtonLabel}</span></button>
                             </p>

@@ -168,7 +168,7 @@ public class UserImpl implements UserInterface {
             stmt.setString(4, formattedDate);
             stmt.setInt(5, 0);
             stmt.setString(6, user.getHostApplication());
-            stmt.setString(7, user.getImageUrl());
+            stmt.setString(7, user.getimage_url());
             stmt.setString(8, user.getFirstName());
             stmt.setString(9, user.getLastName());
             stmt.setString(10, user.getUsername());

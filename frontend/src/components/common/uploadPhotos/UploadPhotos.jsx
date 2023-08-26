@@ -76,7 +76,7 @@ const UploadPhotos = ({photos, setPhotos, numOfPhotos}) => {
 
                 </div>
             </form>
-            <div className="block sm:grid sm:grid-cols-6 sm:gap-4 mt-4">
+            <div className="flex flex-row space-x-4 mt-4">
                 {photos.map((photo, index) => (
                     <div key={index} className="relative">
                         {index === 0 && photos.length >= 2 && (

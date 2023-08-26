@@ -75,7 +75,7 @@ public class User {
         return host_application;
     }
 
-    public String getImageUrl() {
+    public String getimage_url() {
         return image_url;
     }
 
