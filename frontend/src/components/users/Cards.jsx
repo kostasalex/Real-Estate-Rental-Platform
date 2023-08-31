@@ -19,8 +19,6 @@ const Cards = ({listings}) => {
                 street={listing.street}
                 description={listing.description}
                 name={listing.name}
-                hostName={listing.hostName}
-                hostPictureUrl={listing.hostPictureUrl}
                 amenities={listing.amenities}
                 accommodates={listing.accommodates}
                 bathrooms={listing.bathrooms}
@@ -28,14 +26,7 @@ const Cards = ({listings}) => {
                 bed_type={listing.bed_type}
                 longitude={listing.longitude}
                 latitude={listing.latitude}
-                hostSince={listing.hostSince}
-                hostLocation={listing.hostLocation}
-                hostAbout={listing.hostAbout}
-                hostResponseTime={listing.hostResponseTime}
-                hostResponseRate={listing.hostResponseRate}
-                hostListingsCount={listing.hostListingsCount}
-                hosts_id = {listing.hosts_id}
-            />
+                hosts_id = {listing.hosts_id}/>
             ))}
             </div>
         </div>
