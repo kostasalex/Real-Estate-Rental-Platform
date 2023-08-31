@@ -4,34 +4,71 @@ import BookingsTable from './BookingsTable';
 
 const Bookings = () => {
 
-  const NUM_RESULTS = 30;
+  const [numResults, setNumResults] = useState(0);
   const MAX_RESULTS_PER_PAGE = 10;
 
   const [currentPage, setCurrentPage] = useState(1);
 
   const [bookings, setBookings] = useState([]);
+  const [listings, setListings] = useState([]);
   const [filteredBookings, setFiltereBookings] = useState([]);
 
+ 
 
-  /* Import Data */
+
   useEffect(() => {
-    Papa.parse("/src/assets/listings.csv", {
-      download: true,
-      header: true,
-      complete: (results) => {
-        const processedBookings = results.data.map(({ host_name, host_location, name, id, medium_url, host_id }) => ({
-          host_name,
-          host_location,
-          name,
-          id,
-          medium_url,
-          host_id
-        }));
-        setBookings(processedBookings.slice(0, NUM_RESULTS));
-      },
-    });
-  }, []);
 
+    const fetchListings = async () => {
+      const response = await fetch('https://localhost:8443/cards');
+      const data = await response.json();
+      return data;
+    };
+
+    const fetchBookings = async () => {
+      const response = await fetch('https://localhost:8443/api/v1/bookings');
+      const data = await response.json();
+      setNumResults(data.length);
+      return data;
+    };
+  
+    // Fetch users data
+    const fetchUsers = async () => {
+      const response = await fetch('https://localhost:8443/api/v1/users');
+      const data = await response.json();
+      return data;
+    };
+  
+    // Process and set listings
+    const processData = async () => {
+      try {
+        const bookingsData = await fetchBookings();
+        const usersData = await fetchUsers();
+        const listingsData = await fetchListings();
+  
+        const processedBookings = bookingsData.map((booking) => {
+          // Find the corresponding user for each listing
+          const host = usersData.find((u) => Number(u.id) === Number(booking.hostsId));
+          const listing = listingsData.find((l) => Number(l.id) === Number(booking.listingsId));
+          
+          console.log(booking);
+          return {
+            id: booking.id,
+            name: listing.name,
+            location:  listing.street,
+            host_name: host ? host.firstName : 'N/A',
+            thumbnail_url: listing.thumbnail_url,
+            renders_id: booking.rentersId,
+          };
+        });
+  
+        setBookings(processedBookings.slice(0, bookingsData.length));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    processData();
+  }, []);
 
 
   /* Handle pages */
@@ -129,7 +166,7 @@ const Bookings = () => {
         </div>
         <div className="flex flex-col items-center border-t bg-white px-5 py-5 sm:flex-row sm:justify-between">
           <span className="text-xs text-gray-600 sm:text-sm">
-            Showing {(currentPage - 1) * MAX_RESULTS_PER_PAGE + 1} to {Math.min(bookings.length, currentPage * MAX_RESULTS_PER_PAGE)} of {NUM_RESULTS} Entries
+            Showing {(currentPage - 1) * MAX_RESULTS_PER_PAGE + 1} to {Math.min(bookings.length, currentPage * MAX_RESULTS_PER_PAGE)} of {numResults} Entries
           </span>
           <div className="mt-2 inline-flex sm:mt-0">
             {currentPage > 1 && (

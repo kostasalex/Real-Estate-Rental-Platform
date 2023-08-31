@@ -25,7 +25,7 @@ const UsersTable = ({ users, rowClickHandler, iconStyle, userIcon }) => {
                 <div className="flex-shrink-0 h-10 w-10">
                   <img
                     className={iconStyle}
-                    src={user.imageUrl ? user.imageUrl : userIcon}
+                    src={user.image_url ? user.image_url : userIcon}
                     alt= "User"
                     onError={(e) => {
                       e.target.src = userIcon;
