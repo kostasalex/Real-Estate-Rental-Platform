@@ -83,15 +83,14 @@ public class UserImpl implements UserInterface {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
-                        "UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ?, phone_number = ?, address = ?, password = ? WHERE id = ?");) {
-            stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getFirstName());
-            stmt.setString(4, user.getLastName());
-            stmt.setString(5, user.getPhoneNumber());
-            stmt.setString(6, user.getAddress());
-            stmt.setString(7, user.getPassword());
-            stmt.setString(8, user.getId().toString());
+                        "email = ?, first_name = ?, last_name = ?, phone_number = ?, address = ?, password = ? WHERE id = ?");) {
+            stmt.setString(1, user.getEmail());
+            stmt.setString(2, user.getFirstName());
+            stmt.setString(3, user.getLastName());
+            stmt.setString(4, user.getPhoneNumber());
+            stmt.setString(5, user.getAddress());
+            stmt.setString(6, user.getPassword());
+            stmt.setString(7, user.getId().toString());
 
             rowsAffected = stmt.executeUpdate();
 
@@ -156,7 +155,7 @@ public class UserImpl implements UserInterface {
     public int insertUser(User user) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
-                        "INSERT INTO users (email, password, address, register_date, is_admin, host_application, image_url, first_name, last_name, username, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "INSERT INTO users (email, password, address, register_date, is_admin, host_application, image_url, first_name, last_name, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         Statement.RETURN_GENERATED_KEYS);) {
 
             stmt.setString(1, user.getEmail());
@@ -171,8 +170,7 @@ public class UserImpl implements UserInterface {
             stmt.setString(7, user.getimage_url());
             stmt.setString(8, user.getFirstName());
             stmt.setString(9, user.getLastName());
-            stmt.setString(10, user.getUsername());
-            stmt.setString(11, user.getPhoneNumber());
+            stmt.setString(10, user.getPhoneNumber());
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -193,7 +191,6 @@ public class UserImpl implements UserInterface {
         String id = rs.getString("id");
         String phoneNumber = rs.getString("phone_number");
         String lastName = rs.getString("last_name");
-        String username = rs.getString("username");
         String firstName = rs.getString("first_name");
         String imageUrl = rs.getString("image_url");
         String hostApplication = rs.getString("host_application");
@@ -202,9 +199,16 @@ public class UserImpl implements UserInterface {
         String address = rs.getString("address");
         String password = rs.getString("password");
         String email = rs.getString("email");
+        java.sql.Date sqlDate = rs.getDate("host_since");
+        LocalDate hostSince = (sqlDate != null) ? sqlDate.toLocalDate() : null;
+        String hostAbout = rs.getString("host_about");
+        String hostResponseTime = rs.getString("host_response_time");
+        int hostResponseRate = rs.getInt("host_response_rate");
+        int hostListingsCount = rs.getInt("host_listings_count");
 
-        return new User(id, username, email, firstName, lastName, phoneNumber, address, password,
-                registerDate, isAdmin, hostApplication, imageUrl);
+        return new User(id, email, firstName, lastName, phoneNumber, address, password,
+                registerDate, isAdmin, hostApplication, imageUrl, hostSince, hostAbout, hostResponseTime,
+                hostResponseRate, hostListingsCount);
     }
 
     @Override

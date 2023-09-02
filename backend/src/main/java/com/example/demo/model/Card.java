@@ -15,8 +15,7 @@ public class Card {
     private String street;
     private String description;
     private String name;
-    private String hostName;
-    private String hostPictureUrl;
+
     private String amenities;
     private int accommodates;
     private int bathrooms;
@@ -24,22 +23,14 @@ public class Card {
     private String bed_type;
     private float longitude;
     private float latitude;
-    private LocalDate hostSince;
-    private String hostLocation;
-    private String hostAbout;
-    private String hostResponseTime;
-    private int hostResponseRate;
-    private int hostListingsCount;
     private String hosts_id;
     private String rentalRules;
     private int size;
 
     public Card(String id, String thumbnailUrl, String mediumUrl, float price, String roomType, int beds,
             int numberOfReviews, int reviewScoresRating, String street, String description, String name,
-            String hostName, String hostPictureUrl, String amenities, int accommodates, int bathrooms,
-            int bedrooms, String bed_type, float longitude, float latitude, LocalDate hostSince,
-            String hostLocation, String hostAbout, String hostResponseTime, int hostResponseRate,
-            int hostListingsCount, String hosts_id, String rentalRules, int size) {
+            String amenities, int accommodates, int bathrooms, int bedrooms, String bed_type, float longitude,
+            float latitude, String hostId, String rentalRules, int size) {
         this.id = id;
         this.thumbnail_url = thumbnailUrl;
         this.medium_url = mediumUrl;
@@ -51,8 +42,6 @@ public class Card {
         this.street = street;
         this.description = description;
         this.name = name;
-        this.hostName = hostName;
-        this.hostPictureUrl = hostPictureUrl;
         this.amenities = amenities;
         this.accommodates = accommodates;
         this.bathrooms = bathrooms;
@@ -60,13 +49,7 @@ public class Card {
         this.bed_type = bed_type;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.hostSince = hostSince;
-        this.hostLocation = hostLocation;
-        this.hostAbout = hostAbout;
-        this.hostResponseTime = hostResponseTime;
-        this.hostResponseRate = hostResponseRate;
-        this.hostListingsCount = hostListingsCount;
-        this.hosts_id = hosts_id;
+        this.hosts_id = hostId;
         this.rentalRules = rentalRules;
         this.size = size;
     }
@@ -120,14 +103,6 @@ public class Card {
         return name;
     }
 
-    public String getHostName() {
-        return hostName;
-    }
-
-    public String getHostPictureUrl() {
-        return hostPictureUrl;
-    }
-
     public String getAmenities() {
         return amenities;
     }
@@ -154,30 +129,6 @@ public class Card {
 
     public float getLatitude() {
         return latitude;
-    }
-
-    public LocalDate getHostSince() {
-        return hostSince;
-    }
-
-    public String getHostLocation() {
-        return hostLocation;
-    }
-
-    public String getHostAbout() {
-        return hostAbout;
-    }
-
-    public String getHostResponseTime() {
-        return hostResponseTime;
-    }
-
-    public int getHostResponseRate() {
-        return hostResponseRate;
-    }
-
-    public int getHostListingsCount() {
-        return hostListingsCount;
     }
 
     public String gethosts_id() {

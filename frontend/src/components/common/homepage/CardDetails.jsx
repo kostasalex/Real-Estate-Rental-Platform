@@ -29,6 +29,17 @@ function CardDetails() {
 		}
 	}, [arrivalDate, departureDate]);
 
+	const [host, setHost] = useState({});
+
+	useEffect(() => {
+		fetch(`https://localhost:8443/api/v1/users/${cardProps.hosts_id}`)
+			.then((response) => response.json())
+			.then((data) => setHost(data))
+			.catch((error) => console.error(error));
+
+	}, [cardProps.hosts_id]);
+
+
 
 	const [id, setId] = useState(cardProps.id);
 	const [name, setName] = useState(cardProps.name);
@@ -44,17 +55,7 @@ function CardDetails() {
 	const [numberOfReviews, setNumberOfReviews] = useState(cardProps.numberOfReviews);
 	const [reviewScoresRating, setReviewScoresRating] = useState(cardProps.reviewScoresRating);
 	const [street, setStreet] = useState(cardProps.street);
-	const [description, setDescription] = useState(cardProps.description);
-
-	const [hostName, setHostName] = useState(cardProps.hostName);
-	const [hostPictureUrl, setHostPictureUrl] = useState(cardProps.hostPictureUrl);
-	const [hostSince, setHostSince] = useState(cardProps.hostSince);
-	const [hostsId, setHostsId] = useState(cardProps.hosts_id);
-	const [hostLocation, setHostLocation] = useState(cardProps.hostLocation);
-	const [hostAbout, setHostAbout] = useState('');
-	const [hostResponseTime, setHostResponseTime] = useState(cardProps.hostResponseTime);
-	const [hostResponseRate, setHostResponseRate] = useState(cardProps.hostResponseTime);
-	const [hostListingCount, setHostListingCount] = useState(cardProps.hostListingsCount);
+	const [description, setDescription] = useState(cardProps.description);	
 
 	const [amenities, setAmenities] = useState(cardProps.amenities);
 
@@ -182,7 +183,7 @@ function CardDetails() {
 	}, []);
 
 
-
+	console.log(host)
 	const [question, setQuestion] = useState('');
 	const [questions, setQuestions] = useState([]);
 
@@ -329,7 +330,7 @@ function CardDetails() {
 							<button onClick={openDialogHost}>
 								<li>
 									<p className="text-center text-2xl leading-none tracking-tight text-gray-900 sm:text-left">
-										This place is hosted by {hostName}
+										This place is hosted by {host.firstName}
 									</p>
 								</li>
 								<li>
@@ -339,18 +340,18 @@ function CardDetails() {
 												<div className="md:flex-shrink-0">
 													<img
 														className="h-full w-full object-cover md:w-48"
-														src={hostPictureUrl}
+														src={host.image_url}
 														alt="Host Picture"
 													/>
 												</div>
 												<div className="p-10">
 													<div className="text-center pb-4 tracking-wide text-xl text-indigo-500 font-semibold">
-														{hostName}
+														{host.firstName}
 													</div>
 													<div className="mt-4">
-														<p className="text-center">{hostAbout}</p>
-														<p className="">Since: {hostSince}</p>
-														<p className="">Listings: {hostListingCount}</p>
+														<p className="text-center">{host.hostAbout}</p>
+														<p className="">Since: {host.hostSince}</p>
+														<p className="">Listings: {host.hostListingCount}</p>
 													</div>
 												</div>
 											</div>
@@ -364,21 +365,21 @@ function CardDetails() {
 										<div className="md:flex-shrink-0">
 											<img
 												className="h-full w-full object-cover "
-												src={hostPictureUrl}
+												src={host.image_url}
 												alt="Host Picture"
 											/>
 										</div>
 										<div className="p-10">
 											<div className="text-center pb-4 tracking-wide text-xl text-indigo-500 font-semibold">
-												{hostName}
+												{host.firstName}
 											</div>
 											<div className="mt-4">
-												<p className="text-center">{hostAbout}</p>
-												<p className="">Since: {hostSince}</p>
-												<p className="">Location: {hostLocation}</p>
-												<p className="">Listings: {hostListingCount}</p>
-												<p className="mt-5">Response Time: {hostResponseTime}</p>
-												<p className="">Response Rate: {hostResponseRate}</p>
+												<p className="text-center">{host.hostAbout}</p>
+												<p className="">Since: {host.hostSince}</p>
+												<p className="">Location: {host.address}</p>
+												<p className="">Listings: {host.hostListingCount}</p>
+												<p className="mt-5">Response Time: {host.hostResponseTime}</p>
+												<p className="">Response Rate: {host.hostResponseRate}</p>
 											</div>
 										</div>
 									</div>
@@ -389,7 +390,7 @@ function CardDetails() {
 										>
 											<div className="px-3 mb-2 mt-2">
 												<textarea
-													placeholder={`Ask ${hostName} a question`}
+													placeholder={`Ask ${host.firstName} a question`}
 													className="w-full placeholder-gray-500 bg-gray-100 rounded border border-gray-400 leading-normal resize-none h-20 py-2 px-3 font-medium placeholder-gray-700 focus:outline-none focus:bg-white"
 													value={question}
 													onChange={(e) => setQuestion(e.target.value)}

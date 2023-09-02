@@ -3,7 +3,7 @@ import Papa from 'papaparse';
 import ListingsTable from './ListingsTable';
 
 const Listings = () => {
-  const NUM_RESULTS = 30;
+  const [numResults, setNumResults] = useState(0);
   const MAX_RESULTS_PER_PAGE = 10;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -11,21 +11,47 @@ const Listings = () => {
   const [filteredListings, setFilteredListings] = useState([]);
 
   useEffect(() => {
-    fetch('https://localhost:8443/cards')
-      .then((response) => response.json())
-      .then((data) => {
-        const processedListings = data.map((listing) => ({
-          id: listing.id,
-          name: listing.name,
-          host_location: listing.hostLocation,
-          host_name: listing.hostName,
-          medium_url: listing.mediumUrl,
-        }));
-        setListings(processedListings.slice(0, NUM_RESULTS));
-      })
-      .catch((error) => {
-        console.error('Error fetching listings:', error);
-      });
+    // Fetch listings data
+    const fetchListings = async () => {
+      const response = await fetch('https://localhost:8443/cards');
+      const data = await response.json();
+      setNumResults(data.length);
+      return data;
+    };
+  
+    // Fetch users data
+    const fetchUsers = async () => {
+      const response = await fetch('https://localhost:8443/api/v1/users');
+      const data = await response.json();
+      return data;
+    };
+  
+    // Process and set listings
+    const processData = async () => {
+      try {
+        const listingsData = await fetchListings();
+        const usersData = await fetchUsers();
+  
+        const processedListings = listingsData.map((listing) => {
+          // Find the corresponding user for each listing
+          const user = usersData.find((u) => u.id === listing.hosts_id);
+          
+          return {
+            id: listing.id,
+            name: listing.name,
+            host_location: user ? user.address : 'N/A',
+            host_name: user ? user.firstName : 'N/A',
+            thumbnail_url: listing.thumbnail_url,
+          };
+        });
+  
+        setListings(processedListings.slice(0, listingsData.length));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    processData();
   }, []);
 
   useEffect(() => {
@@ -112,7 +138,7 @@ const Listings = () => {
         </div>
         <div className="flex flex-col items-center border-t bg-white px-5 py-5 sm:flex-row sm:justify-between">
           <span className="text-xs text-gray-600 sm:text-sm">
-            Showing {(currentPage - 1) * MAX_RESULTS_PER_PAGE + 1} to {Math.min(listings.length, currentPage * MAX_RESULTS_PER_PAGE)} of {NUM_RESULTS} Entries
+            Showing {(currentPage - 1) * MAX_RESULTS_PER_PAGE + 1} to {Math.min(listings.length, currentPage * MAX_RESULTS_PER_PAGE)} of {numResults} Entries
           </span>
           <div className="mt-2 inline-flex sm:mt-0">
             {currentPage > 1 && (

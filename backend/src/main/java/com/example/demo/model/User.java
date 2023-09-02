@@ -1,8 +1,9 @@
 package com.example.demo.model;
 
+import java.time.LocalDate;
+
 public class User {
     private final String id;
-    private final String username;
     private final String email;
     private final String first_name;
     private final String last_name;
@@ -13,12 +14,17 @@ public class User {
     private final String is_admin;
     private final String host_application;
     private final String image_url;
+    private LocalDate hostSince;
+    private String hostAbout;
+    private String hostResponseTime;
+    private int hostResponseRate;
+    private int hostListingsCount;
 
-    public User(String id, String username, String email, String first_name, String last_name, String phone_number,
+    public User(String id, String email, String first_name, String last_name, String phone_number,
             String address, String password, String register_date, String is_admin, String host_application,
-            String image_url) {
+            String image_url, LocalDate hostSince, String hostAbout, String hostResponseTime, int hostResponseRate,
+            int hostListingsCount) {
         this.id = id;
-        this.username = username;
         this.email = email;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -29,14 +35,15 @@ public class User {
         this.is_admin = is_admin;
         this.host_application = host_application;
         this.image_url = image_url;
+        this.hostSince = hostSince;
+        this.hostAbout = hostAbout;
+        this.hostResponseTime = hostResponseTime;
+        this.hostResponseRate = hostResponseRate;
+        this.hostListingsCount = hostListingsCount;
     }
 
     public String getId() {
         return id;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public String getEmail() {
@@ -83,9 +90,29 @@ public class User {
         return (host_application.equals("2")) ? "Host" : "Seeker";
     }
 
+    public LocalDate getHostSince() {
+        return hostSince;
+    }
+
+    public String getHostAbout() {
+        return hostAbout;
+    }
+
+    public String getHostResponseTime() {
+        return hostResponseTime;
+    }
+
+    public int getHostResponseRate() {
+        return hostResponseRate;
+    }
+
+    public int getHostListingsCount() {
+        return hostListingsCount;
+    }
+
     @Override
     public String toString() {
-        return "User [id=" + id + ", username=" + username + ", email=" + email + ", first_name=" + first_name
+        return "User [id=" + id + ", email=" + email + ", first_name=" + first_name
                 + ", last_name=" + last_name + ", phone_number=" + phone_number + ", address=" + address
                 + ", password=" + password + ", register_date=" + register_date + ", is_admin=" + is_admin
                 + ", host_application=" + host_application + ", image_url=" + image_url + "]";

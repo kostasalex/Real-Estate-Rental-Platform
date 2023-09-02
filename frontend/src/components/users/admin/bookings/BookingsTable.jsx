@@ -27,7 +27,7 @@ const BookingsTable = ({ bookings, iconStyle}) => {
                                 <div className="h-10 w-10 flex-shrink-0">
                                     <img
                                     className={iconStyle}
-                                    src={`${booking.medium_url}`}
+                                    src={`${booking.thumbnail_url}`}
                                     alt='Apartment image'
                                     />
                                 </div>
@@ -37,13 +37,13 @@ const BookingsTable = ({ bookings, iconStyle}) => {
                                 </div>
                             </td>
                             <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                <p className="whitespace-no-wrap">{booking.host_location}</p>
+                                <p className="whitespace-no-wrap">{booking.location}</p>
                             </td>
                             <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                                 <p className="whitespace-no-wrap">{booking.host_name}</p>
                             </td>
                             <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                <p className="whitespace-no-wrap">{booking.host_id}</p>
+                                <p className="whitespace-no-wrap">{booking.renders_id}</p>
                             </td>
                         </tr>
                     </React.Fragment>
