@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Stepper from './Stepper';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom'; // Import useParams to get the cardId from the URL
 import Swal from 'sweetalert2';
 import { Description, Location, Prices, Dates, Details, Amenities } from './steps';
 import useCloudinaryUpload from '/src/hooks/useCloudinaryUpload';
@@ -18,6 +18,7 @@ const NewListing = ({ hosts_id }) => {
 		'Dates',
 		'Prices'
 	]);
+
 
 
 	function nextStepHandler() {
@@ -38,8 +39,7 @@ const NewListing = ({ hosts_id }) => {
 			const amenities = Array.from(values.amenities);
 
 			// Generate a random cardId
-			//const cardId = Math.floor(Math.random() * 10000);
-			//const hosts_id = Math.floor(Math.random() * 10000);
+
 			console.log("the lat value is: " + values.latitude);
 			const requestBody = {
 				...values,
@@ -50,8 +50,7 @@ const NewListing = ({ hosts_id }) => {
 				thumbnail_url: Array.isArray(uploadedImageUrls) ? uploadedImageUrls[0] : uploadedImageUrls,
 				medium_url: Array.isArray(uploadedImageUrls) ? uploadedImageUrls.join(',') : uploadedImageUrls,
 				rentalRules: `{${Array.from(rentalRules).join(',')}}`,
-				//id: cardId,
-				// Include the hosts_id as hosts_id in the request body
+
 			};
 
 			console.log('Request JSON:', JSON.stringify(requestBody, null, 2)); // Log the JSON that will be sent to the server
@@ -147,7 +146,7 @@ const NewListing = ({ hosts_id }) => {
 
 	const rentalRulesList = [
 		'Acceptable for pets',
-  		'Smoking allowed',
+		'Smoking allowed',
 		'Events or parties allowed',
 	];
 
@@ -188,6 +187,27 @@ const NewListing = ({ hosts_id }) => {
 		console.log(longitude)
 	}, [latitude, longitude]);
 
+
+	//Editing listing
+	const cardProps = JSON.parse(localStorage.getItem("cardProps"));
+	const [id] = useState(cardProps.id);
+	const [nameEdit] = useState(cardProps.name);
+	const [priceEdit] = useState(cardProps.price);
+	const [roomTypeEdit] = useState(cardProps.roomType);
+	const [bedsEdit] = useState(cardProps.beds);
+	const [accommodatesEdit] = useState(cardProps.accommodates);
+	const [bathroomsEdit] = useState(cardProps.bathrooms);
+	const [bedroomsEdit] = useState(cardProps.bedrooms);
+	const [bed_typeEdit] = useState(cardProps.bed_type);
+	const [numberOfReviewsEdit] = useState(cardProps.numberOfReviews);
+	const [reviewScoresRatingEdit] = useState(cardProps.reviewScoresRating);
+	const [streetEdit] = useState(cardProps.street);
+	const [sizeEdit] = useState(cardProps.size);
+	const [descriptionEdit] = useState(cardProps.description);
+	const [longitudeEdit] = useState(cardProps.longitude);
+	const [latitudeEdit ] = useState(cardProps.latitude);
+	console.log(cardProps)
+
 	return (
 		<div className="p-5">
 			<Stepper steps={steps} currentStep={step} />
@@ -195,54 +215,54 @@ const NewListing = ({ hosts_id }) => {
 			<div className="font font-semibold text-lg flex justify-center p-10">
 				{step === 1 && (
 					<Location
-						street={street}
+						street={cardProps ? streetEdit : street}
 						setstreet={setstreet}
 						accessingInfo={accessingInfo}
 						setAccessingInfo={setAccessingInfo}
 						setIsFormComplete={setIsFormComplete}
-						latitude={latitude}
-						longitude={longitude}
+						latitude={cardProps ? latitudeEdit : latitude}
+						longitude={cardProps ? longitudeEdit : longitude}
 						setLatitude={setLatitude}
 						setLongitude={setLongitude}
-						country = {country}
-						setCountry = {setCountry} // Default to Athens, Greece
-						postcode = {postcode} 
-						setPostCode = {setPostCode}
-						city = {city}
-						setCity = {setCity}
-						road = {road}
-						setRoad = {setRoad}
+						country={country}
+						setCountry={setCountry} // Default to Athens, Greece
+						postcode={postcode}
+						setPostCode={setPostCode}
+						city={city}
+						setCity={setCity}
+						road={road}
+						setRoad={setRoad}
 					/>
 				)}
 
 				{step === 2 && (
 					<Description
-						title={name}
+						title={cardProps ? nameEdit : name} // Use nameNew if cardProps has data, otherwise use name
 						setTitle={setName}
-						description={description}
+						description={cardProps ? descriptionEdit : description}
 						setdescription={setdescription}
-						roomType={roomType}
+						roomType={cardProps ? roomTypeEdit : roomType}
 						setroomType={setroomType}
 						photos={photos}
 						setPhotos={setPhotos}
 						rentalRules={rentalRules}
 						setRentalRules={setRentalRules}
 						setIsFormComplete={setIsFormComplete}
-						rentalRulesList = {rentalRulesList}
+						rentalRulesList={rentalRulesList}
 					/>
 				)}
 
 				{step === 3 && (
 					<Details
-						beds={beds}
+						beds={cardProps ? bedsEdit : beds}
 						setBeds={setBeds}
-						bathrooms={bathrooms}
+						bathrooms={cardProps ? bathroomsEdit : bathrooms}
 						setBathrooms={setBathrooms}
-						bedrooms={bedrooms}
+						bedrooms={cardProps ? bedroomsEdit : bedrooms}
 						setBedrooms={setBedrooms}
-						bed_type={bed_type}
+						bed_type={cardProps ? bed_typeEdit : bed_type}
 						setBedType={setBedType}
-						size={size}
+						size={cardProps ? sizeEdit : size}
 						setSize={setSize}
 						setIsFormComplete={setIsFormComplete}
 					/>
@@ -335,50 +355,50 @@ const NewListing = ({ hosts_id }) => {
 								text-blue0 
 								border duration-200 ease-in-out 
 								border-blue1 transition"
-							onClick={() =>
-								postHandler({
-									street,
-									accessingInfo,
-									name,
-									description,
-									roomType,
-									photos,
-									beds,
-									bathrooms,
-									bedrooms,
-									selectedDates,
-									price,
-									additionalGuestPrice,
-									accommodates,
-									bed_type,
-									latitude,
-									longitude,
-									hosts_id,
-									size,
-									amenities,
-									rentalRules
+								onClick={() =>
+									postHandler({
+										street,
+										accessingInfo,
+										name,
+										description,
+										roomType,
+										photos,
+										beds,
+										bathrooms,
+										bedrooms,
+										selectedDates,
+										price,
+										additionalGuestPrice,
+										accommodates,
+										bed_type,
+										latitude,
+										longitude,
+										hosts_id,
+										size,
+										amenities,
+										rentalRules
+									}
+
+									)
 								}
-								
-								)
-							}
-						>
-							Post
-						</button>)
-					:(
-						<button
-						className="text-base  ml-2  flex justify-center px-4 py-2 rounded font-bold cursor-not-allowed 
+							>
+								Post
+							</button>)
+							: (
+								<button
+									className="text-base  ml-2  flex justify-center px-4 py-2 rounded font-bold cursor-not-allowed 
 							bg-gray-50 
 							text-gray-500
 							border-2
 							border-gray-500
 							duration-200 ease-in-out 
 							transition"
-								disabled
-					>
-						Post
-					</button>)
+									disabled
+								>
+									Post
+								</button>)
 
-						
+
 					)}
 				</div>
 			</div>

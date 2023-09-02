@@ -134,6 +134,10 @@ function App() {
             <Route path="/results/q?" element={<Results />} />
             <Route path="/cards/:cardId" element={<CardDetails />} />
             <Route path="notfound" element={<NotFound />} />
+            <Route
+              path="/newlisting/:cardId"
+              element={<NewListing />}
+            />
           </Routes>
         </div>
         <Footer />

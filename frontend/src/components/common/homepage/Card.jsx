@@ -1,28 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Card(props) {
 	const handleClick = () => {
 		localStorage.setItem("cardProps", JSON.stringify(props));
 		const newTab = window.open(`/cards/${props.id}`, "_blank");
 	};
-	const maxRating = 100; // Maximum rating on the original scale
-	const targetMaxRating = 5; // Maximum rating on the 5-point scale
+
+	const navigate = useNavigate();
+	JSON.parse(localStorage.getItem("cardProps"));
+	const loggedInUserId = localStorage.getItem('loggedInUserId')
+	const isHost = props.hosts_id === loggedInUserId;
+	const handleEditListing = () => {
+		localStorage.setItem("cardProps", JSON.stringify(props));
+		const newTab = window.open(`/newlisting/${props.id}`);
+	  };
+
+	const cardProps = JSON.parse(localStorage.getItem("cardProps"));
+	const maxRating = 100;
+	const targetMaxRating = 5;
 
 	const convertedRating = (props.reviewScoresRating / maxRating) * targetMaxRating;
 
 	const roundedRating = Math.round(convertedRating * 10) / 10;
 
-	// Check if the listing is from the current logged-in host
-	const isCurrentHostListing = props.hosts_id === props.currentHostsId;
-	console.log("Host " +props.hosts_id)
-	console.log("Cur " +props.currentHostsId)
-	console.log(isCurrentHostListing)
 	return (
 		<div className="w-[450px] h-[500px] mb-4 cursor-pointer ">
 			<section className="flex flex-col items-center bg-white">
 				<div className="mt-10 gap-6 px-2 sm:max-w-lg sm:px-20 md:max-w-screen-xl md:grid-cols-2 md:px-10 lg:grid-cols-3 lg:gap-8">
 					<article className="mb-4 overflow-hidden rounded-xl border text-gray-700 shadow-md duration-500 ease-in-out hover:shadow-xl">
-						<a target="_blank" onClick={handleClick} >
+						<a className="z-0" target="_blank" onClick={handleClick} >
 							<div className="">
 								<img src={props.thumbnailUrl} alt="" className="object-fill h-48 w-96" />
 							</div>
@@ -42,22 +49,10 @@ function Card(props) {
 
 									<li className="mr-4 flex items-center text-left">
 										<i className="mr-2 text-2xl text-blue-600">
-											<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="h-5 w-5" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0-1.1-.9-2-2-2V7c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v3c-1.1 0-2 .9-2 2v5h1.33L4 19h1l.67-2h12.67l.66 2h1l.67-2H22v-5zm-4-2h-5V7h5v3zM6 7h5v3H6V7zm-2 5h16v3H4v-3z" /></svg
-											></i>
+											<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="h-5 w-5" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0-1.1-.9-2-2-2V7c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v3c-1.1 0-2 .9-2 2v5h1.33L4 19h1l.67-2h12.67l.66 2h1l.67-2H22v-5zm-4-2h-5V7h5v3zM6 7h5v3H6V7zm-2 5h16v3H4v-3z" /></svg>
+										</i>
 										<span className="text-sm">{props.beds} Bed(s)</span>
 									</li>
-
-									{/* Render the "Edit" button only if it's the current host's listing */}
-									{isCurrentHostListing && (
-										<li className="flex items-center text-left">
-											<button
-												className="ml-2 text-blue-600 text-sm"
-												onClick={() => handleEditListing(props.id)}
-											>
-												Edit
-											</button>
-										</li>
-									)}
 								</ul>
 								<ul className="m-0 flex list-none items-center justify-between px-0 pt-6 pb-0">
 									<li className="text-left">
@@ -81,10 +76,24 @@ function Card(props) {
 						</a>
 					</article>
 				</div>
+				{isHost && (
+					<li className="flex items-center text-left">
+						{/* Wrap the "Edit" button in a container */}
+						<div onClick={(e) => handleEditListing(props.id, e)}>
+							<button
+								type="submit"
+								className="px-2.5 py-1.5 rounded-md text-white text-sm bg-blue1 z-10"
+							>
+								Edit
+							</button>
+						</div>
+					</li>
+				)}
 			</section>
-		</div>
-	);
 
+		</div>
+
+	);
 }
 
 export default Card;
