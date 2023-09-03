@@ -1,9 +1,10 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Header, SeekerHomepage, DashboardToggle, HostHomepage, Footer, NotFound, NewListing, Messages, Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
+import { Header, EditProfile, SeekerHomepage, DashboardToggle, HostHomepage, Footer, NotFound, NewListing, Messages, Login, SignUp, Cards, Results, CardDetails, AdminHomepage, AdminDashboard, AdminBookings, AdminListings, AdminReviews, AdminUsers } from './components'
 import { Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
 
 
 function App() {
@@ -75,6 +76,10 @@ function App() {
     navigate('/');
   }
 
+  const handleEditProfile = () => {
+    navigate('/editprofile');
+  }
+
   React.useEffect(() => {
     setAdminDashboardToggle(location.pathname.startsWith('/dashboard'));
   }, [location.pathname]);
@@ -92,6 +97,8 @@ function App() {
           handleLogout={handleLogout}
           handleMessages={handleMessages}
           handleDashboard={handleDashboard}
+          handleEditProfile={handleEditProfile}
+          
         />
         <div className="flex-grow">
           <Routes>
@@ -129,6 +136,9 @@ function App() {
             <Route
               path="/signup"
               element={loggedInUserType ? <Navigate to="/" replace /> : <SignUp handleLogin={handleLogin} />}
+            />
+            <Route
+              path="/editprofile" element={!loggedInUserType ? <Navigate to="/" replace /> :<EditProfile handleLogin={handleLogin} />}
             />
             <Route path="*" element={<Navigate to="/notfound" replace />} />
             <Route path="/results/q?" element={<Results />} />

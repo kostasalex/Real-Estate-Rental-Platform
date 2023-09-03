@@ -1,6 +1,6 @@
 import React from 'react'
 
-const UploadPhotos = ({photos, setPhotos, numOfPhotos}) => {
+const UploadPhotos = ({photos, setPhotos, numOfPhotos, title}) => {
 
 	const [notification, setNotification] = React.useState(''); 
 
@@ -8,7 +8,11 @@ const UploadPhotos = ({photos, setPhotos, numOfPhotos}) => {
         const selectedPhotos = Array.from(event.target.files);
 
         if (photos.length + selectedPhotos.length > numOfPhotos) {
-            setNotification('You can upload a maximum of 3 ' + (numOfPhotos > 1 ? 'Photos' : 'Photo') );
+            let msg;
+            if (numOfPhotos === 1)msg = "Remove the image before adding new";
+            else msg = `You can upload a maximum of ${numOfPhotos} photos` ;
+            
+            setNotification(msg);
             return;
         }
 
@@ -61,7 +65,7 @@ const UploadPhotos = ({photos, setPhotos, numOfPhotos}) => {
             <form className="mt-5">
                 <div className="mb-4">
                     <label htmlFor="upload" className="my-2 block text-gray-700 font-medium">
-                        {"Upload " + (numOfPhotos > 1 ? "Photos" : "Photo")}
+                        {title}
                     </label>
                     <input
                         type="file"
@@ -77,13 +81,17 @@ const UploadPhotos = ({photos, setPhotos, numOfPhotos}) => {
                 </div>
             </form>
             <div className="flex flex-row space-x-4 mt-4">
-                {photos.map((photo, index) => (
+            {photos && photos.map((photo, index) => {
+                // Determine the source of the image
+                const src = typeof photo === 'string' ? photo : URL.createObjectURL(photo);
+
+                return (
                     <div key={index} className="relative">
                         {index === 0 && photos.length >= 2 && (
                             <div className="absolute top-0 left-0 bg-black bg-opacity-50 text-white text-sm py-1 px-2">Selected Thumbnail</div>
                         )}
                         <img
-                            src={URL.createObjectURL(photo)}
+                            src={src}
                             alt={`Photo ${index + 1}`}
                             className={`object-cover w-full h-40 rounded-lg ${index === 0 ? 'border-4 border-blue-500' : ''}`}
                             onClick={() => setThumbnail(index)}
@@ -95,7 +103,9 @@ const UploadPhotos = ({photos, setPhotos, numOfPhotos}) => {
                             <span className="text-white">X</span>
                         </div>
                     </div>
-                ))}
+                );
+            })}
+
             </div>
         </div>
     )

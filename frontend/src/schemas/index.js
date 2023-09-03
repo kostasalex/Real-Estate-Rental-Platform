@@ -53,4 +53,31 @@ const registerSchema = yup.object().shape({
         .required("This field is required"),
 });
 
-export { loginSchema, registerSchema };
+
+
+const profileEditSchema = (isPasswordChangeEnabled) => {
+    let schema = {
+        email: yup.string()
+        .email("Please enter a valid email address")
+        .required("This field is required"),
+        first_name: yup.string().required("This field is required"),
+        phone_number: yup.string().required("This field is required"),
+        address: yup.string().required("This field is required"),
+    };
+
+    if (isPasswordChangeEnabled) {
+        schema.password = yup.string()
+            .test('password-rules', 'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number', value => passwordRules.test(value))
+            .required("This field is required");
+        schema.passwordConfirmation = yup.string()
+            .oneOf([yup.ref('password'), null], 'Passwords do not match')
+            .required("This field is required");
+    }
+
+    return yup.object().shape(schema);
+};
+
+
+export { loginSchema, registerSchema, profileEditSchema };
+
+

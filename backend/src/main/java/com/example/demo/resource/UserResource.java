@@ -39,4 +39,13 @@ public class UserResource {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    @PutMapping("/{userId}/update")
+    public ResponseEntity<?> updateUser(@PathVariable("userId") String userId, @RequestBody User user) {
+        int result = userService.updateUser(userId, user);
+        if (result == 1) {
+            return ResponseEntity.ok().body("User updated successfully");
+        }
+        return ResponseEntity.badRequest().body("Failed to update user");
+    }
 }

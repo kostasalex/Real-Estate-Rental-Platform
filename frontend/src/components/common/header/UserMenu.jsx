@@ -6,7 +6,7 @@ import {BsChatSquareTextFill} from "react-icons/bs"
 import {IoMdSettings} from "react-icons/io"
 import {MdSpaceDashboard} from "react-icons/md"
 
-const UserMenu = ({loggedInUserType, handleLogout, handleMessages, handleDashboard}) => {
+const UserMenu = ({loggedInUserType, handleLogout, handleMessages, handleDashboard, handleEditProfile}) => {
 
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const menuRef = React.useRef(null);
@@ -63,7 +63,7 @@ const UserMenu = ({loggedInUserType, handleLogout, handleMessages, handleDashboa
 
                         <nav 
                             onClick={handleMenuToggle}
-                            className=" flex flex-col text-left mt-3 shadow-lg w-32 bg-white absolute mr-4 duration-500  ">
+                            className=" flex flex-col right-1 lg:left-0 text-left mt-3  shadow-lg w-40 bg-white absolute duration-500  ">
                             {!loggedInUserType && 
                                 <div>
                                     <Link to ="/signup">
@@ -80,35 +80,39 @@ const UserMenu = ({loggedInUserType, handleLogout, handleMessages, handleDashboa
                             }
                             {loggedInUserType && 
                             <div>
-                                <div className="flex rounded-lg px-4 py-2 text-gray-500 opacity-80">
-                                <div className='rounded-full p-1 mr-2'>
+                                <div className="flex cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                                    onClick={() => handleEditProfile()}>
+                                    <div className='rounded-full p-1 mr-2'>
                                         <IoMdSettings/>
                                     </div>
                                     <div 
-                                        className="mr-3 text-sm font-medium">
-                                        Acount Settings 
+                                        className="mr-3 text-sm font-medium"
+                                        >
+                                        Edit Profile
                                     </div>
                                 </div> 
                                {loggedInUserType === "Admin" && (
-                                <div className="flex cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                                <div className="flex cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                                    onClick={() => handleDashboard()}>
                                     <div className='rounded-full p-1 mr-2'>
                                         <MdSpaceDashboard/>
                                     </div>
                                     <div 
                                         className="mr-3 text-sm font-medium"
-                                        onClick={() => handleDashboard()}>
+                                        >
                                         Dashboard 
                                     </div>
                                 </div>
                                )}
                                 {loggedInUserType != "Admin" && (
-                                <div className="flex cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                                <div className="flex cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                                    onClick={() => handleMessages()}>
                                     <div className='rounded-full p-1 mr-2'>
                                         <BsChatSquareTextFill/>
                                     </div>
                                     <div 
                                         className="mr-3 text-sm font-medium"
-                                        onClick={() => handleMessages()}>
+                                        >
                                         Messages 
                                     </div>
                                 </div> 

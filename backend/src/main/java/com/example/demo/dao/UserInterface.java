@@ -17,7 +17,7 @@ public interface UserInterface {
     // Returns all users having send-receive message from UserId
     List<Map<String, Object>> getDistinctUsers(int UserId);
 
-    int updateUser(User user);
+    int updateUser(String userId, User user);
 
     int deleteUserByUserId(String userId);
 

@@ -3,17 +3,17 @@ package com.example.demo.model;
 import java.time.LocalDate;
 
 public class User {
-    private final String id;
-    private final String email;
-    private final String first_name;
-    private final String last_name;
-    private final String phone_number;
-    private final String address;
-    private final String password;
-    private final String register_date;
-    private final String is_admin;
-    private final String host_application;
-    private final String image_url;
+    private String id;
+    private String email;
+    private String first_name;
+    private String last_name;
+    private String phone_number;
+    private String address;
+    private String password;
+    private String register_date;
+    private String is_admin;
+    private String host_application;
+    private String image_url;
     private LocalDate hostSince;
     private String hostAbout;
     private String hostResponseTime;
@@ -108,6 +108,58 @@ public class User {
 
     public int getHostListingsCount() {
         return hostListingsCount;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFirstName(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public void setLastName(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public void setPhoneNumber(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setHostApplication(String host_application) {
+        this.host_application = host_application;
+    }
+
+    public void setImageUrl(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public void setHostSince(LocalDate hostSince) {
+        this.hostSince = hostSince;
+    }
+
+    public void setHostAbout(String hostAbout) {
+        this.hostAbout = hostAbout;
+    }
+
+    public void setHostResponseTime(String hostResponseTime) {
+        this.hostResponseTime = hostResponseTime;
+    }
+
+    public void setHostResponseRate(int hostResponseRate) {
+        this.hostResponseRate = hostResponseRate;
+    }
+
+    public void setHostListingsCount(int hostListingsCount) {
+        this.hostListingsCount = hostListingsCount;
     }
 
     @Override

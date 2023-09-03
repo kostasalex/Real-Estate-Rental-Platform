@@ -27,6 +27,11 @@ export const signup = {
   loginButtonLabel: 'Log in',
 };
 
+export const editProfileInfo = {
+  title: 'Edit Your Profile',
+  description: "Update your details and ensure your profile is up-to-date.",
+};
+
 export const login = {
   title: 'Welcome to RentSpot',
   description:

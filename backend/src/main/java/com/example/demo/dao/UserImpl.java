@@ -78,19 +78,50 @@ public class UserImpl implements UserInterface {
     }
 
     @Override
-    public int updateUser(User user) {
+    public int updateUser(String userId, User user) {
         int rowsAffected = 0;
+
+        // Fetch the current user details from the database
+        Optional<User> currentUserOpt = selectUserByUserId(userId.toString());
+        if (!currentUserOpt.isPresent()) {
+            return 0; // User not found
+        }
+        User currentUser = currentUserOpt.get();
+
+        // Update the fields of currentUser with the values from the request, but only
+        // if they are present
+        if (user.getEmail() != null) {
+            currentUser.setEmail(user.getEmail());
+        }
+        if (user.getFirstName() != null) {
+            currentUser.setFirstName(user.getFirstName());
+        }
+        if (user.getLastName() != null) {
+            currentUser.setLastName(user.getLastName());
+        }
+        if (user.getPhoneNumber() != null) {
+            currentUser.setPhoneNumber(user.getPhoneNumber());
+        }
+        if (user.getAddress() != null) {
+            currentUser.setAddress(user.getAddress());
+        }
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            currentUser.setPassword(user.getPassword());
+        }
+
+        currentUser.setImageUrl(user.getimage_url());
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
-                        "email = ?, first_name = ?, last_name = ?, phone_number = ?, address = ?, password = ? WHERE id = ?");) {
-            stmt.setString(1, user.getEmail());
-            stmt.setString(2, user.getFirstName());
-            stmt.setString(3, user.getLastName());
-            stmt.setString(4, user.getPhoneNumber());
-            stmt.setString(5, user.getAddress());
-            stmt.setString(6, user.getPassword());
-            stmt.setString(7, user.getId().toString());
+                        "UPDATE users SET email = ?, first_name = ?, last_name = ?, phone_number = ?, address = ?, password = ?, image_url = ? WHERE id = ?");) {
+            stmt.setString(1, currentUser.getEmail());
+            stmt.setString(2, currentUser.getFirstName());
+            stmt.setString(3, currentUser.getLastName());
+            stmt.setString(4, currentUser.getPhoneNumber());
+            stmt.setString(5, currentUser.getAddress());
+            stmt.setString(6, currentUser.getPassword());
+            stmt.setString(7, currentUser.getimage_url());
+            stmt.setString(8, userId);
 
             rowsAffected = stmt.executeUpdate();
 
