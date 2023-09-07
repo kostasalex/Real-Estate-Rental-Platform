@@ -8,14 +8,14 @@ const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstree
 	const [isSaved, setIsSaved] = useState(false);
 
 	const streetHandler = (address) => {
-		console.log(address);
+		//console.log(address);
 		setstreet(address);
 	};
 
 	const handleLatLon = (lat,lon) => {
 		setLatitude(lat); // Set latitude state from the address
 		setLongitude(lon); // Set longitude state from the address
-		console.log("lat long:" + latitude + " " +longitude );
+		//console.log("lat long:" + latitude + " " +longitude );
 	}
 
 	const handleAccessingInfoChange = (event) => {

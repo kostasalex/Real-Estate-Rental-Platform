@@ -1,45 +1,80 @@
 import React, { useEffect, useState } from 'react';
 import { UploadPhotos } from '/src/components';
 
-const Description = ({ title, setTitle, description, setdescription, roomType, setroomType, photos, setPhotos, rentalRules, setRentalRules, rentalRulesList, setIsFormComplete }) => {
+const Description = ({
+	title: initialTitle,
+	description: initialDescription,
+	roomType: initialRoomType,
+	photos: initialPhotos,
+	rentalRules: initialRentalRules,
+	setTitle,
+	setdescription,
+	setroomType,
+	setPhotos,
+	setRentalRules,
+	rentalRulesList,
+	setIsFormComplete
+}) => {
+	const [title, setLocalTitle] = useState(initialTitle || '');
+	const [description, setLocalDescription] = useState(initialDescription || '');
+	const [roomType, setLocalRoomType] = useState(initialRoomType || '');
+	const [photos, setLocalPhotos] = useState(initialPhotos || []);
+	const [rentalRules, setLocalRentalRules] = useState(
+		new Set(initialRentalRules || [])
+	);
 
-	if (title && description && roomType && photos.length > 0 && rentalRules) {
-		setIsFormComplete(true);
-	} else {
-		setIsFormComplete(false);
-	}
-	
 	useEffect(() => {
-		if (title && description && roomType && photos.length > 0 && rentalRules) {
+		if (
+			title &&
+			description &&
+			roomType 
+			//photos.length > 0 &&
+			//rentalRules.size > 0
+		) {
 			setIsFormComplete(true);
+			//console.log('here');
 		} else {
 			setIsFormComplete(false);
+			//console.log(rentalRules.size +' '+photos.length+ ' ' +roomType+ ' ' +description+ ' ' +title);
 		}
 	}, [title, description, roomType, photos, rentalRules, setIsFormComplete]);
 
+
 	const handleTitleChange = (event) => {
+		setLocalTitle(event.target.value);
 		setTitle(event.target.value);
 	};
 
 	const handledescriptionChange = (event) => {
+		setLocalDescription(event.target.value);
 		setdescription(event.target.value);
 	};
 
 	const handleroomTypeChange = (event) => {
+		setLocalRoomType(event.target.value);
 		setroomType(event.target.value);
 	};
 
 	const handleCheckboxChange = (event, rule) => {
-		setRentalRules((prevRules) => {
-		  const updatedRules = new Set(prevRules);
-		  if (event.target.checked) {
-			updatedRules.add(rule);
-		  } else {
-			updatedRules.delete(rule);
-		  }
-		  return updatedRules;
+		setLocalRentalRules((prevRules) => {
+			const updatedRules = new Set(prevRules);
+			if (event.target.checked) {
+				updatedRules.add(rule);
+			} else {
+				updatedRules.delete(rule);
+			}
+			return updatedRules;
 		});
-	  };
+		setRentalRules((prevRules) => {
+			const updatedRules = new Set(prevRules);
+			if (event.target.checked) {
+				updatedRules.add(rule);
+			} else {
+				updatedRules.delete(rule);
+			}
+			return updatedRules;
+		});
+	};
 
 	return (
 		<div className="text-blue1">
@@ -126,16 +161,16 @@ const Description = ({ title, setTitle, description, setdescription, roomType, s
 					<div className="flex flex-col  gap-">
 						{rentalRulesList.map((rule) => (
 							<div className="flex items-center justify-between" key={rule}>
-							<label htmlFor={rule} className="text-md text-gray-700">
-								{rule}
-							</label>
-							<input
-								type="checkbox"
-								id={rule}
-								className="ml-2"
-								checked={rentalRules.has(rule)}
-								onChange={(e) => handleCheckboxChange(e, rule)}
-							/>
+								<label htmlFor={rule} className="text-md text-gray-700">
+									{rule}
+								</label>
+								<input
+									type="checkbox"
+									id={rule}
+									className="ml-2"
+									checked={rentalRules.has(rule)}
+									onChange={(e) => handleCheckboxChange(e, rule)}
+								/>
 							</div>
 						))}
 					</div>
@@ -146,10 +181,10 @@ const Description = ({ title, setTitle, description, setdescription, roomType, s
 				<UploadPhotos
 					photos={photos}
 					setPhotos={setPhotos}
-					numOfPhotos = {3}
+					numOfPhotos={3}
 				/>
-            </div>
-        </div>
+			</div>
+		</div>
 	);
 };
 

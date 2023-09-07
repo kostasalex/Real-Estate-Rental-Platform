@@ -11,12 +11,12 @@ const Login = (props) => {
   const navigate = useNavigate();
 
   const navigateToSignUp = () => {
-    navigate('/signup', { state: { from: location.state.from } });
+    navigate('/signup');
   };
 
 
   const onSubmit = async (values, actions) => {
-    console.log('Form submitted');
+    //console.log('Form submitted');
     try {
       const response = await fetch('https://localhost:8443/login', {
         method: 'POST',
@@ -33,7 +33,7 @@ const Login = (props) => {
           ...userData,
           email: values.email
         };
-        console.log(userData2);
+        //console.log(userData2);
         /* Navigate previous paths */
         props.handleLogin(userData2);
         navigate(location.state?.from || '/');
@@ -75,6 +75,7 @@ const Login = (props) => {
       });
     }
   };
+  //console.log('Response Status:');
 
   const { values, errors, isSubmitting, touched, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues: {

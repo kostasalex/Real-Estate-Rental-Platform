@@ -50,7 +50,7 @@ const Bookings = () => {
           const host = usersData.find((u) => Number(u.id) === Number(booking.hostsId));
           const listing = listingsData.find((l) => Number(l.id) === Number(booking.listingsId));
           
-          console.log(booking);
+          //console.log(booking);
           return {
             id: booking.id,
             name: listing.name,

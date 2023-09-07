@@ -51,7 +51,7 @@ function App() {
   const handleLogin = (userData) => {
     const { id, firstName, userType, email } = userData;
     // Save the user details to local storage
-    console.log(id + " - " + firstName + " - " + userType + " - " + email);
+    //console.log(id + " - " + firstName + " - " + userType + " - " + email);
     localStorage.setItem('loggedInUserId', id);
     localStorage.setItem('loggedInFirstName', firstName);
     localStorage.setItem('loggedInUserEmail', email);

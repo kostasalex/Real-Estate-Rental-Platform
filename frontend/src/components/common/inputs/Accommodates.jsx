@@ -24,7 +24,7 @@ const Accommodates = ({accommodates, handleDecrease, handleIncrease, people, set
                       setPeople(value);
                     }
                     else {
-                            console.log("aCCOMS")
+                            //console.log("aCCOMS")
                             setAccomError(true)
                         }
                 }}

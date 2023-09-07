@@ -9,7 +9,7 @@ const NewListing = ({ hosts_id }) => {
 	const navigate = useNavigate();
 
 
-	const [step, setStep] = useState(5);
+	const [step, setStep] = useState(1);
 	const [steps, setSteps] = useState([
 		'Location',
 		'Description',
@@ -40,7 +40,7 @@ const NewListing = ({ hosts_id }) => {
 
 			// Generate a random cardId
 
-			console.log("the lat value is: " + values.latitude);
+			//console.log("the lat value is: " + values.latitude);
 			const requestBody = {
 				...values,
 				latitude: parseFloat(values.latitude),
@@ -53,7 +53,7 @@ const NewListing = ({ hosts_id }) => {
 
 			};
 
-			console.log('Request JSON:', JSON.stringify(requestBody, null, 2)); // Log the JSON that will be sent to the server
+			//console.log('Request JSON:', JSON.stringify(requestBody, null, 2)); // Log the JSON that will be sent to the server
 
 			const response = await fetch('https://localhost:8443/cards', {
 				method: 'POST',
@@ -65,7 +65,7 @@ const NewListing = ({ hosts_id }) => {
 
 			if (response.ok) {
 				const responseData = await response.text(); // Get the response text
-				console.log('Response Data:', responseData); // Log the response data
+				//console.log('Response Data:', responseData); // Log the response data
 				const cardId = JSON.parse(responseData).id; // Attempt to parse the JSON data
 
 
@@ -97,7 +97,7 @@ const NewListing = ({ hosts_id }) => {
 					};
 
 					// Handle the cardData object as needed, e.g., store it in state or pass it to a parent component
-					console.log(cardData);
+					//console.log(cardData);
 					navigate('/');
 				});
 			} else {
@@ -178,13 +178,16 @@ const NewListing = ({ hosts_id }) => {
 		'Kitchen',
 		'Pool',
 		'Parking',
-		'Elevator'
+		'Elevator',
+		'Buzzer/Wireless Intercom',
+		'Heating',
+		'Washer'
 	];
 
 	useEffect(() => {
-		console.log("from new listings")
-		console.log(latitude)
-		console.log(longitude)
+		// console.log("from new listings")
+		// console.log(latitude)
+		// console.log(longitude)
 	}, [latitude, longitude]);
 
 
@@ -205,8 +208,10 @@ const NewListing = ({ hosts_id }) => {
 	const [sizeEdit] = useState(cardProps.size);
 	const [descriptionEdit] = useState(cardProps.description);
 	const [longitudeEdit] = useState(cardProps.longitude);
-	const [latitudeEdit ] = useState(cardProps.latitude);
-	console.log(cardProps)
+	const [latitudeEdit] = useState(cardProps.latitude);
+	const [amenitiesEdit, setAmenitiesEdit] = useState(new Set(cardProps.amenities)); // Initialize as a Set
+
+	//console.log(cardProps)
 
 	return (
 		<div className="p-5">
@@ -270,11 +275,13 @@ const NewListing = ({ hosts_id }) => {
 
 				{step === 4 && (
 					<Amenities
-						amenities={amenities}
-						setAmenities={setAmenities}
-						setIsFormComplete={setIsFormComplete}
-						amenitiesList={amenitiesList} // Pass the amenitiesList to the Amenities component
+						amenities={cardProps ? amenitiesEdit : amenities}
+						setAmenities={setAmenitiesEdit} // Corrected the prop name to match the component's state
+						amenitiesList={amenitiesList}
+						setIsFormComplete={setIsFormComplete} // Pass isFormComplete as a prop
+						cardPropsAmenities={cardProps ? cardProps.amenities : ''} // Pass cardProps.amenities as a prop
 					/>
+
 				)}
 
 				{step === 5 && (
@@ -291,11 +298,11 @@ const NewListing = ({ hosts_id }) => {
 
 				{step === 6 && (
 					<Prices
-						price={price}
+						price={cardProps ? priceEdit : price}
 						setprice={setprice}
 						additionalGuestPrice={additionalGuestPrice}
 						setAdditionalGuestPrice={setAdditionalGuestPrice}
-						accommodates={accommodates}
+						accommodates={cardProps ? accommodatesEdit : accommodates}
 						setaccommodates={setaccommodates}
 						setIsFormComplete={setIsFormComplete}
 					/>

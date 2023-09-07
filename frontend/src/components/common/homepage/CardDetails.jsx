@@ -183,12 +183,12 @@ function CardDetails() {
 	}, []);
 
 
-	console.log(host)
+	//console.log(host)
 	const [question, setQuestion] = useState('');
 	const [questions, setQuestions] = useState([]);
 
 	const handleSubmit = async (e) => {
-		console.log(hostsId)
+		//console.log(hostsId)
 		e.preventDefault();
 		if (question.trim() !== '') {
 			setQuestions([question, ...questions]);

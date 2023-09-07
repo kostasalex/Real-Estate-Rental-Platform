@@ -17,7 +17,7 @@ const SignUp = (props) => {
     const toggle = location?.state?.toggle || false;
 
     const navigateToLogIn = () => {
-        navigate('/login', { state: { from: location.state.from } });
+        navigate('/login');
     };
 	const { uploadedUrl, handleUpload } = useCloudinaryUpload();
     const [rentingPlace, setRentingPlace] = useState(toggle);

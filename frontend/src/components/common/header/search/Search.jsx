@@ -58,7 +58,7 @@ const Search = () => {
 
     const handleOptionSelect = (filter, option) => {
         
-        console.log(option);
+        //console.log(option);
         switch (filter) {
         case "Location":
             setLocation(option);
@@ -91,20 +91,20 @@ const Search = () => {
     const handleOptionRemove = (filter) => {
         let persons
         if(guests)persons = guests + " persons"
-        console.log(filter)
+        //console.log(filter)
         switch (filter) {
             case "Location":
                 setLocation("");
                 setFiltersSelected([""  , date , persons]) 
-                console.log(location);
+                //console.log(location);
                 break;
             case "Date":
-                console.log("arrive- leave");
+                //console.log("arrive- leave");
                 setArrive("");
                 setLeave(""); 
                 setDate("");
                 setFiltersSelected([location  , "" , persons]) 
-                console.log("2arrive- leave2");
+                //console.log("2arrive- leave2");
                 break;
             case "Persons":
                 setGuests("");
@@ -131,7 +131,7 @@ const Search = () => {
         if(queryParams.get(param)){
             queryParams.delete(param);
             const newUrl = `${location_.pathname}?${queryParams.toString()}`;
-            console.log(newUrl);
+            //console.log(newUrl);
             return newUrl;
         }
     }
@@ -162,7 +162,7 @@ const Search = () => {
             .join('&');
           
         
-        console.log(queryParams)
+        //console.log(queryParams)
         const url = `/results/q?${queryParams}`;
       
         

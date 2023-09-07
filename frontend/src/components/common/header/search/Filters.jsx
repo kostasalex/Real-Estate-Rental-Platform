@@ -10,7 +10,7 @@ import { MdClear } from 'react-icons/md';
 
 function TabContent({ arrive, leave, activeTab, handleOptionSelect, location, guests }) {
 
-  console.log(activeTab);
+  //console.log(activeTab);
 
   const [accomError, setAccomError] = React.useState(false);
 
