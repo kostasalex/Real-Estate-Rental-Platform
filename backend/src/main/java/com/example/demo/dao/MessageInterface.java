@@ -9,4 +9,6 @@ public interface MessageInterface {
 
     List<Message> getUserMessages(int userId);
 
+    public int deleteMessage(int messageId);
+
 }

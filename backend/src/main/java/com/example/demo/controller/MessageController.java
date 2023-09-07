@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
 @CrossOrigin(origins = "https://localhost:8443")
 public class MessageController {
 
@@ -44,6 +43,17 @@ public class MessageController {
     public ResponseEntity<List<Map<String, Object>>> getUsers(@PathVariable("loggedInUserId") int loggedInUserId) {
         List<Map<String, Object>> distinctUsers = userDao.getDistinctUsers(loggedInUserId);
         return ResponseEntity.ok(distinctUsers);
+    }
+
+    @DeleteMapping("/messages/{messageId}")
+    public ResponseEntity<String> deleteMessage(@PathVariable("messageId") int messageId) {
+        int rowsAffected = messageDao.deleteMessage(messageId);
+
+        if (rowsAffected > 0) {
+            return ResponseEntity.ok("Message deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete message");
+        }
     }
 
 }

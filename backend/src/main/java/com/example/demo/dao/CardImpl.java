@@ -120,7 +120,7 @@ public class CardImpl implements CardInterface {
 
 	public int insertCardImp(Card card) {
 		int rowsAffected = 0;
-		System.out.println(card.toString());
+		//System.out.println(card.toString());
 		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(
 						"INSERT INTO listings (thumbnail_url, medium_url, price, room_type, beds, number_of_reviews, review_scores_rating, street, description, name, "
@@ -223,7 +223,7 @@ public class CardImpl implements CardInterface {
 			}
 
 			String query = queryBuilder.toString();
-			System.out.println(query);
+			//System.out.println(query);
 
 			try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 					Statement stmt = conn.createStatement();

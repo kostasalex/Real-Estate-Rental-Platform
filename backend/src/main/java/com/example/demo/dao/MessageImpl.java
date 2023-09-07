@@ -91,4 +91,20 @@ public class MessageImpl implements MessageInterface {
         return message;
     }
 
+    @Override
+    public int deleteMessage(int messageId) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("DELETE FROM messages WHERE id = ?")) {
+            stmt.setInt(1, messageId);
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return 0; // Return 0 if the deletion fails
+    }
+
 }
