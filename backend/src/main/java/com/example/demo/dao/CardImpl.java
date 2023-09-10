@@ -120,14 +120,14 @@ public class CardImpl implements CardInterface {
 
 	public int insertCardImp(Card card) {
 		int rowsAffected = 0;
-		//System.out.println(card.toString());
+		// System.out.println(card.toString());
 		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(
 						"INSERT INTO listings (thumbnail_url, medium_url, price, room_type, beds, number_of_reviews, review_scores_rating, street, description, name, "
 								+
-								"amenities, accommodates, bathrooms, bedrooms, bed_type, longitude, latitude, hosts_id, rentalRules, size) "
+								"amenities, accommodates, bathrooms, bedrooms, bed_type, longitude, latitude, hosts_id, rentalRules, size, accessing_info, minimum_nights) "
 								+
-								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 			stmt.setString(1, card.getthumbnail_url());
 			stmt.setString(2, card.getmedium_url());
 			stmt.setFloat(3, card.getPrice());
@@ -148,6 +148,8 @@ public class CardImpl implements CardInterface {
 			stmt.setString(18, card.gethosts_id());
 			stmt.setString(19, card.getRentalRules());
 			stmt.setInt(20, card.getSize());
+			stmt.setString(21, card.getaccessing_info());
+			stmt.setInt(22, card.getminimum_nights());
 
 			rowsAffected = stmt.executeUpdate();
 
@@ -223,7 +225,7 @@ public class CardImpl implements CardInterface {
 			}
 
 			String query = queryBuilder.toString();
-			//System.out.println(query);
+			// System.out.println(query);
 
 			try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 					Statement stmt = conn.createStatement();
@@ -308,10 +310,12 @@ public class CardImpl implements CardInterface {
 		String hostId = rs.getString("hosts_id");
 		String rentalRules = rs.getString("rentalRules");
 		int size = rs.getInt("size");
+		String accessing_info = rs.getString("accessing_info");
+		int minimum_nights = rs.getInt("minimum_nights");
 
 		return new Card(id, thumbnailUrl, mediumUrl, price, roomType, beds, numberOfReviews, reviewScoresRating, street,
 				description, name, amenities, accommodates, bathrooms, bedrooms, bed_type,
-				longitude, latitude, hostId, rentalRules, size);
+				longitude, latitude, hostId, rentalRules, size, accessing_info, minimum_nights);
 	}
 
 	public List<String> getDistinctCountries() {

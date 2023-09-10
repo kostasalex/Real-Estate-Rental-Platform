@@ -53,7 +53,7 @@ const NewListing = ({ hosts_id }) => {
 
 			};
 
-			//console.log('Request JSON:', JSON.stringify(requestBody, null, 2)); // Log the JSON that will be sent to the server
+			console.log('Request JSON:', JSON.stringify(requestBody, null, 2)); // Log the JSON that will be sent to the server
 
 			const response = await fetch('https://localhost:8443/cards', {
 				method: 'POST',
@@ -130,7 +130,7 @@ const NewListing = ({ hosts_id }) => {
 
 	// Location Step State
 	const [street, setstreet] = useState('');
-	const [accessingInfo, setAccessingInfo] = useState('');
+	const [accessing_info, setAccessingInfo] = useState('');
 	const [latitude, setLatitude] = useState(null); // Add lat state
 	const [longitude, setLongitude] = useState(null); // Add lng state
 	const [country, setCountry] = useState(''); // Default to Athens, Greece
@@ -142,6 +142,7 @@ const NewListing = ({ hosts_id }) => {
 	const [name, setName] = useState('');
 	const [description, setdescription] = useState('');
 	const [roomType, setroomType] = useState('');
+	const [minimum_nights, setminimum_nights] = useState(1);
 	const [photos, setPhotos] = useState([]);
 
 	const rentalRulesList = [
@@ -222,7 +223,7 @@ const NewListing = ({ hosts_id }) => {
 					<Location
 						street={cardProps ? streetEdit : street}
 						setstreet={setstreet}
-						accessingInfo={accessingInfo}
+						accessingInfo={accessing_info}
 						setAccessingInfo={setAccessingInfo}
 						setIsFormComplete={setIsFormComplete}
 						latitude={cardProps ? latitudeEdit : latitude}
@@ -293,6 +294,8 @@ const NewListing = ({ hosts_id }) => {
 						selectedDates={selectedDates}
 						setSelectedDates={setSelectedDates}
 						setIsFormComplete={setIsFormComplete}
+						minimum_nights={minimum_nights}
+						setminimum_nights={setminimum_nights}
 					/>
 				)}
 
@@ -365,7 +368,8 @@ const NewListing = ({ hosts_id }) => {
 								onClick={() =>
 									postHandler({
 										street,
-										accessingInfo,
+										accessing_info,
+										minimum_nights,
 										name,
 										description,
 										roomType,

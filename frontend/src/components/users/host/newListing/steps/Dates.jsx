@@ -3,9 +3,11 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, 
-	setHostDepartureDate, selectedDates, setSelectedDates, setIsFormComplete }) => {
+	setHostDepartureDate, selectedDates, setSelectedDates, setIsFormComplete, minimum_nights, setminimum_nights }) => {
 
 	setIsFormComplete(true);
+
+	const [showButtons, setShowButtons] = useState(false);
 
 	const [errorMsg, setErrorMsg] = useState('')
 
@@ -16,6 +18,14 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate,
 	const doRangesOverlap = (start1, end1, start2, end2) => {
 		return isDateInRange(start1, start2, end2) || isDateInRange(end1, start2, end2);
 	}
+
+	const handleIncrease = (setter) => {
+		setter((prevValue) => prevValue + 1);
+	};
+
+	const handleDecrease = (setter) => {
+		setter((prevValue) => prevValue > 1 ? prevValue - 1 : 1);
+	};
 	
 const handleAddDates = () => {
     if (hostArrivalDate && hostDepartureDate) {
@@ -122,6 +132,36 @@ const handleAddDates = () => {
 					)}
 				</div>
 			</div>
+
+            <div className='flex mt-10 flex-col justify-center items-start'>
+				<div className=' '></div>
+                <p className=' flex text-center justify-start my-8'>Specify the minimum stay.</p>
+				<div className= "flex flex-col items-center">
+					<p className="font-bold  mb-5">Nights *</p>
+					<div className="flex items-center ml-5">
+						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full" onClick={() => handleDecrease(setminimum_nights)}>
+							-
+						</button>
+						<span className="relative">
+							<input
+								className="[appearance:textfield] w-20 text-center"
+								type="number"
+								min="1"
+								value={minimum_nights}
+								onChange={(e) => {
+									const value = parseInt(e.target.value);
+									setminimum_nights(value < 1 ? 1 : value);
+								}}
+							/>
+						</span>
+						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-5 rounded-full" onClick={() => handleIncrease(setminimum_nights)}>
+							+
+						</button>
+					</div>
+				</div>
+			</div>
+
+
 		</div>
 	);
 };

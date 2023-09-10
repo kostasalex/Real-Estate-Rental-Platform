@@ -26,11 +26,13 @@ public class Card {
     private String hosts_id;
     private String rentalRules;
     private int size;
+    private String accessing_info;
+    private int minimum_nights;
 
     public Card(String id, String thumbnailUrl, String mediumUrl, float price, String roomType, int beds,
             int numberOfReviews, int reviewScoresRating, String street, String description, String name,
             String amenities, int accommodates, int bathrooms, int bedrooms, String bed_type, float longitude,
-            float latitude, String hostId, String rentalRules, int size) {
+            float latitude, String hostId, String rentalRules, int size, String accessing_info, int minimum_nights) {
         this.id = id;
         this.thumbnail_url = thumbnailUrl;
         this.medium_url = mediumUrl;
@@ -52,6 +54,8 @@ public class Card {
         this.hosts_id = hostId;
         this.rentalRules = rentalRules;
         this.size = size;
+        this.accessing_info = accessing_info;
+        this.minimum_nights = minimum_nights;
     }
 
     public String getId() {
@@ -141,6 +145,14 @@ public class Card {
 
     public int getSize() {
         return size;
+    }
+
+    public String getaccessing_info() {
+        return accessing_info;
+    }
+
+    public int getminimum_nights() {
+        return minimum_nights;
     }
 
 }
