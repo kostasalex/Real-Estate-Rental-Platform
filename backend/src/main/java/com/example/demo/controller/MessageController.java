@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "https://localhost:8443")
+@CrossOrigin(origins = "https://localhost:8443", maxAge = 3600)
 public class MessageController {
 
     private final MessageInterface messageDao;

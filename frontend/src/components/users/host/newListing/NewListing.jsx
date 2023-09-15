@@ -212,7 +212,7 @@ const NewListing = ({ hosts_id }) => {
 	const [latitudeEdit] = useState(cardProps.latitude);
 	const [amenitiesEdit, setAmenitiesEdit] = useState(new Set(cardProps.amenities)); // Initialize as a Set
 
-	//console.log(cardProps)
+	console.log(cardProps)
 
 	return (
 		<div className="p-5">

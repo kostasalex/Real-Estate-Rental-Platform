@@ -7,7 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import Swal from "sweetalert2";
 import { FaUser } from "react-icons/fa";
 import { useNavigate, useLocation } from 'react-router-dom';
-
+import dayjs from 'dayjs'; // Import dayjs
 
 function CardDetails() {
 
@@ -41,26 +41,26 @@ function CardDetails() {
 
 
 
-	const [id, setId] = useState(cardProps.id);
-	const [name, setName] = useState(cardProps.name);
-	const [thumbnailUrl, setThumbnailUrl] = useState(cardProps.thumbnailUrl);
-	const [mediumUrl, setMediumUrl] = useState(cardProps.mediumUrl);
-	const [price, setPrice] = useState(cardProps.price);
-	const [roomType, setRoomType] = useState(cardProps.roomType);
-	const [beds, setBeds] = useState(cardProps.beds);
-	const [accommodates, setAccommodates] = useState(cardProps.accommodates);
-	const [bathrooms, setBathrooms] = useState(cardProps.bathrooms);
-	const [bedrooms, setBedrooms] = useState(cardProps.bedrooms);
-	const [bed_type, setBedType] = useState(cardProps.bed_type);
-	const [numberOfReviews, setNumberOfReviews] = useState(cardProps.numberOfReviews);
-	const [reviewScoresRating, setReviewScoresRating] = useState(cardProps.reviewScoresRating);
-	const [street, setStreet] = useState(cardProps.street);
-	const [description, setDescription] = useState(cardProps.description);	
+	const [id] = useState(cardProps.id);
+	const [name] = useState(cardProps.name);
+	const [thumbnailUrl] = useState(cardProps.thumbnailUrl);
+	const [price] = useState(cardProps.price);
+	const [roomType] = useState(cardProps.roomType);
+	const [beds] = useState(cardProps.beds);
+	const [accommodates] = useState(cardProps.accommodates);
+	const [bathrooms] = useState(cardProps.bathrooms);
+	const [bedrooms] = useState(cardProps.bedrooms);
+	const [bed_type] = useState(cardProps.bed_type);
+	const [numberOfReviews] = useState(cardProps.numberOfReviews);
+	const [reviewScoresRating] = useState(cardProps.reviewScoresRating);
+	const [street] = useState(cardProps.street);
+	const [description] = useState(cardProps.description);
+	const [accessingInfo] = useState(cardProps.accessing_info);
 
-	const [amenities, setAmenities] = useState(cardProps.amenities);
+	const [amenities] = useState(cardProps.amenities);
 
-	const [lng, setLongitude] = useState(cardProps.longitude);
-	const [lat, setLatitude] = useState(cardProps.latitude);
+	const [lng] = useState(cardProps.longitude);
+	const [lat] = useState(cardProps.latitude);
 
 	const [people, setPeople] = useState(1);
 	const [isOpen, setIsOpen] = useState(false);
@@ -73,7 +73,7 @@ function CardDetails() {
 	const convertedRating = (reviewScoresRating / maxRating) * targetMaxRating;
 	const roundedRating = Math.round(convertedRating * 10) / 10;
 	const amenitiesArray = amenities.replace(/[\{\}]/g, '').split(',');
-	let totalPrice;
+	const [totalPrice, setTotalPrice] = useState(0);
 
 	const openDialog = () => {
 		setIsOpen(true);
@@ -83,41 +83,48 @@ function CardDetails() {
 		setIsOpen(false);
 	};
 
-	const openDialogHost = () => {
-		if(localStorage.getItem('loggedInUserType'))
-		  setIsOpenHost(true);
-		else { 
-		  Swal.fire({
-			title: 'Login or Sign Up',
-			html: 'You have to login or sign up before you can contact the host.',
-			icon: 'info',
-			confirmButtonText: 'Login',
-			showCancelButton: true,
-			cancelButtonText: 'Sign Up',
-			showCloseButton: true,
-		  }).then((result) => {
-			if (result.isConfirmed) {
-			  navigate('/login', { state: { from: location.pathname } });  // Pass current page as state
-			} else if (result.isDismissed && result.dismiss !== Swal.DismissReason.close) {
-			  navigate('/signup', { state: { from: location.pathname } });  // Pass current page as state
-			}
-		  });
-		}
-	  };
-	  
-	
 
+	const openDialogHost = () => {
+		if (localStorage.getItem('loggedInUserType'))
+			setIsOpenHost(true);
+		else {
+			Swal.fire({
+				title: 'Login or Sign Up',
+				html: 'You have to login or sign up before you can contact the host.',
+				icon: 'info',
+				confirmButtonText: 'Login',
+				showCancelButton: true,
+				cancelButtonText: 'Sign Up',
+				showCloseButton: true,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					navigate('/login', { state: { from: location.pathname } });  // Pass current page as state
+				} else if (result.isDismissed && result.dismiss !== Swal.DismissReason.close) {
+					navigate('/signup', { state: { from: location.pathname } });  // Pass current page as state
+				}
+			});
+		}
+	};
+
+
+	const today = dayjs(); // Create a dayjs object for today's date
 	const closeDialogHost = () => {
 		setIsOpenHost(false);
 	};
 
-	if (people === 1) {
-		totalPrice = (numDaysStayed * parseFloat(price.toString().substring(1))).toString();
-	} else {
-		const basePrice = parseFloat(price.toString().substring(1));
-		const additionalPrice = (people - 1) * 0.4 * basePrice;
-		totalPrice = ((numDaysStayed * basePrice) + additionalPrice).toString();
-	}
+	useEffect(() => {
+		if (arrivalDate && departureDate) {
+			const numDaysStayed = dayjs(departureDate).diff(arrivalDate, 'day');
+			const basePrice = parseFloat(price);
+
+			if (people === 1) {
+				setTotalPrice((numDaysStayed * basePrice).toFixed(2));
+			} else {
+				const additionalPrice = (people - 1) * 0.4 * basePrice;
+				setTotalPrice(((numDaysStayed * basePrice) + additionalPrice).toFixed(2));
+			}
+		}
+	}, [arrivalDate, departureDate, people, price]);
 
 	const handleIncrease = () => {
 		if (accommodates != null && people < accommodates) {
@@ -134,8 +141,10 @@ function CardDetails() {
 		}
 	};
 
+
+
 	function postHandler() {
-		if(localStorage.getItem('loggedInUserType'))
+		if (localStorage.getItem('loggedInUserType'))
 			Swal.fire({
 				title: 'Reservation successfull!',
 				text: 'The host is notified about your booking.',
@@ -144,22 +153,22 @@ function CardDetails() {
 			}).then(() => {
 				navigate('/');
 			});
-		else { 
-		  Swal.fire({
-			title: 'Login or Sign Up',
-			html: 'You have to login or sign up before booking.',
-			icon: 'info',
-			confirmButtonText: 'Login',
-			showCancelButton: true,
-			cancelButtonText: 'Sign Up',
-			showCloseButton: true,
-		  }).then((result) => {
-			if (result.isConfirmed) {
-			  navigate('/login', { state: { from: location.pathname } });  // Pass current page as state
-			} else if (result.isDismissed && result.dismiss !== Swal.DismissReason.close) {
-			  navigate('/signup', { state: { from: location.pathname } });  // Pass current page as state
-			}
-		  });
+		else {
+			Swal.fire({
+				title: 'Login or Sign Up',
+				html: 'You have to login or sign up before booking.',
+				icon: 'info',
+				confirmButtonText: 'Login',
+				showCancelButton: true,
+				cancelButtonText: 'Sign Up',
+				showCloseButton: true,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					navigate('/login', { state: { from: location.pathname } });  // Pass current page as state
+				} else if (result.isDismissed && result.dismiss !== Swal.DismissReason.close) {
+					navigate('/signup', { state: { from: location.pathname } });  // Pass current page as state
+				}
+			});
 		}
 	}
 
@@ -183,7 +192,7 @@ function CardDetails() {
 	}, []);
 
 
-	//console.log(host)
+	console.log(cardProps.id,cardProps.hosts_id)
 	const [question, setQuestion] = useState('');
 	const [questions, setQuestions] = useState([]);
 
@@ -195,79 +204,84 @@ function CardDetails() {
 			setQuestion('');
 		}
 		try {
-		const response = await fetch('https://localhost:8443/api/v1/messages', {
-			method: 'POST',
-			headers: {
-			'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-			senderId: localStorage.getItem('loggedInUserId'),
-			recipientId: hostsId, //! Need host id to send 
-			content: question,
-			}),
-		});
-	
-		if (response.ok) {
-			Swal.fire({
-			title: 'Message sent!',
-			text: 'Your message has been sent to the host.',
-			icon: 'success',
-			confirmButtonText: 'OK',
-			}).then(() => {
-			//navigate('/');
+			const response = await fetch('https://localhost:8443/api/v1/messages', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					senderId: localStorage.getItem('loggedInUserId'),
+					recipientId: hostsId, //! Need host id to send 
+					content: question,
+				}),
 			});
-		} else {
-			throw new Error('Failed to send message');
-		}
+
+			if (response.ok) {
+				Swal.fire({
+					title: 'Message sent!',
+					text: 'Your message has been sent to the host.',
+					icon: 'success',
+					confirmButtonText: 'OK',
+				}).then(() => {
+					//navigate('/');
+				});
+			} else {
+				throw new Error('Failed to send message');
+			}
 		} catch (error) {
-		console.error('Error sending message:', error);
-		Swal.fire({
-			title: 'Error',
-			text: 'Failed to send message. Please try again later.',
-			icon: 'error',
-			confirmButtonText: 'OK',
-		});
+			console.error('Error sending message:', error);
+			Swal.fire({
+				title: 'Error',
+				text: 'Failed to send message. Please try again later.',
+				icon: 'error',
+				confirmButtonText: 'OK',
+			});
 		}
 	};
 
 	return (
 
-		<div className=" mx-auto lg:px-20 md:px-6 px-4 md:py-12 py-8 sm:mx-36">
+		<div className="mx-auto lg:px-6 md:px-4 px-2 md:py-8 py-4">
 			{/* header title-reviews-road */}
 			<div>
-				<ul className="block m-4 sm:grid grid-cols-4">
+				<ul className="block md:grid grid-cols-2 gap-4">
 					<div>
-						<p className="mb-4  text-3xl text-center leading-none tracking-tight text-gray-900 ">{name}</p>
+						<p className="mb-4 text-3xl text-center leading-none tracking-tight text-gray-900">{name}</p>
 					</div>
 
-					<div className="text-base text-center sm:inline">
-						<div className="inline text-yellow-500 inline">
-							<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline" viewBox="0 0 20 20" fill="currentColor">
-								<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-							</svg>
+					<div className="text-base text-center md:text-left">
+						<div className="flex items-center justify-center md:justify-start">
+							<div className="inline text-yellow-500 inline">
+								<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline" viewBox="0 0 20 20" fill="currentColor">
+									<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+								</svg>
+							</div>
+							<p className="inline px-2">{roundedRating} ({numberOfReviews} Reviews)</p>
 						</div>
-						<p className="inline px-2">{roundedRating}({numberOfReviews} Reviews)</p>
-						<p></p>
+						{/* Add padding to the address */}
+						<p className="text-center md:text-left mt-2 md:mt-0 md:pl-4">{street}</p>
 					</div>
-
-					<div className="inline text-base text-center">{street}</div>
 				</ul>
 			</div>
 
-			{/* main image - description */}
-			<div className=" grid gap-4">
-				<div className="block sm:grid grid-cols-2">
-					<button onClick={openDialog}>
-						<img className="h-56 max-w-full rounded-lg hover:opacity-60 sm:h-96" src={thumbnailUrl} alt="" />
-					</button>
+
+			{/* Main Content */}
+			<div className="grid gap-4">
+				<div className="block md:grid grid-cols-2 gap-4">
+					{/* Center the main image on small screens */}
+					<div className="text-center md:text-left">
+						<button onClick={openDialog}>
+							<img className="h-56 max-w-full rounded-lg hover:opacity-60 sm:h-96 mx-auto md:mx-0" src={thumbnailUrl} alt="" />
+						</button>
+					</div>
 					<div className="flex flex-col justify-center">
-						<p className="mb-4  text-3xl text-center leading-none tracking-tight text-gray-900 ">About this place</p>
-						<p className="text-center">{description}</p>
+						<p className="mb-4 text-3xl text-center md:text-left leading-none tracking-tight text-gray-900">About this place</p>
+						<p className="text-center md:text-left">{description}</p>
 					</div>
 				</div>
 
-				{/* rest of images*/}
-				<div className="block sm:grid grid-cols-5 gap-4">
+				{/* Rest of images */}
+				<div className="block md:grid grid-cols-5 gap-4">
 					<div>
 						<button onClick={openDialog}><img className="h-auto max-w-full rounded-lg hover:opacity-60" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg" alt="" /></button>
 					</div>
@@ -308,9 +322,8 @@ function CardDetails() {
 				</div>
 			</div>
 
-			{/* amenities - reserve */}
-			<div className="grid grid-cols1 sm:p-10 sm:grid sm:grid-cols-2 sm:gap-x-10 ">
-
+			{/* Amenities and Reserve */}
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 md:p-10">
 				<div>
 					{/* amenities */}
 					<div>
@@ -323,9 +336,8 @@ function CardDetails() {
 						</ul>
 					</div>
 
-					{/* host */}
-
-					<div className='pt-5 pb-10 block sm:grid sm:grid-cols-2 sm:gap-4'>
+					{/* Host */}
+					<div className="md:pt-5 md:pb-10">
 						<ul>
 							<button onClick={openDialogHost}>
 								<li>
@@ -416,7 +428,7 @@ function CardDetails() {
 
 					</div>
 
-					{/* map */}
+					{/* Map */}
 					<div className="relative">
 						<MapContainer center={[lat, lng]} zoom={13} style={{ height: '400px', width: '100%' }} className="z-0">
 							<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -425,7 +437,7 @@ function CardDetails() {
 					</div>
 				</div>
 
-				{/* reserve */}
+				{/* Reserve */}
 				<div className="">
 					<div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
 						<div className="block">
@@ -441,64 +453,71 @@ function CardDetails() {
 								</div>
 								<p className="mt-4 text-gray-500">{accommodates} guests · {bedrooms} bedroom(s) · {beds} bed(s) · {bathrooms} bathroom(s)</p>
 
-								<div className="flex items-center mt-4">
-									<label className="text-indigo-500 mr-2" htmlFor="accommodates">Accommodates:</label>
-									<div className="flex items-center border border-gray-300 rounded-md">
-										<button
-											className="px-3 py-1 bg-gray-100 text-gray-500 hover:text-gray-700 focus:outline-none"
-											onClick={handleDecrease}
-										>
-											-
-										</button>
-										<input
-											className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-12 text-center border-r border-l border-gray-300 bg-gray-100"
-											type="number"
-											min="0"
-											max={accommodates}
-											value={people}
-											onChange={(e) => setPeople(Number(e.target.people))}
-										/>
-										<button
-											className="px-3 py-1 bg-gray-100 text-gray-500 hover:text-gray-700 focus:outline-none"
-											onClick={handleIncrease}
-										>
-											+
-										</button>
+								<div className="mt-4">
+									{/* Accommodates */}
+									<div className="flex items-center mb-4">
+										<label className="text-indigo-500 pr-4" htmlFor="accommodates">
+											Accommodates:
+										</label>
+										<div className="flex items-center border border-gray-300 rounded-md">
+											<button
+												className="px-3 py-1 bg-gray-100 text-gray-500 hover:text-gray-700 focus:outline-none"
+												onClick={handleDecrease}
+											>
+												-
+											</button>
+											<input
+												className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-12 text-center border-r border-l border-gray-300 bg-gray-100"
+												type="number"
+												min="0"
+												max={accommodates}
+												value={people}
+												onChange={(e) => setPeople(Number(e.target.value))}
+											/>
+											<button
+												className="px-3 py-1 bg-gray-100 text-gray-500 hover:text-gray-700 focus:outline-none"
+												onClick={handleIncrease}
+											>
+												+
+											</button>
+										</div>
+									</div>
+
+									{/* Dates */}
+									<div>
+										<div className="my-5">
+											<label className="text-indigo-500" htmlFor="arrivalDate">
+												Arrival Date:
+											</label>
+											<DatePicker
+												id="arrivalDate"
+												selected={arrivalDate}
+												onChange={(date) => setArrivalDate(date)}
+												dateFormat="dd-MM-yyyy"
+												placeholderText="Select arrival date"
+												minDate={dayjs()} // To allow picking dates only after today
+											/>
+										</div>
+
+										<div className="">
+											<label className="text-indigo-500" htmlFor="departureDate">
+												Departure Date:
+											</label>
+											<DatePicker
+												id="departureDate"
+												selected={departureDate}
+												onChange={(date) => setDepartureDate(date)}
+												dateFormat="dd-MM-yyyy"
+												minDate={arrivalDate || dayjs()} // To ensure departure date is after arrival
+												disabled={!arrivalDate}
+												placeholderText="Select departure date"
+											/>
+										</div>
 									</div>
 								</div>
-								{/* Dates */}
-								<div className="">
-									<div className="my-5">
-										<label className="text-indigo-500" htmlFor="arrivalDate">Arrival Date:</label>
-										<DatePicker
-											id="arrivalDate"
-											selected={arrivalDate}
-											onChange={(date) => setArrivalDate(date)}
-											dateFormat="dd-MM-yyyy"
-											placeholderText="Select arrival date"
 
-										/>
-									</div>
 
-									<div className="">
-										<label className="text-indigo-500" htmlFor="departureDate">Departure Date:</label>
-										<DatePicker
-											id="departureDate"
-											selected={departureDate}
-											onChange={(date) => {
-												if (date >= arrivalDate) {
-													setDepartureDate(date);
-												}
-											}}
-											dateFormat="dd-MM-yyyy"
-											minDate={arrivalDate}
-											disabled={!arrivalDate}
-											placeholderText="Select departure date"
-
-										/>
-									</div>
-								</div>
-
+								{/* Total Price */}
 								<div className="mt-4">
 									<span className="text-gray-500">Total price:</span>
 									<span className="font-semibold text-gray-900 text-xl ml-1">${totalPrice}</span>
@@ -524,6 +543,25 @@ function CardDetails() {
 											>Reserve</button>)
 										)}
 								</div>
+
+							</div>
+						</div>
+					</div>
+
+					{/* Accessing Information */}
+					<div className="block">
+						<div>
+							<p className="text-xl leading-none tracking-tight text-center pt-10 text-gray-900">Accessing Information</p>
+						</div>
+						<div className="md:grid md:grid-cols-2 md:gap-4">
+							<div className="flex items-center justify-center">
+								<div className="">
+									<div className="bg-white max-w-xl rounded-2xl px-10 py-8 shadow-lg hover:shadow-2xl transition duration-500">
+										<div className="mt-4">
+											<p className="mt-4 text-md text-gray-600">{accessingInfo}</p>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -531,36 +569,39 @@ function CardDetails() {
 			</div>
 
 
-			<div className='block'>
-				<div className="">
-					<div><p className=" text-xl leading-none tracking-tight text-gray-900 ">Reviews about this place</p></div>
-					<div className="sm:grid sm:grid-cols-2 sm:gap-4">
-						{reviews.map(({id, comment,date,hostId,listingId,rating,renterId }) => (
-							<div key={id} className=" flex items-center justify-center">
-								<div className="">
-									<div className="bg-white max-w-xl rounded-2xl px-10 py-8 shadow-lg hover:shadow-2xl transition duration-500">
-										<link rel="icon" type="image/svg+xml" href="/src/assets/logosmall.png" />
-										<div className="mt-4 flex items-center space-x-4 ">
-											<div className="">
-												<FaUser style={{ fontSize: '30px', color: '' }} />
-											</div>
-											<div className="text-sm font-semibold"> {renterId} • <span className="font-normal"> {date}</span></div>
+
+			{/* Reviews */}
+			<div className="block">
+				<div>
+					<p className="text-xl leading-none tracking-tight text-center text-gray-900">Reviews about this place</p>
+				</div>
+				<div className="md:grid md:grid-cols-2 md:gap-4">
+					{reviews.map(({ id, comment, date, hostId, listingId, rating, renterId }) => (
+						<div key={id} className=" flex items-center justify-center">
+							<div className="">
+								<div className="bg-white max-w-xl rounded-2xl px-10 py-8 shadow-lg hover:shadow-2xl transition duration-500">
+									<link rel="icon" type="image/svg+xml" href="/src/assets/logosmall.png" />
+									<div className="mt-4 flex items-center space-x-4 ">
+										<div className="">
+											<FaUser style={{ fontSize: '30px', color: '' }} />
 										</div>
-										<div className="mt-4">
-											<p className="mt-4 text-md text-gray-600">{comment}</p>
-										</div>
-										<div className="mt-4">
-											<p className="mt-4 text-md text-gray-600">Rating : {rating}</p>
-										</div>
+										<div className="text-sm font-semibold"> {renterId} • <span className="font-normal"> {date}</span></div>
+									</div>
+									<div className="mt-4">
+										<p className="mt-4 text-md text-gray-600">{comment}</p>
+									</div>
+									<div className="mt-4">
+										<p className="mt-4 text-md text-gray-600">Rating : {rating}</p>
 									</div>
 								</div>
 							</div>
-						))}
-					</div>
+						</div>
+					))}
 				</div>
 			</div>
+		</div >
 
-		</div>
+
 	);
 }
 

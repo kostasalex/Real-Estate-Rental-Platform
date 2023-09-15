@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BsChatSquareTextFill,BsFillTrashFill } from 'react-icons/bs';
+import { BsChatSquareTextFill, BsFillTrashFill } from 'react-icons/bs';
 import { TbSend } from 'react-icons/tb';
 
 
@@ -124,7 +124,7 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 
 
 	return (
-		<div className="container mx-auto shadow-lg pt-10 rounded-lg">
+		<div className="container mx-auto min-h-screen bg-gray-100 shadow-lg pt-10 rounded-lg">
 			<div className="flex justify-center items-center gap-x-5 text-blue1 font-bold text-3xl">
 				<BsChatSquareTextFill />
 				Messages
@@ -139,7 +139,7 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 									{users.length ? users.length : 0}
 								</span>
 							</div>
-							<div className="flex flex-col space-y-1 mt-4 -mx-2 h-full  overflow-auto">
+							<div className="flex flex-col space-y-1 mt-4 -mx-2 h-full overflow-auto">
 								{users.map((user) =>
 									user.id !== loggedInUserId && (
 										<button
@@ -167,38 +167,35 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 										{getUserMessages(selectedUser.id).map((message) => (
 											<div
 												key={message.id}
-												className={`flex flex col gap-y-2 ${message.senderId === loggedInUserId ? 'justify-end' : 'justify-'}`}
+												className={`flex gap-2 ${message.senderId === loggedInUserId ? 'justify-end' : 'justify-start'
+													}`}
 											>
-												<div className="col-start-1 font-semibold col-end-8 p-3 rounded-lg">
-													<div className={`flex flex-row items-center ${message.senderId === loggedInUserId ? 'justify-end' : 'justify-start'} flex-shrink-0`}>
-														{message.senderId !== loggedInUserId && (
-															<div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-200 flex-shrink-0">
-																{selectedUser.name.charAt(0)}
-															</div>
-														)}
-														<div className={`relative ml-3 text-md  py-2 px-4 shadow  ${message.senderId === loggedInUserId} rounded-xl`}>
-															<div>{message.content}</div>
-														</div>
-														{message.senderId === loggedInUserId && (
-															<div className="flex items-center justify-center h-10 w-10 rounded-full ml-3 bg-indigo-500 flex-shrink-0">
-																{loggedInFirstName.charAt(0)}
-															</div>
-														)}
-														{message.senderId !== loggedInUserId && (
-															<button
-																className="ml-3 text-red-500"
-																onClick={() => handleDeleteMessage(message.id)}
-															>
-																<BsFillTrashFill />
-															</button>
-														)}
+												{message.senderId !== loggedInUserId && (
+													<div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-200">
+														{selectedUser.name.charAt(0)}
 													</div>
+												)}
+												<div
+													className={`relative p-3 max-w-xs rounded-xl shadow ${message.senderId === loggedInUserId ? 'bg-indigo-100' : 'bg-white'
+														}`}
+												>
+													{message.content}
 												</div>
+												{message.senderId === loggedInUserId && (
+													<div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500">
+														{loggedInFirstName.charAt(0)}
+													</div>
+												)}
+												{(message.senderId === loggedInUserId || message.senderId !== loggedInUserId) && (
+													<button className="text-red-500" onClick={() => handleDeleteMessage(message.id)}>
+														<BsFillTrashFill />
+													</button>
+												)}
 											</div>
 										))}
 									</>
 								) : (
-									<div>Select a user to view messages</div>
+									<div className="text-xl">Select a user to view messages</div>
 								)}
 							</div>
 							<div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
@@ -215,8 +212,8 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 									</div>
 								</div>
 								<div className="ml-4">
-									{users.length ?
-										(<button
+									{users.length ? (
+										<button
 											onClick={handleSendMessage}
 											className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 mt-2"
 										>
@@ -224,17 +221,15 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 											<span className="ml-2">
 												<TbSend />
 											</span>
-										</button>)
-										:
-										(<div
-											className="flex items-center justify-center bg-gray-400 border-1 border-gray-800 rounded-xl text-white px-4 py-1 mt-2"
-										>
+										</button>
+									) : (
+										<div className="flex items-center justify-center bg-gray-400 border-1 border-gray-800 rounded-xl text-white px-4 py-1 mt-2">
 											<span>Send</span>
 											<span className="ml-2">
 												<TbSend />
 											</span>
-										</div>)
-									}
+										</div>
+									)}
 								</div>
 							</div>
 						</div>
