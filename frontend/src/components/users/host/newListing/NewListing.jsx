@@ -31,6 +31,38 @@ const NewListing = ({ hosts_id }) => {
 
 	const { uploadedUrls, handleUpload } = useCloudinaryUpload();
 
+	const parseDates = (datesString) => {
+		const [arrival, departure] = datesString.split(' - ');
+		return { arrival, departure };
+	};
+
+	// For not available dates
+	const insertBooking = async (arrival, departure, cardId) => {
+		let user_id = parseInt(localStorage.getItem('loggedInUserId'));
+		
+		const booking = {
+			hosts_id: user_id,
+			renters_id: user_id,
+			listings_id: cardId,
+			arrival_date: new Date(arrival),
+			departure_date: new Date(departure),
+			trueBooking: 0
+		};
+		console.log("booking: " , booking);
+		const response = await fetch('https://localhost:8443/api/v1/insertBooking', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(booking)
+		});
+	
+		if (!response.ok) {
+			// Handle error
+			console.error('Failed to insert booking');
+		}
+	};
+
 
 	const postHandler = async (values) => {
 		const uploadedImageUrls = await handleUpload(photos);
@@ -55,7 +87,7 @@ const NewListing = ({ hosts_id }) => {
 
 			console.log('Request JSON:', JSON.stringify(requestBody, null, 2)); // Log the JSON that will be sent to the server
 
-			const response = await fetch('https://localhost:8443/cards', {
+			const response = await fetch('https://localhost:8443/insertCard', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -68,6 +100,14 @@ const NewListing = ({ hosts_id }) => {
 				//console.log('Response Data:', responseData); // Log the response data
 				const cardId = JSON.parse(responseData).id; // Attempt to parse the JSON data
 
+				console.log("cardId: ", cardId);
+				//Insert unavailable dates as bookings
+				if(selectedDates){
+					values.selectedDates.forEach(dateString => {
+						const { arrival, departure } = parseDates(dateString);
+						insertBooking(arrival, departure, cardId);
+					});
+				}
 
 				Swal.fire({
 					title: 'Welcome !',
@@ -126,6 +166,7 @@ const NewListing = ({ hosts_id }) => {
 
 	useEffect(() => {
 		setIsFormComplete(false);
+		console.log(selectedDates)
 	}, [step]);
 
 	// Location Step State

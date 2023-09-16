@@ -59,15 +59,4 @@ public class Application {
         return reviewService.getAllReviews();
     }
 
-    @PostMapping("/cards")
-    public Card createCard(@RequestBody Card card) {
-        int result = cardService.insertCard(card);
-        if (result == 1) {
-            return card;
-        } else {
-            // Handle the error case, such as throwing an exception or returning an
-            // appropriate response
-            return null;
-        }
-    }
 }

@@ -119,15 +119,14 @@ public class CardImpl implements CardInterface {
 	}
 
 	public int insertCardImp(Card card) {
-		int rowsAffected = 0;
-		// System.out.println(card.toString());
+		int generatedId = -1; // Default to an invalid value
 		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(
 						"INSERT INTO listings (thumbnail_url, medium_url, price, room_type, beds, number_of_reviews, review_scores_rating, street, description, name, "
-								+
-								"amenities, accommodates, bathrooms, bedrooms, bed_type, longitude, latitude, hosts_id, rentalRules, size, accessing_info, minimum_nights) "
-								+
-								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+								+ "amenities, accommodates, bathrooms, bedrooms, bed_type, longitude, latitude, hosts_id, rentalRules, size, accessing_info, minimum_nights) "
+								+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+						Statement.RETURN_GENERATED_KEYS)) {
+
 			stmt.setString(1, card.getthumbnail_url());
 			stmt.setString(2, card.getmedium_url());
 			stmt.setFloat(3, card.getPrice());
@@ -151,14 +150,22 @@ public class CardImpl implements CardInterface {
 			stmt.setString(21, card.getaccessing_info());
 			stmt.setInt(22, card.getminimum_nights());
 
-			rowsAffected = stmt.executeUpdate();
+			int rowsAffected = stmt.executeUpdate();
+
+			if (rowsAffected > 0) {
+				try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+					if (generatedKeys.next()) {
+						generatedId = generatedKeys.getInt(1);
+					}
+				}
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// Handle the exception as needed
 		}
 
-		return rowsAffected;
+		return generatedId;
 	}
 
 	public List<Card> searchCards(String filters) {
