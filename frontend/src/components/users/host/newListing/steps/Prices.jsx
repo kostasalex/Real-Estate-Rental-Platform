@@ -58,7 +58,7 @@ const Prices = ({ price, setprice, additionalGuestPrice, setAdditionalGuestPrice
 								type="number"
 								step="0.01"
 								min="1"
-								value={localAdditionalGuestPrice}
+								value={additionalGuestPrice}
 								onChange={(e) => setLocalAdditionalGuestPrice(parseFloat(e.target.value))}
 							/>
 							<span className="absolute inset-y-0 right-0 flex items-center pr-2">$</span>

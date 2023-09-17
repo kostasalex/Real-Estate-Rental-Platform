@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dao.BookingInterface;
 import com.example.demo.model.Booking;
-
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -25,6 +25,12 @@ public class BookingController {
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/api/v1/bookings/byListing/{listingsId}")
+    public List<Booking> fetchBookingsByListingId(@PathVariable("listingsId") Integer listingsId,
+            @RequestParam("trueBooking") Integer trueBooking) {
+        return bookingDao.getBookings(listingsId, trueBooking);
     }
 
 }

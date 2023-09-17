@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, 
 	setHostDepartureDate, selectedDates, setSelectedDates, setIsFormComplete, minimum_nights, setminimum_nights }) => {
 
+	console.log("dates:",selectedDates);
 	setIsFormComplete(true);
 
 	const [showButtons, setShowButtons] = useState(false);

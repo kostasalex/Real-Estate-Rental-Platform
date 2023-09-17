@@ -36,6 +36,9 @@ const Cards = () => {
             latitude={listing.latitude}
             hosts_id = {listing.hosts_id}
             accessing_info = {listing.accessing_info}
+            rentalRules = {listing.rentalRules}
+            size = {listing.size}
+            minimum_nights = {listings.minimum_nights}
           />
         ))}
       </div>

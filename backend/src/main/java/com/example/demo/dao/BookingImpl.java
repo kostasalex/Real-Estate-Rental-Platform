@@ -126,4 +126,27 @@ public class BookingImpl implements BookingInterface {
 
         return new Booking(id, hostsId, rentersId, listingsId, departureDate, arrivalDate, trueBooking);
     }
+
+    @Override
+    public List<Booking> getBookings(Integer listingsId, Integer trueBooking) {
+        List<Booking> bookings = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn
+                        .prepareStatement("SELECT * FROM bookings WHERE listings_id = ? AND trueBooking = ?");) {
+            stmt.setInt(1, listingsId);
+            stmt.setInt(2, trueBooking);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Booking booking = mapResultSetToBooking(rs);
+                    bookings.add(booking);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return bookings;
+    }
+
 }

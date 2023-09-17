@@ -5,7 +5,7 @@ import Map from '/src/components/common/maps/Map';
 const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstreet, accessingInfo, setAccessingInfo, setIsFormComplete,
 	country, setCountry, postcode, setPostCode, city, setCity, road, setRoad}) => {
 	
-	const [isSaved, setIsSaved] = useState(false);
+	const [isSaved, setIsSaved] = useState(street ? true : false);
 
 	const streetHandler = (address) => {
 		//console.log(address);
@@ -13,16 +13,18 @@ const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstree
 	};
 
 	const handleLatLon = (lat,lon) => {
-		setLatitude(lat); // Set latitude state from the address
-		setLongitude(lon); // Set longitude state from the address
-		//console.log("lat long:" + latitude + " " +longitude );
+		setLatitude(lat);
+		setLongitude(lon);
 	}
 
 	const handleAccessingInfoChange = (event) => {
 		setAccessingInfo(event.target.value);
 	};
 
-	
+	if (isSaved &&  country && postcode && city && road && accessingInfo) {
+		setIsFormComplete(true);
+	}
+
 	useEffect(() => {
 		if (isSaved &&  country && postcode && city && road && accessingInfo) {
 			setIsFormComplete(true);
