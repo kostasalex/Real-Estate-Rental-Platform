@@ -191,15 +191,116 @@ const NewListing = ({ hosts_id }) => {
 	};
 
 
+	const handleSubmission = async (values) => {
+		if (editMode) {
+			await updateHandler(values);
+		} else {
+			await postHandler(values);
+		}
+	};
+
+	const deleteBookings = async (hostsId) => {
+		try {
+			const response = await fetch(`https://localhost:8443/api/v1/deleteBookings/${hostsId}?trueBooking=0`, {
+				method: 'DELETE',
+			});
+			return response.ok;
+		} catch (error) {
+			console.error("Error deleting bookings:", error);
+			return false;
+		}
+	};
+	
+
+	const updateHandler = async (values) => {
+
+        // Separate photos into URLs and files
+        const existingPhotoUrls = photos.filter(photo => typeof photo === 'string');
+        const newPhotosToUpload = photos.filter(photo => typeof photo !== 'string');
+
+        // Upload new photos to Cloudinary
+        let newUploadedUrls = await handleUpload(newPhotosToUpload);
+        if (typeof newUploadedUrls === 'string') {
+            newUploadedUrls = [newUploadedUrls];
+        }
+        // Combine existing URLs with new URLs
+        const allPhotoUrls = [...existingPhotoUrls, ...newUploadedUrls];
+
+		try {
+			const amenities = Array.from(values.amenities);
+			const requestBody = {
+				...values,
+				latitude: parseFloat(values.latitude),
+				longitude: parseFloat(values.longitude),
+				hosts_id: localStorage.getItem('loggedInUserId'),
+				amenities: `{${amenities.join(',')}}`,
+				thumbnail_url: allPhotoUrls[0],
+				medium_url: allPhotoUrls.join(','),
+				rentalRules: `{${Array.from(rentalRules).join(',')}}`,
+				id:cardId,
+			};
+			console.log(JSON.stringify(requestBody));
+
+			const response = await fetch(`https://localhost:8443/updateCard/${cardId}`, { // Assuming your update endpoint is like this
+				method: 'PUT', // Typically, updates use the PUT method
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(requestBody)
+			});
+	
+			if (response.ok) {
+
+				// Delete old unavailable dates
+				const hostsId = localStorage.getItem('loggedInUserId');
+				const deleteSuccess = await deleteBookings(hostsId);
+				if (!deleteSuccess) {
+					throw new Error("Failed to delete old bookings.");
+				}
+
+				// Insert new bookings
+				if (selectedDates) {
+					values.selectedDates.forEach(dateString => {
+						const { arrival, departure } = parseDates(dateString);
+						insertBooking(arrival, departure, cardId);
+					});
+				}
+
+				Swal.fire({
+					title: 'Updated!',
+					text: 'Your card has been successfully updated.',
+					icon: 'success',
+					confirmButtonText: 'OK'
+				}).then(() => {
+					navigate('/');
+				});
+			} else {
+				const errorMessage = await response.text();
+				Swal.fire({
+					title: 'Error',
+					text: errorMessage,
+					icon: 'error',
+					confirmButtonText: 'OK'
+				});
+			}
+		} catch (error) {
+			console.error(error);
+			Swal.fire({
+				title: 'Error',
+				text: 'An error occurred while updating your card.',
+				icon: 'error',
+				confirmButtonText: 'OK'
+			});
+		}
+	};
+	
+
 	const postHandler = async (values) => {
 		const uploadedImageUrls = await handleUpload(photos);
 		try {
 			// Create an array from the Set of selected amenities
 			const amenities = Array.from(values.amenities);
 
-			// Generate a random cardId
-
-			//console.log("the lat value is: " + values.latitude);
 			const requestBody = {
 				...values,
 				latitude: parseFloat(values.latitude),
@@ -243,7 +344,7 @@ const NewListing = ({ hosts_id }) => {
 					confirmButtonText: 'OK'
 				}).then(() => {
 					const cardData = {
-						id: cardId,
+						/*id: cardId,
 						thumbnailUrl: values.photos,
 						mediumUrl: values.photos,
 						price: values.price,
@@ -260,7 +361,7 @@ const NewListing = ({ hosts_id }) => {
 						hosts_id: hosts_id, // Include the hosts_id as hosts_id in the cardData object
 						beds: values.beds,
 						name: values.name,
-						roomType: values.roomType,
+						roomType: values.roomType,*/
 					};
 
 					// Handle the cardData object as needed, e.g., store it in state or pass it to a parent component
@@ -399,9 +500,9 @@ const NewListing = ({ hosts_id }) => {
 				{step > 1 && (
 					<button
 						className="text-base hover:scale-110 mr-10 focus:outline-none flex  px-4 py-2 rounded font-bold cursor-pointer hover:bg-gray-200  bg-gray-100 
-            text-gray-700 
-            border duration-200 ease-in-out 
-            border-gray-600 transition"
+							text-gray-700 
+							border duration-200 ease-in-out 
+							border-gray-600 transition"
 						onClick={prevStepHandler}
 					>
 						Previous
@@ -413,11 +514,11 @@ const NewListing = ({ hosts_id }) => {
 							{isFormComplete ? (
 								<button
 									className="text-base  ml-2  hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer 
-                  hover:bg-blue1  
-                  bg-blue1 
-                  text-blue0 
-                  border duration-200 ease-in-out 
-                  border-blue1 transition"
+										hover:bg-blue1  
+										bg-blue1 
+										text-blue0 
+										border duration-200 ease-in-out 
+										border-blue1 transition"
 									onClick={nextStepHandler}
 								>
 									Next
@@ -425,12 +526,12 @@ const NewListing = ({ hosts_id }) => {
 							) : (
 								<button
 									className="text-base  ml-2  flex justify-center px-4 py-2 rounded font-bold cursor-not-allowed 
-                  bg-gray-50 
-                  text-gray-500
-                  border-2
-                  border-gray-500
-                  duration-200 ease-in-out 
-                  transition"
+										bg-gray-50 
+										text-gray-500
+										border-2
+										border-gray-500
+										duration-200 ease-in-out 
+										transition"
 									disabled
 								>
 									Next
@@ -449,7 +550,7 @@ const NewListing = ({ hosts_id }) => {
 								border duration-200 ease-in-out 
 								border-blue1 transition"
 								onClick={() =>
-									postHandler({
+									handleSubmission({
 										street,
 										accessing_info,
 										minimum_nights,
@@ -480,8 +581,7 @@ const NewListing = ({ hosts_id }) => {
 							</button>)
 							: (
 								<button
-									className="text-base  ml-2  flex justify-center px-4 py-2 rounded font-bold cursor-not-allowed 
-							bg-gray-50 
+									className="text-base  ml-2  flex justify-center px-4 py-2 rounded font-bold cursor-not-allowed bg-gray-50 
 							text-gray-500
 							border-2
 							border-gray-500

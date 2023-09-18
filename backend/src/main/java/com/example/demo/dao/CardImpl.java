@@ -70,7 +70,7 @@ public class CardImpl implements CardInterface {
 								"beds = ?, number_of_reviews = ?, review_scores_rating = ?, street = ?, description = ?, name = ?, "
 								+
 								"amenities = ?, accommodates = ?, bathrooms = ?, bedrooms = ?, bed_type = ?, " +
-								"longitude = ?, latitude = ?, hosts_id = ? WHERE id = ?")) {
+								"longitude = ?, latitude = ?, hosts_id = ?, rentalRules = ?, size = ?, accessing_info = ?, minimum_nights = ? WHERE id = ?")) {
 			stmt.setString(1, card.getthumbnail_url());
 			stmt.setString(2, card.getmedium_url());
 			stmt.setFloat(3, card.getPrice());
@@ -89,13 +89,16 @@ public class CardImpl implements CardInterface {
 			stmt.setFloat(16, card.getLongitude());
 			stmt.setFloat(17, card.getLatitude());
 			stmt.setString(18, card.gethosts_id());
-			stmt.setString(19, card.getId());
+			stmt.setString(19, card.getRentalRules());
+			stmt.setInt(20, card.getSize());
+			stmt.setString(21, card.getaccessing_info());
+			stmt.setInt(22, card.getminimum_nights());
+			stmt.setString(23, card.getId());
 
 			rowsAffected = stmt.executeUpdate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle the exception as needed
 		}
 
 		return rowsAffected;

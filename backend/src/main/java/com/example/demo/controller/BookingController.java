@@ -33,4 +33,15 @@ public class BookingController {
         return bookingDao.getBookings(listingsId, trueBooking);
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, path = "/api/v1/deleteBookings/{hostsId}")
+    public ResponseEntity<String> deleteBookingsByHostId(@PathVariable("hostsId") Integer hostsId,
+            @RequestParam("trueBooking") Integer trueBooking) {
+        int result = bookingDao.deleteBookingsByHostId(hostsId, trueBooking);
+        if (result > 0) {
+            return ResponseEntity.ok("Bookings deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting bookings.");
+        }
+    }
+
 }

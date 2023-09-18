@@ -133,6 +133,7 @@ const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPost
 					title: 'Oops...',
 					text: "We couldn't find the specified address on the map.",
 				});
+				setIsSaved(false);
 			}
 		} catch (error) {
 			console.error('Error occurred during geocoding:', error);

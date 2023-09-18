@@ -149,4 +149,22 @@ public class BookingImpl implements BookingInterface {
         return bookings;
     }
 
+    @Override
+    public int deleteBookingsByHostId(Integer hostsId, Integer trueBooking) {
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn
+                        .prepareStatement("DELETE FROM bookings WHERE hosts_id = ? AND trueBooking = ?");) {
+            stmt.setInt(1, hostsId);
+            stmt.setInt(2, trueBooking);
+
+            rowsAffected = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rowsAffected;
+    }
+
 }

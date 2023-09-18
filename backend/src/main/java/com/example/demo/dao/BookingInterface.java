@@ -19,4 +19,5 @@ public interface BookingInterface {
 
     List<Booking> getBookings(Integer listingsId, Integer trueBooking);
 
+    int deleteBookingsByHostId(Integer hostsId, Integer trueBooking);
 }

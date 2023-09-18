@@ -5,7 +5,7 @@ import Map from '/src/components/common/maps/Map';
 const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstreet, accessingInfo, setAccessingInfo, setIsFormComplete,
 	country, setCountry, postcode, setPostCode, city, setCity, road, setRoad}) => {
 	
-	const [isSaved, setIsSaved] = useState(street ? true : false);
+	const [isSaved, setIsSaved] = useState(false);
 
 	const streetHandler = (address) => {
 		//console.log(address);
