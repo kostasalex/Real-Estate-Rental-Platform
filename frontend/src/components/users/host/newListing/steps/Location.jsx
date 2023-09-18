@@ -64,7 +64,7 @@ const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstree
 							Information about Accessing Transportation to the Rental Space
 						</label>
 						<textarea
-							maxLength={1500}
+							maxLength={300}
 							id="description"
 							rows="4"
 							className="block w-full p-2.5 py-5 mt-5 w-96 text-sm text-blue1 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -73,7 +73,7 @@ const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstree
 							onChange={handleAccessingInfoChange}
 						></textarea>
 						<label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900">
-							Max characters 1500
+							Max characters 300
 						</label>
 					</div>
 				</div>

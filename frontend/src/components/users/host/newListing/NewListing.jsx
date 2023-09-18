@@ -124,7 +124,7 @@ const NewListing = ({ hosts_id }) => {
 
 	// Prices Step State
 	const [price, setprice] = useState(editMode ? cardProps.price : 0);
-	const [additionalGuestPrice, setAdditionalGuestPrice] = useState(editMode ? cardProps.additionalGuestPrice : 0);
+	const [additionalGuestPrice, setAdditionalGuestPrice] = useState(cardProps.price_per_additional_guest ? cardProps.price_per_additional_guest : 0);
 	const [accommodates, setaccommodates] = useState(editMode ? cardProps.accommodates : 1);
 
 	// Amenities Step State
@@ -237,6 +237,7 @@ const NewListing = ({ hosts_id }) => {
 				thumbnail_url: allPhotoUrls[0],
 				medium_url: allPhotoUrls.join(','),
 				rentalRules: `{${Array.from(rentalRules).join(',')}}`,
+				price_per_additional_guest : additionalGuestPrice,
 				id:cardId,
 			};
 			console.log(JSON.stringify(requestBody));
@@ -310,7 +311,7 @@ const NewListing = ({ hosts_id }) => {
 				thumbnail_url: Array.isArray(uploadedImageUrls) ? uploadedImageUrls[0] : uploadedImageUrls,
 				medium_url: Array.isArray(uploadedImageUrls) ? uploadedImageUrls.join(',') : uploadedImageUrls,
 				rentalRules: `{${Array.from(rentalRules).join(',')}}`,
-
+				price_per_additional_guest : additionalGuestPrice,
 			};
 
 			console.log('Request JSON:', JSON.stringify(requestBody, null, 2)); // Log the JSON that will be sent to the server
@@ -571,7 +572,7 @@ const NewListing = ({ hosts_id }) => {
 										hosts_id,
 										size,
 										amenities,
-										rentalRules
+										rentalRules,
 									}
 
 									)

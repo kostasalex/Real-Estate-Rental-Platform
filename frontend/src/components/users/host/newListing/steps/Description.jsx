@@ -68,7 +68,7 @@ const Description = ({ title, description, roomType, rentalRules, setTitle, setd
 				<div className="mb-10">
 					<p className='text-2xl'>Listing Description*</p>
 					<textarea
-						maxLength={1500}
+						maxLength={1000}
 						id="description"
 						rows="4"
 						className="block p-2.5 py-5 mt-5 w-96 text-sm text-blue1 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -77,7 +77,7 @@ const Description = ({ title, description, roomType, rentalRules, setTitle, setd
 						onChange={handledescriptionChange}
 					></textarea>
 					<label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900">
-						Max characters 1500
+						Max characters 1000
 					</label>
 				</div>
 

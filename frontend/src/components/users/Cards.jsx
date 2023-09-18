@@ -31,6 +31,7 @@ const Cards = ({listings}) => {
                 rentalRules = {listing.rentalRules}
                 size = {listing.size}
                 minimum_nights = {listing.minimum_nights}
+                price_per_additional_guest = {listing.price_per_additional_guest}
                 />
             ))}
             </div>
