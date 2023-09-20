@@ -50,4 +50,19 @@ public class CardController {
         }
     }
 
+    @PutMapping("/updateCard/{cardId}")
+    public ResponseEntity<Map<String, Object>> updateCard(@PathVariable String cardId, @RequestBody Card card) {
+        if (!cardDao.selectCardByCardId(cardId).isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Card not found."));
+        }
+
+        int rowsAffected = cardDao.updateCard(card);
+        if (rowsAffected > 0) {
+            return ResponseEntity.ok(Map.of("message", "Card updated successfully"));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 }

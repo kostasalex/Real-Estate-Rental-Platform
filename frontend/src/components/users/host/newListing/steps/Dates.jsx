@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, 
 	setHostDepartureDate, selectedDates, setSelectedDates, setIsFormComplete, minimum_nights, setminimum_nights }) => {
 
+	console.log("dates:",selectedDates);
 	setIsFormComplete(true);
 
 	const [showButtons, setShowButtons] = useState(false);
@@ -27,34 +28,35 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate,
 		setter((prevValue) => prevValue > 1 ? prevValue - 1 : 1);
 	};
 	
-const handleAddDates = () => {
-    if (hostArrivalDate && hostDepartureDate) {
-        if (hostArrivalDate.getTime() < hostDepartureDate.getTime()) {
-            let overlap = false;
-            for (let range of selectedDates) {
-                const [startStr, endStr] = range.split(' - ');
-                const startDate = new Date(startStr);
-                const endDate = new Date(endStr);
-                if (doRangesOverlap(hostArrivalDate, hostDepartureDate, startDate, endDate)) {
-                    overlap = true;
-                    break;
-                }
-            }
+	
+	const handleAddDates = () => {
+		if (hostArrivalDate && hostDepartureDate) {
+			if (hostArrivalDate.getTime() < hostDepartureDate.getTime()) {
+				let overlap = false;
+				for (let range of selectedDates) {
+					const [startStr, endStr] = range.split(' - ');
+					const startDate = new Date(startStr);
+					const endDate = new Date(endStr);
+					if (doRangesOverlap(hostArrivalDate, hostDepartureDate, startDate, endDate)) {
+						overlap = true;
+						break;
+					}
+				}
 
-            if (overlap) {
-                setErrorMsg('The selected date range overlaps with an existing date range. Please select a different date range.');
-            } else {
-                setErrorMsg('');
-                const formattedDates = `${hostArrivalDate.toLocaleDateString()} - ${hostDepartureDate.toLocaleDateString()}`;
-                setSelectedDates([...selectedDates, formattedDates]);
-                setHostArrivalDate(null);
-                setHostDepartureDate(null);
-            }
-        } else {
-            setErrorMsg('The start date should be before the end date. Please select a valid date range.');
-        }
-    }
-};
+				if (overlap) {
+					setErrorMsg('The selected date range overlaps with an existing date range. Please select a different date range.');
+				} else {
+					setErrorMsg('');
+					const formattedDates = `${hostArrivalDate.toLocaleDateString()} - ${hostDepartureDate.toLocaleDateString()}`;
+					setSelectedDates([...selectedDates, formattedDates]);
+					setHostArrivalDate(null);
+					setHostDepartureDate(null);
+				}
+			} else {
+				setErrorMsg('The start date should be before the end date. Please select a valid date range.');
+			}
+		}
+	};
 
 
 	const handleDeleteDate = (index) => {
@@ -82,33 +84,43 @@ const handleAddDates = () => {
 					<label className="text-indigo-500" htmlFor="hostArrivalDate">
 						Start of Unavailability:
 					</label>
-					<DatePicker
-						id="hostArrivalDate"
-						minDate={new Date(arrivalDate.getTime() + 24*60*60*1000)}
-						selected={arrivalDate}
-						onChange={(date) => setHostArrivalDate(date)}
-						dateFormat="dd/MM/yyyy"
-						placeholderText="Select arrival date"
-					/>
+					<div className='flex flex-row'>
+						<div className='shadow-sm  hover:shadow-xl'>
+							<DatePicker
+								id="hostArrivalDate"
+								minDate={new Date(arrivalDate.getTime() + 24*60*60*1000)}
+								selected={arrivalDate}
+								onChange={(date) => setHostArrivalDate(date)}
+								dateFormat="dd/MM/yyyy"
+								placeholderText="Select arrival date"
+							/>
+						</div>
+					</div>
+
+
 				</div>
 
 				<div className="my-5">
 					<label className="text-indigo-500" htmlFor="hostDepartureDate">
 						End of Unavailability:
 					</label>
-					<DatePicker
-						id="hostDepartureDate"
-						selected={departureDate}
-						onChange={(date) => {
-							if (date >= arrivalDate) {
-								setHostDepartureDate(date);
-							}
-						}}
-						dateFormat="dd/MM/yyyy"
-						minDate={new Date(arrivalDate.getTime() + 24*60*60*1000)}
-						disabled={!arrivalDate}
-						placeholderText="Select departure date"
-					/>
+					<div className='flex flex-row'>
+						<div className='shadow-sm  hover:shadow-xl'>
+							<DatePicker
+								id="hostDepartureDate"
+								selected={departureDate}
+								onChange={(date) => {
+									if (date >= arrivalDate) {
+										setHostDepartureDate(date);
+									}
+								}}
+								dateFormat="dd/MM/yyyy"
+								minDate={new Date(arrivalDate.getTime() + 24*60*60*1000)}
+								disabled={!arrivalDate}
+								placeholderText="Select departure date"
+							/>
+						</div>
+					</div>
 				</div>
 				<div className='text-sm text-red-500'>{errorMsg}</div>
 

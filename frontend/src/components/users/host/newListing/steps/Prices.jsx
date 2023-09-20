@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
 const Prices = ({ price, setprice, additionalGuestPrice, setAdditionalGuestPrice, accommodates, setaccommodates, setIsFormComplete }) => {
-	const [localPrice, setLocalPrice] = useState(price);
-	const [localAdditionalGuestPrice, setLocalAdditionalGuestPrice] = useState(additionalGuestPrice);
-	const [localAccommodates, setLocalAccommodates] = useState(accommodates);
 
 	useEffect(() => {
-		if (parseFloat(localPrice) !== 0  && parseFloat(localAccommodates) !== 0) {
+		if (parseFloat(price) !== 0  && parseFloat(accommodates) !== 0) {
 			setIsFormComplete(true);
 		} else {
 			setIsFormComplete(false);
 		}
-	}, [localPrice, localAdditionalGuestPrice, localAccommodates, setIsFormComplete]);
+	}, [price, additionalGuestPrice, accommodates, setIsFormComplete]);
 
 	const handleIncrease = (setter) => {
 		setter((prevValue) => prevValue + 1);
@@ -27,7 +24,7 @@ const Prices = ({ price, setprice, additionalGuestPrice, setAdditionalGuestPrice
 				<div className="">
 					<p className="text-2xl mb-5">Min price for 1 Guest*</p>
 					<div className="flex items-center ml-5">
-						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full" onClick={() => handleDecrease(setLocalPrice)}>
+						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full" onClick={() => handleDecrease(setprice)}>
 							-
 						</button>
 						<span className="relative">
@@ -35,12 +32,12 @@ const Prices = ({ price, setprice, additionalGuestPrice, setAdditionalGuestPrice
 								className="[appearance:textfield] w-20 text-center"
 								type="number"
 								step="0.01"
-								value={localPrice}
-								onChange={(e) => setLocalPrice(parseFloat(e.target.value))}
+								value={price}
+								onChange={(e) => setprice(parseFloat(e.target.value))}
 							/>
 							<span className="absolute inset-y-0 right-0 flex items-center pr-2">$</span>
 						</span>
-						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-5 rounded-full" onClick={() => handleIncrease(setLocalPrice)}>
+						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-5 rounded-full" onClick={() => handleIncrease(setprice)}>
 							+
 						</button>
 					</div>
@@ -49,7 +46,7 @@ const Prices = ({ price, setprice, additionalGuestPrice, setAdditionalGuestPrice
 				<div className="">
 					<p className="text-2xl mb-5">Price per additional Guests*</p>
 					<div className="flex items-center ml-5">
-						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full" onClick={() => handleDecrease(setLocalAdditionalGuestPrice)}>
+						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full" onClick={() => handleDecrease(setAdditionalGuestPrice)}>
 							-
 						</button>
 						<span className="relative">
@@ -58,12 +55,12 @@ const Prices = ({ price, setprice, additionalGuestPrice, setAdditionalGuestPrice
 								type="number"
 								step="0.01"
 								min="1"
-								value={localAdditionalGuestPrice}
-								onChange={(e) => setLocalAdditionalGuestPrice(parseFloat(e.target.value))}
+								value={additionalGuestPrice}
+								onChange={(e) => setAdditionalGuestPrice(parseFloat(e.target.value))}
 							/>
 							<span className="absolute inset-y-0 right-0 flex items-center pr-2">$</span>
 						</span>
-						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-5 rounded-full" onClick={() => handleIncrease(setLocalAdditionalGuestPrice)}>
+						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-5 rounded-full" onClick={() => handleIncrease(setAdditionalGuestPrice)}>
 							+
 						</button>
 					</div>
@@ -72,7 +69,7 @@ const Prices = ({ price, setprice, additionalGuestPrice, setAdditionalGuestPrice
 				<div className="">
 					<p className="text-2xl mb-5">Accommodates *</p>
 					<div className="flex items-center ml-5">
-						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full" onClick={() => handleDecrease(setLocalAccommodates)}>
+						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full" onClick={() => handleDecrease(setaccommodates)}>
 							-
 						</button>
 						<span className="relative">
@@ -80,11 +77,11 @@ const Prices = ({ price, setprice, additionalGuestPrice, setAdditionalGuestPrice
 								className="[appearance:textfield] w-20 text-center"
 								type="number"
 								min="1"
-								value={localAccommodates}
-								onChange={(e) => setLocalAccommodates(parseInt(e.target.value))}
+								value={accommodates}
+								onChange={(e) => setaccommodates(parseInt(e.target.value))}
 							/>
 						</span>
-						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-5 rounded-full" onClick={() => handleIncrease(setLocalAccommodates)}>
+						<button className="bg-blue1 hover:bg-blue-400 text-white font-bold py-3 px-5 rounded-full" onClick={() => handleIncrease(setaccommodates)}>
 							+
 						</button>
 					</div>

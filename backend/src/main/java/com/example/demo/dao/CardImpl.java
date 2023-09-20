@@ -70,7 +70,7 @@ public class CardImpl implements CardInterface {
 								"beds = ?, number_of_reviews = ?, review_scores_rating = ?, street = ?, description = ?, name = ?, "
 								+
 								"amenities = ?, accommodates = ?, bathrooms = ?, bedrooms = ?, bed_type = ?, " +
-								"longitude = ?, latitude = ?, hosts_id = ? WHERE id = ?")) {
+								"longitude = ?, latitude = ?, hosts_id = ?, rentalRules = ?, size = ?, accessing_info = ?, minimum_nights = ?, price_per_additional_guest = ? WHERE id = ?")) {
 			stmt.setString(1, card.getthumbnail_url());
 			stmt.setString(2, card.getmedium_url());
 			stmt.setFloat(3, card.getPrice());
@@ -89,13 +89,17 @@ public class CardImpl implements CardInterface {
 			stmt.setFloat(16, card.getLongitude());
 			stmt.setFloat(17, card.getLatitude());
 			stmt.setString(18, card.gethosts_id());
-			stmt.setString(19, card.getId());
+			stmt.setString(19, card.getRentalRules());
+			stmt.setInt(20, card.getSize());
+			stmt.setString(21, card.getaccessing_info());
+			stmt.setInt(22, card.getminimum_nights());
+			stmt.setFloat(23, card.getprice_per_additional_guest());
+			stmt.setString(24, card.getId());
 
 			rowsAffected = stmt.executeUpdate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle the exception as needed
 		}
 
 		return rowsAffected;
@@ -119,15 +123,14 @@ public class CardImpl implements CardInterface {
 	}
 
 	public int insertCardImp(Card card) {
-		int rowsAffected = 0;
-		// System.out.println(card.toString());
+		int generatedId = -1; // Default to an invalid value
 		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(
 						"INSERT INTO listings (thumbnail_url, medium_url, price, room_type, beds, number_of_reviews, review_scores_rating, street, description, name, "
-								+
-								"amenities, accommodates, bathrooms, bedrooms, bed_type, longitude, latitude, hosts_id, rentalRules, size, accessing_info, minimum_nights) "
-								+
-								"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+								+ "amenities, accommodates, bathrooms, bedrooms, bed_type, longitude, latitude, hosts_id, rentalRules, size, accessing_info, minimum_nights, price_per_additional_guest) "
+								+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+						Statement.RETURN_GENERATED_KEYS)) {
+
 			stmt.setString(1, card.getthumbnail_url());
 			stmt.setString(2, card.getmedium_url());
 			stmt.setFloat(3, card.getPrice());
@@ -150,15 +153,23 @@ public class CardImpl implements CardInterface {
 			stmt.setInt(20, card.getSize());
 			stmt.setString(21, card.getaccessing_info());
 			stmt.setInt(22, card.getminimum_nights());
+			stmt.setFloat(23, card.getprice_per_additional_guest());
+			int rowsAffected = stmt.executeUpdate();
 
-			rowsAffected = stmt.executeUpdate();
+			if (rowsAffected > 0) {
+				try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+					if (generatedKeys.next()) {
+						generatedId = generatedKeys.getInt(1);
+					}
+				}
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// Handle the exception as needed
 		}
 
-		return rowsAffected;
+		return generatedId;
 	}
 
 	public List<Card> searchCards(String filters) {
@@ -312,10 +323,12 @@ public class CardImpl implements CardInterface {
 		int size = rs.getInt("size");
 		String accessing_info = rs.getString("accessing_info");
 		int minimum_nights = rs.getInt("minimum_nights");
+		int price_per_additional_guest = rs.getInt("price_per_additional_guest");
 
 		return new Card(id, thumbnailUrl, mediumUrl, price, roomType, beds, numberOfReviews, reviewScoresRating, street,
 				description, name, amenities, accommodates, bathrooms, bedrooms, bed_type,
-				longitude, latitude, hostId, rentalRules, size, accessing_info, minimum_nights);
+				longitude, latitude, hostId, rentalRules, size, accessing_info, minimum_nights,
+				price_per_additional_guest);
 	}
 
 	public List<String> getDistinctCountries() {

@@ -26,7 +26,13 @@ const Cards = ({listings}) => {
                 bed_type={listing.bed_type}
                 longitude={listing.longitude}
                 latitude={listing.latitude}
-                hosts_id = {listing.hosts_id}/>
+                hosts_id = {listing.hosts_id}
+                accessing_info = {listing.accessing_info}
+                rentalRules = {listing.rentalRules}
+                size = {listing.size}
+                minimum_nights = {listing.minimum_nights}
+                price_per_additional_guest = {listing.price_per_additional_guest}
+                />
             ))}
             </div>
         </div>

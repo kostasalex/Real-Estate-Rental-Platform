@@ -3,11 +3,12 @@ import React from 'react'
 const UploadPhotos = ({photos, setPhotos, numOfPhotos, title}) => {
 
 	const [notification, setNotification] = React.useState(''); 
-
+    console.log("photos: ", photos);
     const handlePhotosChange = (event) => {
         const selectedPhotos = Array.from(event.target.files);
-
+        console.log("selecterd", selectedPhotos);
         if (photos.length + selectedPhotos.length > numOfPhotos) {
+            
             let msg;
             if (numOfPhotos === 1)msg = "Remove the image before adding new";
             else msg = `You can upload a maximum of ${numOfPhotos} photos` ;
@@ -34,11 +35,12 @@ const UploadPhotos = ({photos, setPhotos, numOfPhotos, title}) => {
             
             return true;
         });
-
+        console.log("photos:", validPhotos.length,selectedPhotos.length );
         if (validPhotos.length !== selectedPhotos.length) return; // Do not proceed if there's an invalid photo
 
         setNotification(''); // Reset notification if everything is okay
         setPhotos([...photos, ...validPhotos]);
+        
     };
 
     const setThumbnail = (index) => {
@@ -84,7 +86,7 @@ const UploadPhotos = ({photos, setPhotos, numOfPhotos, title}) => {
             {photos && photos.map((photo, index) => {
                 // Determine the source of the image
                 const src = typeof photo === 'string' ? photo : URL.createObjectURL(photo);
-
+                console.log("photo: ", photo)
                 return (
                     <div key={index} className="relative">
                         {index === 0 && photos.length >= 2 && (

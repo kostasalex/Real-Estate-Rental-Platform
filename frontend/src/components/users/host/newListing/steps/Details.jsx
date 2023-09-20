@@ -1,24 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
-const Details = ({
-  beds: initialBeds,
-  setBeds,
-  bathrooms: initialBathrooms,
-  setBathrooms,
-  bedrooms: initialBedrooms,
-  setBedrooms,
-  bed_type: initialBedType,
-  setBedType,
-  size: initialSize,
-  setSize,
-  setIsFormComplete,
-}) => {
-  const [beds, setLocalBeds] = useState(initialBeds || 0);
-  const [bathrooms, setLocalBathrooms] = useState(initialBathrooms || 0);
-  const [bedrooms, setLocalBedrooms] = useState(initialBedrooms || 0);
-  const [bed_type, setLocalBedType] = useState(initialBedType || '');
-  const [size, setLocalSize] = useState(initialSize || 0);
+const Details = ({ beds,setBeds, bathrooms, setBathrooms, bedrooms, setBedrooms, bed_type, setBedType, size, setSize, setIsFormComplete }) => {
 
+  if (beds !== 0 && bathrooms !== 0 && bedrooms !== 0 && size !== 0 && bed_type !== '') 
+    setIsFormComplete(true);
+  
   useEffect(() => {
     if (beds !== 0 && bathrooms !== 0 && bedrooms !== 0 && size !== 0 && bed_type !== '') {
       setIsFormComplete(true);
@@ -30,21 +16,20 @@ const Details = ({
   const handleFieldChange = (setter, increment) => {
     setter((prevValue) => {
       const newValue = Math.max(prevValue + increment, 0);
-      setLocalValue(setter, newValue);
+      setValue(setter, newValue);
       return newValue;
     });
   };
 
-  const setLocalValue = (setter, value) => {
-    if (setter === setBeds) setLocalBeds(value);
-    else if (setter === setBathrooms) setLocalBathrooms(value);
-    else if (setter === setBedrooms) setLocalBedrooms(value);
-    else if (setter === setSize) setLocalSize(value);
+  const setValue = (setter, value) => {
+    if (setter === setBeds) setBeds(value);
+    else if (setter === setBathrooms) setBathrooms(value);
+    else if (setter === setBedrooms) setBedrooms(value);
+    else if (setter === setSize) setSize(value);
   };
 
   const handleBedTypeChange = (event) => {
     const newValue = event.target.value;
-    setLocalBedType(newValue);
     setBedType(newValue);
   };
 

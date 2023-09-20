@@ -11,7 +11,7 @@ const HostHomepage = ({ hosts_id }) => {
     navigate('/newlisting');
   };
 
-  const NUM_RESULTS = 13;
+  const NUM_RESULTS = 100;
 
   useEffect(() => {
     // Fetch recent listings (without hosts_id filter)
@@ -19,17 +19,15 @@ const HostHomepage = ({ hosts_id }) => {
       .then((response) => response.json())
       .then((data) => setRecentListings(data.slice(0, NUM_RESULTS)))
       .catch((error) => console.error(error));
-  }, []);
 
-  useEffect(() => {
-    // Fetch listings for the logged-in host (using hosts_id)
+      // Fetch listings for the logged-in host (using hosts_id)
     fetch(`https://localhost:8443/cards?hosts_id=${hosts_id}`)
       .then((response) => response.json())
       .then((data) => setMyListings(data))
       .catch((error) => console.error(error));
-  }, [hosts_id]); // Make sure to include hosts_id in the dependency array
+  }, []);
 
-
+  
   return (
     <div className="flex flex-col space-y-16">
       <div className="mt-10 justify-center text-blue1 font-semibold hover:opacity-90 flex flex-col">

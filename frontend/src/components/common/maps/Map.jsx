@@ -3,15 +3,15 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { FaSearch } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 
-const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPostCode, city, setCity, road, setRoad, isSaved, setIsSaved }) => {
+const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPostCode, city, setCity, road, setRoad, isSaved, setIsSaved, longitude, latitude}) => {
 	
 	const allFieldsFilled = () => {
 		return country && postcode && city && road;
 	};
 
 
-	const [mapCenter, setMapCenter] = useState([37.9838, 23.7275]); // Default to Athens, Greece
-	const [markerPosition, setMarkerPosition] = useState([37.9838, 23.7275]);
+	const [mapCenter, setMapCenter] = useState(latitude ? [latitude, longitude] : [37.9838, 23.7275]); // Default to Athens, Greece
+	const [markerPosition, setMarkerPosition] = useState(latitude ? [latitude, longitude] : [37.9838, 23.7275]);
 	const [mapKey, setMapKey] = useState(Date.now());
 	const [countrySuggestions, setCountrySuggestions] = useState([]);
 	const [postcodeSuggestions, setPostcodeSuggestions] = useState([]);
@@ -102,7 +102,7 @@ const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPost
 		const inputValue = e.target.value;
 		setRoad(inputValue);
 		if (inputValue.length > 2) {
-		  fetchData(`${country} ${postcode} ${city} ${inputValue}`, setCitySuggestions, 5);  // For roads, it might be the 4th to last part, adjust as needed
+		  fetchData(`${country} ${postcode} ${city} ${inputValue}`, setCitySuggestions, 5); 
 		}
 	  };
 
@@ -133,6 +133,7 @@ const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPost
 					title: 'Oops...',
 					text: "We couldn't find the specified address on the map.",
 				});
+				setIsSaved(false);
 			}
 		} catch (error) {
 			console.error('Error occurred during geocoding:', error);

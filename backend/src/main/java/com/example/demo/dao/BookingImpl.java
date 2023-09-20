@@ -60,13 +60,13 @@ public class BookingImpl implements BookingInterface {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
-                        "UPDATE bookings SET hosts_id = ?, renters_id = ?, listings_id = ?, departure_date = ?, arrival_date = ? WHERE id = ?");) {
-            stmt.setInt(1, booking.getHostsId());
-            stmt.setInt(2, booking.getRentersId());
-            stmt.setInt(3, booking.getListingsId());
-            stmt.setDate(4, booking.getDepartureDate());
-            stmt.setDate(5, booking.getArrivalDate());
-            stmt.setInt(6, booking.getId());
+                        "UPDATE bookings SET hosts_id = ?, renters_id = ?, listings_id = ?, departure_date = ?, arrival_date = ?, trueBooking = ? WHERE id = ?");) {
+            stmt.setInt(1, booking.gethosts_id());
+            stmt.setInt(2, booking.getrenters_id());
+            stmt.setInt(3, booking.getlistings_id());
+            stmt.setDate(4, booking.getdeparture_date());
+            stmt.setDate(5, booking.getarrival_date());
+            stmt.setInt(6, booking.getTrueBooking());
 
             rowsAffected = stmt.executeUpdate();
 
@@ -99,18 +99,17 @@ public class BookingImpl implements BookingInterface {
     public int insertBooking(Booking booking) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
-                        "INSERT INTO bookings (id, hosts_id, renters_id, listings_id, departure_date, arrival_date) VALUES (?, ?, ?, ?, ?, ?)");) {
-            stmt.setInt(1, booking.getId());
-            stmt.setInt(2, booking.getHostsId());
-            stmt.setInt(3, booking.getRentersId());
-            stmt.setInt(4, booking.getListingsId());
-            stmt.setDate(5, booking.getDepartureDate());
-            stmt.setDate(6, booking.getArrivalDate());
+                        "INSERT INTO bookings ( hosts_id, renters_id, listings_id, departure_date, arrival_date, trueBooking) VALUES (?, ?, ?, ?, ?, ?)");) {
+            stmt.setInt(1, booking.gethosts_id());
+            stmt.setInt(2, booking.getrenters_id());
+            stmt.setInt(3, booking.getlistings_id());
+            stmt.setDate(4, booking.getdeparture_date());
+            stmt.setDate(5, booking.getarrival_date());
+            stmt.setInt(6, booking.getTrueBooking());
 
             return stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return 0;
@@ -127,4 +126,45 @@ public class BookingImpl implements BookingInterface {
 
         return new Booking(id, hostsId, rentersId, listingsId, departureDate, arrivalDate, trueBooking);
     }
+
+    @Override
+    public List<Booking> getBookings(Integer listingsId, Integer trueBooking) {
+        List<Booking> bookings = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn
+                        .prepareStatement("SELECT * FROM bookings WHERE listings_id = ? AND trueBooking = ?");) {
+            stmt.setInt(1, listingsId);
+            stmt.setInt(2, trueBooking);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Booking booking = mapResultSetToBooking(rs);
+                    bookings.add(booking);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return bookings;
+    }
+
+    @Override
+    public int deleteBookingsByHostId(Integer hostsId, Integer trueBooking) {
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn
+                        .prepareStatement("DELETE FROM bookings WHERE hosts_id = ? AND trueBooking = ?");) {
+            stmt.setInt(1, hostsId);
+            stmt.setInt(2, trueBooking);
+
+            rowsAffected = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rowsAffected;
+    }
+
 }

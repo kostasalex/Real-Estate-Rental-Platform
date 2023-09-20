@@ -1,28 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { UploadPhotos } from '/src/components';
 
-const Description = ({
-	title: initialTitle,
-	description: initialDescription,
-	roomType: initialRoomType,
-	photos: initialPhotos,
-	rentalRules: initialRentalRules,
-	setTitle,
-	setdescription,
-	setroomType,
-	setPhotos,
-	setRentalRules,
-	rentalRulesList,
-	setIsFormComplete
-}) => {
-	const [title, setLocalTitle] = useState(initialTitle || '');
-	const [description, setLocalDescription] = useState(initialDescription || '');
-	const [roomType, setLocalRoomType] = useState(initialRoomType || '');
-	const [photos, setLocalPhotos] = useState(initialPhotos || []);
-	const [rentalRules, setLocalRentalRules] = useState(
-		new Set(initialRentalRules || [])
-	);
+const Description = ({ title, description, roomType, rentalRules, setTitle, setdescription, setroomType, setPhotos,	setRentalRules,	rentalRulesList, setIsFormComplete, photos
+	}) => {
 
+	if (title && description && roomType ) {setIsFormComplete(true);}
+	
 	useEffect(() => {
 		if (
 			title &&
@@ -32,7 +15,6 @@ const Description = ({
 			//rentalRules.size > 0
 		) {
 			setIsFormComplete(true);
-			//console.log('here');
 		} else {
 			setIsFormComplete(false);
 			//console.log(rentalRules.size +' '+photos.length+ ' ' +roomType+ ' ' +description+ ' ' +title);
@@ -41,30 +23,18 @@ const Description = ({
 
 
 	const handleTitleChange = (event) => {
-		setLocalTitle(event.target.value);
 		setTitle(event.target.value);
 	};
 
 	const handledescriptionChange = (event) => {
-		setLocalDescription(event.target.value);
 		setdescription(event.target.value);
 	};
 
 	const handleroomTypeChange = (event) => {
-		setLocalRoomType(event.target.value);
 		setroomType(event.target.value);
 	};
 
 	const handleCheckboxChange = (event, rule) => {
-		setLocalRentalRules((prevRules) => {
-			const updatedRules = new Set(prevRules);
-			if (event.target.checked) {
-				updatedRules.add(rule);
-			} else {
-				updatedRules.delete(rule);
-			}
-			return updatedRules;
-		});
 		setRentalRules((prevRules) => {
 			const updatedRules = new Set(prevRules);
 			if (event.target.checked) {
@@ -98,7 +68,7 @@ const Description = ({
 				<div className="mb-10">
 					<p className='text-2xl'>Listing Description*</p>
 					<textarea
-						maxLength={1500}
+						maxLength={1000}
 						id="description"
 						rows="4"
 						className="block p-2.5 py-5 mt-5 w-96 text-sm text-blue1 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -107,7 +77,7 @@ const Description = ({
 						onChange={handledescriptionChange}
 					></textarea>
 					<label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900">
-						Max characters 1500
+						Max characters 1000
 					</label>
 				</div>
 
@@ -182,6 +152,7 @@ const Description = ({
 					photos={photos}
 					setPhotos={setPhotos}
 					numOfPhotos={3}
+					title = "Change Listing Images"
 				/>
 			</div>
 		</div>

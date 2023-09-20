@@ -146,7 +146,7 @@ function App() {
             <Route path="notfound" element={<NotFound />} />
             <Route
               path="/newlisting/:cardId"
-              element={<NewListing />}
+              element={<NewListing loggedInUserId={loggedInUserId} />}
             />
           </Routes>
         </div>
