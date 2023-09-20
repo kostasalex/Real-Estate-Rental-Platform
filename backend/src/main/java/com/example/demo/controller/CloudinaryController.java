@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.math.BigInteger;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://localhost:8443")
 public class CloudinaryController {
 
     private final String apiSecret;

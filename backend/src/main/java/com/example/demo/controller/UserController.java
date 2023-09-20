@@ -10,7 +10,7 @@ import com.example.demo.model.User;
 import com.example.demo.dao.UserInterface;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
+@CrossOrigin(origins = "https://localhost:8443", maxAge = 3600)
 public class UserController {
 
     private final UserInterface userDao;

@@ -4,7 +4,7 @@ import com.example.demo.dao.BookingInterface;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://localhost:8443")
 public class BookingController {
 
     private final BookingInterface bookingDao;

@@ -44,6 +44,6 @@ public class ReviewService {
     }
 
     public int insertReview(Review review) {
-        return reviewDao.insertReview(review.getId(), review);
+        return reviewDao.insertReview(review);
     }
 }

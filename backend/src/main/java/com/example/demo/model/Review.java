@@ -48,4 +48,7 @@ public class Review {
         return hostId;
     }
 
+    public void setId(String generateUniqueId) {
+    }
+
 }

@@ -117,9 +117,9 @@ public class ReviewImpl implements ReviewInterface {
     }
 
     @Override
-    public int insertReview(String reviewId, Review review) {
+    public int insertReview(Review review) {
 
-        reviewId = generateUniqueId();
+        review.setId(generateUniqueId()); // Generate a unique ID for the review
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement(
@@ -139,6 +139,62 @@ public class ReviewImpl implements ReviewInterface {
         }
 
         return 0;
+    }
+
+    @Override
+    public Review getReviewById(String reviewId) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM reviews WHERE id = ?");) {
+            stmt.setString(1, reviewId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToReview(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return null; // Return null if the review is not found
+    }
+
+    @Override
+    public List<Review> getReviewsByListing(String listingId) {
+        List<Review> reviews = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM reviews WHERE listings_id = ?");) {
+            stmt.setString(1, listingId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Review review = mapResultSetToReview(rs);
+                    reviews.add(review);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return reviews;
+    }
+
+    @Override
+    public int deleteReview(String reviewId) {
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("DELETE FROM reviews WHERE id = ?");) {
+            stmt.setString(1, reviewId);
+
+            rowsAffected = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return rowsAffected;
     }
 
     private Review mapResultSetToReview(ResultSet rs) throws SQLException {
