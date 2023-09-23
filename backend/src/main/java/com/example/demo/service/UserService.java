@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dao.UserInterface;
 import com.example.demo.model.User;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
+
 @Service
 public class UserService {
 
@@ -21,15 +23,15 @@ public class UserService {
         return userDao.selectAllUsers();
     }
 
-    public Optional<User> getUser(String userId) {
+    public Optional<User> getUser(Integer userId) {
         return userDao.selectUserByUserId(userId);
     }
 
-    public int updateUser(String userId, User user) {
+    public int updateUser(Integer userId, User user) {
         return userDao.updateUser(userId, user);
     }
 
-    public int removeUser(String userId) {
+    public int removeUser(Integer userId) {
         Optional<User> optionalUser = getUser(userId);
         if (optionalUser.isPresent()) {
             userDao.deleteUserByUserId(userId);

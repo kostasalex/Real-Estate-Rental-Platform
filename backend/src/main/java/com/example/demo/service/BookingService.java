@@ -24,6 +24,7 @@ public class BookingService {
         return bookingInterface.getBookingById(id);
     }
 
+
     public int updateBooking(Booking booking) {
         Optional<Booking> optionalBooking = getBooking(booking.getId());
         if (optionalBooking.isPresent()) {
@@ -37,6 +38,15 @@ public class BookingService {
         Optional<Booking> optionalBooking = getBooking(id);
         if (optionalBooking.isPresent()) {
             bookingInterface.deleteBookingById(id);
+            return 1;
+        }
+        return -1;
+    }
+
+        public int removeBookingListing(Integer id) {
+        Optional<Booking> optionalBooking = getBooking(id);
+        if (optionalBooking.isPresent()) {
+            bookingInterface.deleteBookingByListingId(id);
             return 1;
         }
         return -1;

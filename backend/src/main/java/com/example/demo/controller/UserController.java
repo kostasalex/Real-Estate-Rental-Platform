@@ -74,4 +74,16 @@ public class UserController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, path = "/api/v1/deleteUserByUserId/{Id}")
+    public ResponseEntity<String> deleteUserByUserId(@PathVariable("Id") Integer Id) {
+        int result = userDao.deleteUserByUserId(Id);
+        if (result > 0) {
+            return ResponseEntity.ok("User deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting User.");
+        }
+    }
+
+    
+
 }

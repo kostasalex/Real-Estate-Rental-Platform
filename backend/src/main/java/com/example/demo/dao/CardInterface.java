@@ -26,4 +26,7 @@ public interface CardInterface {
     List<String> getDistinctCities();
 
     List<String> getDistinctStreets();
+
+    List<Card> getListingsByUserId(String userId);
+
 }

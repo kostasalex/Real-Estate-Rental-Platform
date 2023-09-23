@@ -56,6 +56,25 @@ public class ReviewImpl implements ReviewInterface {
     }
 
     @Override
+    public Optional<Review> selectReviewByListingId(Integer Id) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM reviews WHERE listings_id = ?");) {
+            stmt.setInt(1, Id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Review review = mapResultSetToReview(rs);
+                    return Optional.of(review);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public int updateReview(Review review) {
         int rowsAffected = 0;
 
@@ -80,22 +99,6 @@ public class ReviewImpl implements ReviewInterface {
         return rowsAffected;
     }
 
-    @Override
-    public int deleteReviewByReviewId(String reviewId) {
-        int rowsAffected = 0;
-
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-                PreparedStatement stmt = conn.prepareStatement("DELETE FROM reviews WHERE id = ?");) {
-            stmt.setString(1, reviewId);
-
-            rowsAffected = stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Handle the exception as needed
-        }
-
-        return rowsAffected;
-    }
 
     @Override
     public boolean authenticateReview(String email, String password) {
@@ -196,6 +199,25 @@ public class ReviewImpl implements ReviewInterface {
 
         return rowsAffected;
     }
+
+    @Override
+    public int deleteReviewByListingId(Integer listingId) {
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("DELETE FROM reviews WHERE listings_id = ?");) {
+            stmt.setInt(1, listingId);
+
+            rowsAffected = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return rowsAffected;
+    }
+
+ 
 
     private Review mapResultSetToReview(ResultSet rs) throws SQLException {
         String id = rs.getString("id");

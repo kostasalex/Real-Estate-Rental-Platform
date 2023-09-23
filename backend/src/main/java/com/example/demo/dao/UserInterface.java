@@ -10,16 +10,16 @@ public interface UserInterface {
 
     List<User> selectAllUsers();
 
-    Optional<User> selectUserByUserId(String userId);
+    Optional<User> selectUserByUserId(Integer userId);
 
     Optional<User> selectUserByEmail(String userEmail);
 
     // Returns all users having send-receive message from UserId
     List<Map<String, Object>> getDistinctUsers(int UserId);
 
-    int updateUser(String userId, User user);
+    int updateUser(Integer userId, User user);
 
-    int deleteUserByUserId(String userId);
+    int deleteUserByUserId(Integer userId);
 
     int insertUser(User user);
 

@@ -18,18 +18,17 @@ public class CardService {
         this.cardDao = cardDao;
     }
 
-public List<Card> getAllCards(Optional<String> hosts_id) {
-    List<Card> cards = cardDao.selectAllCards();
+    public List<Card> getAllCards(Optional<String> hosts_id) {
+        List<Card> cards = cardDao.selectAllCards();
 
-    if (hosts_id.isPresent() && !hosts_id.get().isEmpty()) {
-        return cards.stream()
-                .filter(card -> hosts_id.get().equals(card.gethosts_id()))
-                .collect(Collectors.toList());
+        if (hosts_id.isPresent() && !hosts_id.get().isEmpty()) {
+            return cards.stream()
+                    .filter(card -> hosts_id.get().equals(card.gethosts_id()))
+                    .collect(Collectors.toList());
+        }
+
+        return cards;
     }
-
-    return cards;
-}
-
 
     public Optional<Card> getCard(String cardId) {
         return cardDao.selectCardByCardId(cardId);
@@ -54,9 +53,17 @@ public List<Card> getAllCards(Optional<String> hosts_id) {
         return -1;
     }
 
+    public int removeUserCard(String cardId) {
+        Optional<Card> optionalCard = getCard(cardId);
+        if (optionalCard.isPresent()) {
+            cardDao.getListingsByUserId(cardId);
+            return 1;
+        }
+        return -1;
+    }
+
     public int insertCard(Card card) {
         return cardDao.insertCardImp(card);
     }
 
-    
 }

@@ -65,4 +65,20 @@ public class CardController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, path = "/api/v1/deleteListing/{Id}")
+    public ResponseEntity<String> deleteCardByCardId(@PathVariable("Id") String Id) {
+        int result = cardDao.deleteCardByCardId(Id);
+        if (result > 0) {
+            return ResponseEntity.ok("Listing deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting listing.");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/api/v1/getListingsByUserId/{userId}")
+    public ResponseEntity<List<Card>> getListingsByUserId(@PathVariable("userId") String userId) {
+        List<Card> listings = cardDao.getListingsByUserId(userId);
+        return ResponseEntity.ok(listings);
+    }
+
 }

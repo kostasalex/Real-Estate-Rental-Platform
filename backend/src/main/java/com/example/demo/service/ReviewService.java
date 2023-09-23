@@ -25,6 +25,10 @@ public class ReviewService {
         return reviewDao.selectReviewByReviewId(reviewId);
     }
 
+    public Optional<Review> getReviewListing(Integer Id) {
+        return reviewDao.selectReviewByListingId(Id);
+    }
+
     public int updateReview(Review review) {
         Optional<Review> optionalReview = getReview(review.getId());
         if (optionalReview.isPresent()) {
@@ -37,7 +41,16 @@ public class ReviewService {
     public int removeReview(String reviewId) {
         Optional<Review> optionalReview = getReview(reviewId);
         if (optionalReview.isPresent()) {
-            reviewDao.deleteReviewByReviewId(reviewId);
+            reviewDao.deleteReview(reviewId);
+            return 1;
+        }
+        return -1;
+    }
+
+        public int removeReviewListing(Integer Id) {
+        Optional<Review> optionalReview = getReviewListing(Id);
+        if (optionalReview.isPresent()) {
+            reviewDao.deleteReviewByListingId(Id);
             return 1;
         }
         return -1;

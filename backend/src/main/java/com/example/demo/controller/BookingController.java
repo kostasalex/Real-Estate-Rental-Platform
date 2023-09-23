@@ -44,4 +44,24 @@ public class BookingController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, path = "/api/v1/deleteBooking/{Id}")
+    public ResponseEntity<String> deleteBookingById(@PathVariable("Id") Integer Id) {
+        int result = bookingDao.deleteBookingById(Id);
+        if (result > 0) {
+            return ResponseEntity.ok("Bookings deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting bookings.");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/api/v1/deleteBookingByListingId/{listingId}")
+    public ResponseEntity<String> deleteBookingByListingId(@PathVariable("listingId") Integer listingId) {
+        int result = bookingDao.deleteBookingByListingId(listingId);
+        if (result > 0) {
+            return ResponseEntity.ok("Bookings deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting bookings.");
+        }
+    }
+
 }

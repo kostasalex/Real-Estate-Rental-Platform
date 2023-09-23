@@ -26,7 +26,7 @@ public class UserResource {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> fetchUser(@PathVariable("userId") String userId) {
+    public ResponseEntity<User> fetchUser(@PathVariable("userId") Integer userId) {
         User user = userService.getUser(userId).orElse(null);
         return ResponseEntity.ok().body(user);
     }
@@ -41,7 +41,7 @@ public class UserResource {
     }
 
     @PutMapping("/{userId}/update")
-    public ResponseEntity<?> updateUser(@PathVariable("userId") String userId, @RequestBody User user) {
+    public ResponseEntity<?> updateUser(@PathVariable("userId") Integer userId, @RequestBody User user) {
         int result = userService.updateUser(userId, user);
         if (result == 1) {
             return ResponseEntity.ok().body("User updated successfully");

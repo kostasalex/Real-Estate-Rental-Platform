@@ -9,11 +9,13 @@ public interface ReviewInterface {
 
     List<Review> selectAllReviews();
 
-    Review getReviewById(String reviewId); // Change the method name
+    Review getReviewById(String reviewId); 
 
-    List<Review> getReviewsByListing(String listingId); // Keep the method name
+    List<Review> getReviewsByListing(String listingId);
 
-    int deleteReview(String reviewId); // Change the method name
+    int deleteReview(String reviewId);
+
+    int deleteReviewByListingId(Integer listingId);
 
     int updateReview(Review review);
 
@@ -21,7 +23,7 @@ public interface ReviewInterface {
 
     boolean authenticateReview(String email, String password);
 
-    int deleteReviewByReviewId(String reviewId);
-
     Optional<Review> selectReviewByReviewId(String reviewId);
+
+    Optional<Review> selectReviewByListingId(Integer Id);
 }

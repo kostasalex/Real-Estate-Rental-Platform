@@ -40,10 +40,10 @@ public class UserImpl implements UserInterface {
     }
 
     @Override
-    public Optional<User> selectUserByUserId(String userId) {
+    public Optional<User> selectUserByUserId(Integer userId) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?");) {
-            stmt.setString(1, userId);
+            stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     User user = mapResultSetToUser(rs);
@@ -78,11 +78,11 @@ public class UserImpl implements UserInterface {
     }
 
     @Override
-    public int updateUser(String userId, User user) {
+    public int updateUser(Integer userId, User user) {
         int rowsAffected = 0;
 
         // Fetch the current user details from the database
-        Optional<User> currentUserOpt = selectUserByUserId(userId.toString());
+        Optional<User> currentUserOpt = selectUserByUserId(userId);
         if (!currentUserOpt.isPresent()) {
             return 0; // User not found
         }
@@ -121,7 +121,7 @@ public class UserImpl implements UserInterface {
             stmt.setString(5, currentUser.getAddress());
             stmt.setString(6, currentUser.getPassword());
             stmt.setString(7, currentUser.getimage_url());
-            stmt.setString(8, userId);
+            stmt.setInt(8, userId);
 
             rowsAffected = stmt.executeUpdate();
 
@@ -134,12 +134,12 @@ public class UserImpl implements UserInterface {
     }
 
     @Override
-    public int deleteUserByUserId(String userId) {
+    public int deleteUserByUserId(Integer userId) {
         int rowsAffected = 0;
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement stmt = conn.prepareStatement("DELETE FROM users WHERE id = ?");) {
-            stmt.setString(1, userId);
+            stmt.setInt(1, userId);
 
             rowsAffected = stmt.executeUpdate();
         } catch (SQLException e) {

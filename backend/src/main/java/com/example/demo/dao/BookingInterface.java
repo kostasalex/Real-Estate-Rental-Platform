@@ -11,6 +11,8 @@ public interface BookingInterface {
 
     Optional<Booking> getBookingById(Integer id);
 
+    Optional<Booking> getBookingByListingId(Integer id);
+
     int updateBooking(Booking booking);
 
     int deleteBookingById(Integer id);
@@ -20,4 +22,6 @@ public interface BookingInterface {
     List<Booking> getBookings(Integer listingsId, Integer trueBooking);
 
     int deleteBookingsByHostId(Integer hostsId, Integer trueBooking);
+
+    int deleteBookingByListingId(Integer listingId);
 }

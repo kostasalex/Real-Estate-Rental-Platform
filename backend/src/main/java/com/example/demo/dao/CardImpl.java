@@ -379,4 +379,25 @@ public class CardImpl implements CardInterface {
 		return streets;
 	}
 
+	@Override
+	public List<Card> getListingsByUserId(String userId) {
+		List<Card> listings = new ArrayList<>();
+
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement("SELECT * FROM listings WHERE hosts_id = ?")) {
+			stmt.setString(1, userId);
+			try (ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
+					Card card = mapResultSetToCard(rs);
+					listings.add(card);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// Handle the exception as needed
+		}
+
+		return listings;
+	}
+
 }

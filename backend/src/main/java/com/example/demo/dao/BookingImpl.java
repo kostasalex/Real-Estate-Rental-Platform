@@ -55,6 +55,25 @@ public class BookingImpl implements BookingInterface {
     }
 
     @Override
+    public Optional<Booking> getBookingByListingId(Integer id) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM bookings WHERE listings_id = ?");) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Booking booking = mapResultSetToBooking(rs);
+                    return Optional.of(booking);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public int updateBooking(Booking booking) {
         int rowsAffected = 0;
 
@@ -78,22 +97,6 @@ public class BookingImpl implements BookingInterface {
         return rowsAffected;
     }
 
-    @Override
-    public int deleteBookingById(Integer id) {
-        int rowsAffected = 0;
-
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-                PreparedStatement stmt = conn.prepareStatement("DELETE FROM bookings WHERE id = ?");) {
-            stmt.setInt(1, id);
-
-            rowsAffected = stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Handle the exception as needed
-        }
-
-        return rowsAffected;
-    }
 
     @Override
     public int insertBooking(Booking booking) {
@@ -150,6 +153,23 @@ public class BookingImpl implements BookingInterface {
     }
 
     @Override
+    public int deleteBookingById(Integer id) {
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("DELETE FROM bookings WHERE id = ?");) {
+            stmt.setInt(1, id);
+
+            rowsAffected = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return rowsAffected;
+    }
+
+    @Override
     public int deleteBookingsByHostId(Integer hostsId, Integer trueBooking) {
         int rowsAffected = 0;
 
@@ -162,6 +182,23 @@ public class BookingImpl implements BookingInterface {
             rowsAffected = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        return rowsAffected;
+    }
+
+    @Override
+    public int deleteBookingByListingId(Integer id) {
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("DELETE FROM bookings WHERE listings_id = ? ");) {
+            stmt.setInt(1, id);
+
+            rowsAffected = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
         }
 
         return rowsAffected;
