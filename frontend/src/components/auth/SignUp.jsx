@@ -43,11 +43,15 @@ const SignUp = (props) => {
         msg = '\nHost Application Received. We will notify you as soon as it is approved.';
     }
     values.host_application = hostApplication;
-    const uploadedImageUrl = await handleUpload(photo);
+    
+    let uploadedImageUrl = photo.length > 0 ? await handleUpload(photo[0]) : null
+    const visitedListings = JSON.parse(localStorage.getItem('visitedListings')) || [];
+
     try {
         const requestBody = {
             ...values,
             image_url : uploadedImageUrl,
+            visited_listings: visitedListings,
         };
         // Send the form data to the backend and handle the response
         const response = await fetch('https://localhost:8443/register', {
@@ -59,6 +63,7 @@ const SignUp = (props) => {
         });
 
         if (response.ok) {
+            localStorage.removeItem('visitedListings'); // Clear the visited listings for the user after storing in the database
             const data = await response.json(); // Parse the response as JSON
             const userId = data.id; // Access the ID from the response
             navigate(location.state?.from || '/');

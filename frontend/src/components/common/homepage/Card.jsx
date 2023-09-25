@@ -2,14 +2,46 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Card(props) {
+
+	const loggedInUserId = localStorage.getItem('loggedInUserId')
+
 	const handleClick = () => {
 		localStorage.setItem("cardProps", JSON.stringify(props));
+	  
+		if (loggedInUserId) {
+		  // If user is logged in, send the card ID to backend
+		  fetch('https://localhost:8443/updateVisitedListings', {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+			  userId: loggedInUserId,
+			  cardId: props.id
+			})
+		  })
+		  .then(response => response.json())
+		  .then(data => {
+			console.log(data.message); // You can handle the success response here
+		  })
+		  .catch(error => {
+			console.error('Error updating visited listings:', error); // Handle errors here
+		  });
+		} else {
+		  // If user is a guest, store the card ID in local storage
+		  const visitedListings = JSON.parse(localStorage.getItem('visitedListings')) || [];
+		  if (!visitedListings.includes(props.id)) {// Maybe we can keep dublicates for better recomentation 
+			visitedListings.push(props.id);
+			localStorage.setItem('visitedListings', JSON.stringify(visitedListings));
+		  }
+		}
+	  
 		const newTab = window.open(`/cards/${props.id}`, "_blank");
-	};
+	  };
+	  
 
 	const navigate = useNavigate();
 	JSON.parse(localStorage.getItem("cardProps"));
-	const loggedInUserId = localStorage.getItem('loggedInUserId')
 	const isHost = props.hosts_id === loggedInUserId;
 	const handleEditListing = () => {
 		localStorage.setItem("cardProps", JSON.stringify(props));

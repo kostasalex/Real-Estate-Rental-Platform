@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Cards from '../Cards';
 import { useNavigate } from 'react-router-dom';
+import { Recommendation } from '/src/components';
 
 const HostHomepage = ({ hosts_id }) => {
   const [recentListings, setRecentListings] = useState([]);
@@ -41,6 +42,9 @@ const HostHomepage = ({ hosts_id }) => {
         <div className="justify-center flex">
           <Cards listings={myListings.slice(0, NUM_RESULTS)} />
         </div>
+      </div>
+      <div className="mt-2">
+        <Recommendation/>
       </div>
       <div className="mt-2">
         <div className="justify-center text-gray-900 text-3xl flex"> Recent Listings </div>

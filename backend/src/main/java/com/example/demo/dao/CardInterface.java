@@ -29,4 +29,5 @@ public interface CardInterface {
 
     List<Card> getListingsByUserId(String userId);
 
+    List<Card> getListingsByIds(List<String> ids);
 }

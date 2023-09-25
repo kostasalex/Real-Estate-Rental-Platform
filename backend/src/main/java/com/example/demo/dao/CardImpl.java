@@ -3,6 +3,7 @@ package com.example.demo.dao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -397,6 +398,31 @@ public class CardImpl implements CardInterface {
 			// Handle the exception as needed
 		}
 
+		return listings;
+	}
+
+	@Override
+	public List<Card> getListingsByIds(List<String> ids) {
+		List<Card> listings = new ArrayList<>();
+		String query = "SELECT * FROM listings WHERE id IN (" + String.join(", ", Collections.nCopies(ids.size(), "?"))
+				+ ")";
+
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(query)) {
+
+			for (int i = 0; i < ids.size(); i++) {
+				stmt.setString(i + 1, ids.get(i));
+			}
+
+			try (ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
+					Card card = mapResultSetToCard(rs);
+					listings.add(card);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return listings;
 	}
 

@@ -81,4 +81,10 @@ public class CardController {
         return ResponseEntity.ok(listings);
     }
 
+    @PostMapping("/getRecommendations")
+    public ResponseEntity<List<Card>> getRecommendations(@RequestBody Map<String, List<String>> request) {
+        List<String> ids = request.get("ids");
+        return ResponseEntity.ok(cardDao.getListingsByIds(ids));
+    }
+
 }

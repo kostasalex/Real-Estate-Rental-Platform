@@ -1,10 +1,14 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.Optional;
 
 import com.example.demo.model.User;
 import com.example.demo.dao.UserInterface;
@@ -84,6 +88,53 @@ public class UserController {
         }
     }
 
-    
+    @PostMapping("/updateVisitedListings")
+    public ResponseEntity<Map<String, Object>> updateVisitedListings(@RequestBody Map<String, Object> payload) {
+        Integer userId = Integer.parseInt(payload.get("userId").toString());
+        String cardId = payload.get("cardId").toString();
+
+        // Fetch the current user details from the database
+        Optional<User> currentUserOpt = userDao.selectUserByUserId(userId);
+        if (currentUserOpt.isPresent()) {
+            User currentUser = currentUserOpt.get();
+            String visitedListings = currentUser.getVisitedListings();
+
+            if (visitedListings == null || visitedListings.isEmpty()) {
+                visitedListings = cardId;
+            } else {
+                // Split the current listings, add the new one, and then join them again
+                List<String> listings = new ArrayList<>(Arrays.asList(visitedListings.split(",")));
+
+                if (!listings.contains(cardId)) {
+                    listings.add(cardId);
+                    visitedListings = String.join(",", listings);
+                }
+            }
+
+            int rowsAffected = userDao.updateUserVisitedListings(userId, visitedListings);
+            if (rowsAffected > 0) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("message", "Visited listings updated successfully");
+                return ResponseEntity.ok(response);
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+
+    @GetMapping("/visitedListings/{userId}")
+    public ResponseEntity<String> getVisitedListingsByUserId(@PathVariable("userId") Integer userId) {
+        Optional<User> userOpt = userDao.selectUserByUserId(userId);
+        if (userOpt.isPresent()) {
+            String visitedListings = userOpt.get().getVisitedListings();
+            if (visitedListings != null && !visitedListings.isEmpty()) {
+                return ResponseEntity.ok(visitedListings);
+            } else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No visited listings found.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+    }
 
 }
