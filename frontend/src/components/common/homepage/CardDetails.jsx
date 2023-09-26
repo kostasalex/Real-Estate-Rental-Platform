@@ -57,8 +57,11 @@ function CardDetails() {
 	const [description] = useState(cardProps.description);
 	const [accessingInfo] = useState(cardProps.accessing_info);
 	const [pricePerAdditionalGuest] = useState(cardProps.price_per_additional_guest);
+	const [hostsId] = useState(cardProps.hosts_id);
+	const [size] = useState(cardProps.size);
 
 	const [amenities] = useState(cardProps.amenities);
+	const [rentalRules] = useState(cardProps.rentalRules);
 
 	const [lng] = useState(cardProps.longitude);
 	const [lat] = useState(cardProps.latitude);
@@ -73,7 +76,17 @@ function CardDetails() {
 	const targetMaxRating = 5;
 	const convertedRating = (reviewScoresRating / maxRating) * targetMaxRating;
 	const roundedRating = Math.round(convertedRating * 10) / 10;
-	const amenitiesArray = amenities.replace(/[\{\}]/g, '').split(',');
+
+	let amenitiesArray = [];
+	if (amenities) {
+		amenitiesArray = amenities.replace(/[\{\}]/g, '').split(',');
+	}
+
+	let rentalRulesArray = [];
+	if (rentalRules) {
+		rentalRulesArray = rentalRules.replace(/[\{\}]/g, '').split(',');
+	}
+
 	const [totalPrice, setTotalPrice] = useState(0);
 
 	const openDialog = () => {
@@ -112,7 +125,6 @@ function CardDetails() {
 	const closeDialogHost = () => {
 		setIsOpenHost(false);
 	};
-	console.log(cardProps);
 	useEffect(() => {
 		if (arrivalDate && departureDate) {
 			const numDaysStayed = dayjs(departureDate).diff(arrivalDate, 'day');
@@ -121,7 +133,7 @@ function CardDetails() {
 			if (people === 1) {
 				setTotalPrice((numDaysStayed * basePrice).toFixed(2));
 			} else {
-				
+
 				setTotalPrice(((numDaysStayed * basePrice) + pricePerAdditionalGuest).toFixed(2));
 			}
 		}
@@ -143,35 +155,59 @@ function CardDetails() {
 	};
 
 
-
-	function postHandler() {
-		if (localStorage.getItem('loggedInUserType'))
-			Swal.fire({
-				title: 'Reservation successfull!',
-				text: 'The host is notified about your booking.',
-				icon: 'success',
-				confirmButtonText: 'OK'
-			}).then(() => {
-				navigate('/');
+	const postHandler = async (arrival, departure, cardId) => {
+		let user_id = parseInt(localStorage.getItem('loggedInUserId'));
+		const isoArrivalDate = arrival.toISOString().split("T")[0];
+		const isoDepartureDate = departure.toISOString().split("T")[0];
+		const booking = {
+			hosts_id: hostsId,
+			renters_id: user_id,
+			listings_id: cardId,
+			arrival_date: isoArrivalDate,
+			departure_date: isoDepartureDate,
+			trueBooking: 0,
+		};
+		console.log("booking: ", booking);
+		try {
+			const response = await fetch('https://localhost:8443/api/v1/insertBooking', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(booking),
 			});
-		else {
+
+			if (response.ok) {
+				// Handle a successful response here, e.g., show a success message and navigate to a confirmation page.
+				Swal.fire({
+					title: 'Reservation successful!',
+					text: 'The host is notified about your booking.',
+					icon: 'success',
+					confirmButtonText: 'OK',
+				}).then(() => {
+					// Navigate to a confirmation page or perform any other desired action.
+					navigate('/');
+				});
+			} else {
+				// Handle errors from the backend API, e.g., show an error message.
+				Swal.fire({
+					title: 'Reservation failed!',
+					text: 'There was an error processing your reservation. Please try again later.',
+					icon: 'error',
+					confirmButtonText: 'OK',
+				});
+			}
+		} catch (error) {
+			// Handle network errors, e.g., show a generic error message.
+			console.error('Error making reservation:', error);
 			Swal.fire({
-				title: 'Login or Sign Up',
-				html: 'You have to login or sign up before booking.',
-				icon: 'info',
-				confirmButtonText: 'Login',
-				showCancelButton: true,
-				cancelButtonText: 'Sign Up',
-				showCloseButton: true,
-			}).then((result) => {
-				if (result.isConfirmed) {
-					navigate('/login', { state: { from: location.pathname } });  // Pass current page as state
-				} else if (result.isDismissed && result.dismiss !== Swal.DismissReason.close) {
-					navigate('/signup', { state: { from: location.pathname } });  // Pass current page as state
-				}
+				title: 'Network Error',
+				text: 'There was a problem connecting to the server. Please check your internet connection and try again.',
+				icon: 'error',
+				confirmButtonText: 'OK',
 			});
 		}
-	}
+	};
 
 	useEffect(() => {
 		if (accommodates && arrivalDate && departureDate)
@@ -240,6 +276,7 @@ function CardDetails() {
 		}
 	};
 
+
 	return (
 
 		<div className="mx-auto lg:px-6 md:px-4 px-2 md:py-8 py-4">
@@ -277,7 +314,7 @@ function CardDetails() {
 					</div>
 					<div className="flex flex-col justify-center">
 						<p className="mb-4 text-3xl text-center md:text-left leading-none tracking-tight text-gray-900">About this place</p>
-						<p className="text-center md:text-left">{description}</p>
+						<p className="text-center md:text-left ">{description}</p>
 					</div>
 				</div>
 
@@ -326,11 +363,28 @@ function CardDetails() {
 					<div>
 						<hr className="mb-10"></hr>
 						<p className="text-center mb-10 text-2xl leading-none tracking-tight text-gray-900 sm:text-left">What this place offers</p>
-						<ul className="grid grid-cols-2 gap-0">
-							{amenitiesArray.map((amenity) => (
-								<li className="text-center mb-2" key={amenity}><p>{amenity.replace(/"/g, '')}</p></li>
-							))}
-						</ul>
+						<p className="text-center mb-10 text-xl leading-none tracking-tight text-gray-900 sm:text-left">Size: {size}</p>
+
+						{amenitiesArray && amenitiesArray.length > 0 && (
+							<div>
+								<p className="text-center mb-10 text-xl leading-none tracking-tight text-gray-900 sm:text-left">Amenities:</p>
+								<ul className="grid grid-cols-2 gap-0">
+									{amenitiesArray.map((amenity) => (
+										<li className="text-center mb-2" key={amenity}><p>{amenity.replace(/"/g, '')}</p></li>
+									))}
+								</ul>
+							</div>
+						)}
+						{rentalRulesArray && rentalRulesArray.length > 0 && (
+							<div>
+								<p className="text-center mb-10 text-xl leading-none tracking-tight text-gray-900 sm:text-left">Rental Rules:</p>
+								<ul className="grid grid-cols-2 gap-0">
+									{rentalRulesArray.map((rentalRule) => (
+										<li className="text-center mb-2" key={rentalRule}><p>{rentalRule.replace(/"/g, '')}</p></li>
+									))}
+								</ul>
+							</div>
+						)}
 					</div>
 
 					{/* Host */}
@@ -358,7 +412,17 @@ function CardDetails() {
 														{host.firstName}
 													</div>
 													<div className="mt-4">
-														<p className="text-center">{host.hostAbout}</p>
+														<p
+															className="text-center"
+															style={{
+																whiteSpace: "nowrap",
+																overflow: "hidden",
+																textOverflow: "ellipsis",
+																maxWidth: "200px",
+															}}
+														>
+															{host.hostAbout}
+														</p>
 														<p className="">Since: {host.hostSince}</p>
 														<p className="">Listings: {host.hostListingCount}</p>
 													</div>
@@ -493,6 +557,7 @@ function CardDetails() {
 												dateFormat="dd-MM-yyyy"
 												placeholderText="Select arrival date"
 												minDate={dayjs()} // To allow picking dates only after today
+												maxDate={departureDate}
 											/>
 										</div>
 
@@ -528,7 +593,7 @@ function CardDetails() {
 												text-blue0 
 												border duration-200 ease-in-out 
 												border-blue1 transition"
-												onClick={postHandler}>Reserve</button>)
+												onClick={() => postHandler(arrivalDate, departureDate, id)}>Reserve</button>)
 											:
 											(<button className="text-base  ml-2  flex justify-center px-4 py-2 rounded font-bold cursor-not-allowed 
 												bg-gray-50 

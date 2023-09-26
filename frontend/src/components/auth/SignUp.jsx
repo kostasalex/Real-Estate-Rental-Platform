@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import Swal from 'sweetalert2';
 import { useNavigate, useLocation } from 'react-router-dom';
 import backgroundImage from '/src/assets/auth.png';
-import { BsFillKeyFill } from 'react-icons/bs';
 import { FiSearch } from 'react-icons/fi';
 import { GoHome } from 'react-icons/go';
 import { signup } from '/src/assets/constants';
@@ -107,18 +106,6 @@ const SignUp = (props) => {
     
     
 
-    const handleAdmin = () => {
-        let userType = 'Admin';
-        const userData = {
-            id: values.id,
-            firstName: values.first_name,
-            userType: userType,
-            email: values.email
-          };
-        props.handleLogin(userData);
-        navigate('/');
-    };
-
     const { values, errors, isSubmitting, touched, handleBlur, handleChange, handleSubmit } = useFormik({
         initialValues: {
             email: signup.emailPlaceholder,
@@ -149,13 +136,7 @@ const SignUp = (props) => {
                             <h1 className="text-gray-500 ">{signup.selectAccountType}</h1>
 
                             <div className="mt-3 md:flex md:items-center md:-mx-2">
-                                <button
-                                    className="flex justify-center items-center w-full px-6 py-3 text-white bg-orange-500 hover:bg-orange-400 hover:shadow-xl rounded-md md:w-auto md:mx-2 focus:outline-none"
-                                    onClick={() => handleAdmin()}
-                                >
-                                    <BsFillKeyFill />
-                                    <span className="mx-2">Admin</span>
-                                </button>
+                                
 
                                 <label className="flex justify-center items-center w-full px-6 py-3 text-white bg-blue-500 rounded-md md:w-auto md:mx-2 focus:outline-none">
                                     <input type="checkbox" name="accountType" value="lookingForPlace" checked className="hidden" />
