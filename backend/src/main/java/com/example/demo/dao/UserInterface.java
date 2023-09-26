@@ -26,4 +26,6 @@ public interface UserInterface {
     public Map<String, Object> authenticateUser(String email, String password);
 
     int updateHostApplication(String userId, int hostApplication);
+
+    int updateUserVisitedListings(Integer userId, String visitedListings);
 }

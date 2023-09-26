@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Card from "./Card";
+import { Recommendation } from '/src/components';
+
+
 const Cards = () => {
   const [listings, setListings] = useState([]);
 
@@ -12,6 +15,7 @@ const Cards = () => {
 
   return (
     <div className="flex flex-col justify-center">
+       <Recommendation/>  
       <div className="flex flex-wrap">
         {listings.map((listing, index) => (
           <Card

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Cards from '../Cards';
-
+import { Recommendation } from '/src/components';
 
 const SeekerHomepage = () => {
     const [suggested, setSuggested] = React.useState([]);
@@ -21,6 +21,9 @@ const SeekerHomepage = () => {
 
     return (
         <div className='flex flex-col space-y-16'>
+            <div className='m-t-2 '>
+                <Recommendation/>  
+            </div>
             <div className='m-t-2 '>
                 <div className='justify-center text-gray-900 text-3xl flex'> Suggested Listings  </div>
                 <div className='justify-center flex'> <Cards listings = {suggested}/>  </div>

@@ -236,10 +236,11 @@ public class UserImpl implements UserInterface {
         String hostResponseTime = rs.getString("host_response_time");
         int hostResponseRate = rs.getInt("host_response_rate");
         int hostListingsCount = rs.getInt("host_listings_count");
+        String visitedListings = rs.getString("visited_listings");
 
         return new User(id, email, firstName, lastName, phoneNumber, address, password,
                 registerDate, isAdmin, hostApplication, imageUrl, hostSince, hostAbout, hostResponseTime,
-                hostResponseRate, hostListingsCount);
+                hostResponseRate, hostListingsCount, visitedListings);
     }
 
     @Override
@@ -289,6 +290,27 @@ public class UserImpl implements UserInterface {
         }
         System.out.print(users);
         return users;
+    }
+
+    @Override
+    public int updateUserVisitedListings(Integer userId, String visitedListings) {
+        int rowsAffected = 0;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(
+                        "UPDATE users SET visited_listings = ? WHERE id = ?");) {
+
+            stmt.setString(1, visitedListings);
+            stmt.setInt(2, userId);
+
+            rowsAffected = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return rowsAffected;
     }
 
 }

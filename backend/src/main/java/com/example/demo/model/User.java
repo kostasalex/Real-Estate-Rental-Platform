@@ -19,11 +19,12 @@ public class User {
     private String hostResponseTime;
     private int hostResponseRate;
     private int hostListingsCount;
+    private String visited_listings;
 
     public User(String id, String email, String first_name, String last_name, String phone_number,
             String address, String password, String register_date, String is_admin, String host_application,
             String image_url, LocalDate hostSince, String hostAbout, String hostResponseTime, int hostResponseRate,
-            int hostListingsCount) {
+            int hostListingsCount, String visitedListings) {
         this.id = id;
         this.email = email;
         this.first_name = first_name;
@@ -40,6 +41,7 @@ public class User {
         this.hostResponseTime = hostResponseTime;
         this.hostResponseRate = hostResponseRate;
         this.hostListingsCount = hostListingsCount;
+        this.visited_listings = visitedListings;
     }
 
     public String getId() {
@@ -108,6 +110,10 @@ public class User {
 
     public int getHostListingsCount() {
         return hostListingsCount;
+    }
+
+    public String getVisitedListings() {
+        return visited_listings;
     }
 
     public void setEmail(String email) {
