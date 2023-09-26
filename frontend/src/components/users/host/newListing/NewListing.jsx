@@ -124,7 +124,7 @@ const NewListing = ({ hosts_id }) => {
 
 	// Prices Step State
 	const [price, setprice] = useState(editMode ? cardProps.price : 0);
-	const [additionalGuestPrice, setAdditionalGuestPrice] = useState(cardProps.price_per_additional_guest ? cardProps.price_per_additional_guest : 0);
+	const [additionalGuestPrice, setAdditionalGuestPrice] = useState(editMode ? cardProps.price_per_additional_guest : 0);
 	const [accommodates, setaccommodates] = useState(editMode ? cardProps.accommodates : 1);
 
 	// Amenities Step State

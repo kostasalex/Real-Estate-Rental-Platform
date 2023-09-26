@@ -38,7 +38,7 @@ const Cards = () => {
             accessing_info = {listing.accessing_info}
             rentalRules = {listing.rentalRules}
             size = {listing.size}
-            minimum_nights = {listings.minimum_nights}
+            minimum_nights = {listing.minimum_nights}
             price_per_additional_guest = {listing.price_per_additional_guest}
           />
         ))}

@@ -56,6 +56,7 @@ function CardDetails() {
 	const [street] = useState(cardProps.street);
 	const [description] = useState(cardProps.description);
 	const [accessingInfo] = useState(cardProps.accessing_info);
+	const [pricePerAdditionalGuest] = useState(cardProps.price_per_additional_guest);
 
 	const [amenities] = useState(cardProps.amenities);
 
@@ -111,7 +112,7 @@ function CardDetails() {
 	const closeDialogHost = () => {
 		setIsOpenHost(false);
 	};
-
+	console.log(cardProps);
 	useEffect(() => {
 		if (arrivalDate && departureDate) {
 			const numDaysStayed = dayjs(departureDate).diff(arrivalDate, 'day');
@@ -120,8 +121,8 @@ function CardDetails() {
 			if (people === 1) {
 				setTotalPrice((numDaysStayed * basePrice).toFixed(2));
 			} else {
-				const additionalPrice = (people - 1) * 0.4 * basePrice;
-				setTotalPrice(((numDaysStayed * basePrice) + additionalPrice).toFixed(2));
+				
+				setTotalPrice(((numDaysStayed * basePrice) + pricePerAdditionalGuest).toFixed(2));
 			}
 		}
 	}, [arrivalDate, departureDate, people, price]);
@@ -192,7 +193,7 @@ function CardDetails() {
 	}, []);
 
 
-	console.log(cardProps.id,cardProps.hosts_id)
+	const mediumUrls = cardProps.mediumUrl.split(',');
 	const [question, setQuestion] = useState('');
 	const [questions, setQuestions] = useState([]);
 
@@ -282,36 +283,32 @@ function CardDetails() {
 
 				{/* Rest of images */}
 				<div className="block md:grid grid-cols-5 gap-4">
+					{/* Map through the array of image URLs and display them */}
+					{mediumUrls.map((imageUrl, index) => (
+						<div key={index}>
+							<button onClick={openDialog}>
+								<img className="h-auto max-w-full rounded-lg hover:opacity-60" src={imageUrl} alt="" />
+							</button>
+						</div>
+					))}
 					<div>
-						<button onClick={openDialog}><img className="h-auto max-w-full rounded-lg hover:opacity-60" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg" alt="" /></button>
-					</div>
-					<div>
-						<button onClick={openDialog}><img className="h-auto max-w-full rounded-lg hover:opacity-60" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg" alt="" /></button>
-					</div>
-					<div>
-						<button onClick={openDialog}><img className="h-auto max-w-full rounded-lg hover:opacity-60" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg" alt="" /></button>
-					</div>
-					<div>
-						<button onClick={openDialog}><img className="h-auto max-w-full rounded-lg hover:opacity-60" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg" alt="" /></button>
-					</div>
-					<div>
-						<button onClick={openDialog}><img className="mb-5 h-auto max-w-full rounded-lg hover:opacity-60" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg" alt="" /></button>
+						<button onClick={openDialog}><img className="mb-5 h-auto max-w-full rounded-lg hover:opacity-60" src={mediumUrls[2]} alt="" /></button>
 						<div>
 							<button onClick={openDialog} className="float-right flex flex-row  items-center  justify-end shadow-xl xl:mt-0 mt-20 bg-blue1 rounded-xl px-2 py-1 transition duration-300 transform hover:translate-y--2 text-white text-lg duration-300 transform hover:translate-y-2">See all photos</button>
 							{isOpen && (
 								<Dialog onClose={closeDialog}>
 									<ul className="">
 										<li>
-											<img className="mb-10 rounded-lg" src={thumbnailUrl} alt="" />
+											<img className="my-10 rounded-lg" src={thumbnailUrl} alt="" />
 										</li>
 										<li>
-											<img className="my-10 rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg" alt="" />
+											<img className="my-10 rounded-lg" src={mediumUrls[0]} alt="" />
 										</li>
 										<li>
-											<img className="my-10 rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg" alt="" />
+											<img className="my-10 rounded-lg" src={mediumUrls[1]} alt="" />
 										</li>
 										<li>
-											<img className="my-10 rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg" alt="" />
+											<img className="my-10 rounded-lg" src={mediumUrls[2]} alt="" />
 										</li>
 									</ul>
 								</Dialog>
