@@ -39,7 +39,6 @@ function Card(props) {
 		const newTab = window.open(`/cards/${props.id}`, "_blank");
 	  };
 	  
-
 	const navigate = useNavigate();
 	JSON.parse(localStorage.getItem("cardProps"));
 	const isHost = props.hosts_id === loggedInUserId;

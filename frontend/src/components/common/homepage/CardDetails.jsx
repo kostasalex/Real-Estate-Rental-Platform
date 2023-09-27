@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import { FaUser } from "react-icons/fa";
 import { useNavigate, useLocation } from 'react-router-dom';
 import dayjs from 'dayjs'; // Import dayjs
+import { Rating } from "@material-tailwind/react";
 
 function CardDetails() {
 
@@ -18,6 +19,7 @@ function CardDetails() {
 	const [arrivalDate, setArrivalDate] = useState(null);
 	const [departureDate, setDepartureDate] = useState(null);
 	const [numDaysStayed, setNumDaysStayed] = useState(0);
+	const [newReview, setNewReview] = useState(null)
 
 	useEffect(() => {
 		if (arrivalDate && departureDate) {
@@ -57,9 +59,9 @@ function CardDetails() {
 	const [description] = useState(cardProps.description);
 	const [accessingInfo] = useState(cardProps.accessing_info);
 	const [pricePerAdditionalGuest] = useState(cardProps.price_per_additional_guest);
+	const [minimumNights] = useState(cardProps.minimum_nights);
 	const [hostsId] = useState(cardProps.hosts_id);
 	const [size] = useState(cardProps.size);
-
 	const [amenities] = useState(cardProps.amenities);
 	const [rentalRules] = useState(cardProps.rentalRules);
 
@@ -95,6 +97,79 @@ function CardDetails() {
 
 	const closeDialog = () => {
 		setIsOpen(false);
+	};
+
+	const [selectedRating, setSelectedRating] = useState(0); // Initialize with 0 stars
+	const postReview = async (cardId) => {
+		// Check if the review is not empty
+		if (newReview.trim() === '') {
+			Swal.fire({
+				title: 'Review must not be empty',
+				html: 'You have to write a review before posting it.',
+				icon: 'info',
+				confirmButtonText: 'Review',
+				showCancelButton: false,
+				cancelButtonText: 'Close',
+				showCloseButton: true,
+			})
+			return;
+		}
+		const currentDate = new Date();
+		const year = currentDate.getFullYear();
+		// Add 1 to the month because getMonth() returns 0-based month (0 = January)
+		const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Ensure 2 digits
+		const day = currentDate.getDate().toString().padStart(2, '0'); // Ensure 2 digits
+
+		const formattedDate = `${year}-${month}-${day}`;
+
+		let user_id = parseInt(localStorage.getItem('loggedInUserId'));
+		const review = {
+			hostId: hostsId,
+			comment: newReview,
+			renterId: user_id,
+			listingId: cardId,
+			date: formattedDate,
+			rating: selectedRating
+		};
+		console.log("review: ", review);
+		try {
+			const response = await fetch('https://localhost:8443/reviews', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(review),
+			});
+
+			if (response.ok) {
+				// Handle a successful response here, e.g., show a success message and navigate to a confirmation page.
+				Swal.fire({
+					title: 'Review posted successfuly!',
+					text: 'The host is notified about your review.',
+					icon: 'success',
+					confirmButtonText: 'OK',
+				}).then(() => {
+					window.location.reload()
+				});
+			} else {
+				// Handle errors from the backend API, e.g., show an error message.
+				Swal.fire({
+					title: 'Review failed!',
+					text: 'There was an error processing your review. Please try again later.',
+					icon: 'error',
+					confirmButtonText: 'OK',
+				});
+			}
+		} catch (error) {
+			// Handle network errors, e.g., show a generic error message.
+			console.error('Error making review:', error);
+			Swal.fire({
+				title: 'Network Error',
+				text: 'There was a problem connecting to the server. Please check your internet connection and try again.',
+				icon: 'error',
+				confirmButtonText: 'OK',
+			});
+		}
 	};
 
 
@@ -156,57 +231,114 @@ function CardDetails() {
 
 
 	const postHandler = async (arrival, departure, cardId) => {
-		let user_id = parseInt(localStorage.getItem('loggedInUserId'));
-		const isoArrivalDate = arrival.toISOString().split("T")[0];
-		const isoDepartureDate = departure.toISOString().split("T")[0];
-		const booking = {
-			hosts_id: hostsId,
-			renters_id: user_id,
-			listings_id: cardId,
-			arrival_date: isoArrivalDate,
-			departure_date: isoDepartureDate,
-			trueBooking: 0,
-		};
-		console.log("booking: ", booking);
-		try {
-			const response = await fetch('https://localhost:8443/api/v1/insertBooking', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(booking),
-			});
-
-			if (response.ok) {
-				// Handle a successful response here, e.g., show a success message and navigate to a confirmation page.
-				Swal.fire({
-					title: 'Reservation successful!',
-					text: 'The host is notified about your booking.',
-					icon: 'success',
-					confirmButtonText: 'OK',
-				}).then(() => {
-					// Navigate to a confirmation page or perform any other desired action.
-					navigate('/');
-				});
-			} else {
-				// Handle errors from the backend API, e.g., show an error message.
+		if (localStorage.getItem('loggedInUserType')) {
+			let user_id = parseInt(localStorage.getItem('loggedInUserId'));
+			const isoArrivalDate = arrival.toISOString().split("T")[0];
+			const isoDepartureDate = departure.toISOString().split("T")[0];
+			const availabilityCheck = {
+				listings_id: cardId,
+				arrival_date: isoArrivalDate,
+				departure_date: isoDepartureDate,
+			};
+			const numNights = dayjs(departure).diff(arrival, 'day');
+			console.log(numNights + " " + minimumNights);
+			if (numNights < minimumNights) {
 				Swal.fire({
 					title: 'Reservation failed!',
-					text: 'There was an error processing your reservation. Please try again later.',
+					text: `The minimum stay for this property is ${minimumNights} nights.`,
+					icon: 'error',
+					confirmButtonText: 'OK',
+				});
+				return; // Don't proceed with the reservation.
+			}
+			try {
+				// Check availability first
+				const availabilityResponse = await fetch('https://localhost:8443/api/v1/bookings/checkAvailability', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(availabilityCheck),
+				});
+
+
+				if (!availabilityResponse.ok) {
+					// Handle the case where the dates are not available.
+					Swal.fire({
+						title: 'Reservation failed!',
+						text: 'The selected dates are not available for booking.',
+						icon: 'error',
+						confirmButtonText: 'OK',
+					});
+					return; // Don't proceed with the reservation.
+				}
+
+				// If the dates are available, proceed with the reservation.
+				const booking = {
+					hosts_id: hostsId,
+					renters_id: user_id,
+					listings_id: cardId,
+					arrival_date: isoArrivalDate,
+					departure_date: isoDepartureDate,
+					trueBooking: 0,
+				};
+				const response = await fetch('https://localhost:8443/api/v1/insertBooking', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(booking),
+				});
+
+				if (response.ok) {
+					// Handle a successful response here, e.g., show a success message and navigate to a confirmation page.
+					Swal.fire({
+						title: 'Reservation successful!',
+						text: 'The host is notified about your booking.',
+						icon: 'success',
+						confirmButtonText: 'OK',
+					}).then(() => {
+						// Navigate to a confirmation page or perform any other desired action.
+						//window.location.reload();
+					});
+				} else {
+					// Handle errors from the backend API, e.g., show an error message.
+					Swal.fire({
+						title: 'Reservation failed!',
+						text: 'There was an error processing your reservation. Please try again later.',
+						icon: 'error',
+						confirmButtonText: 'OK',
+					});
+				}
+			} catch (error) {
+				// Handle network errors, e.g., show a generic error message.
+				console.error('Error making reservation:', error);
+				Swal.fire({
+					title: 'Network Error',
+					text: 'There was a problem connecting to the server. Please check your internet connection and try again.',
 					icon: 'error',
 					confirmButtonText: 'OK',
 				});
 			}
-		} catch (error) {
-			// Handle network errors, e.g., show a generic error message.
-			console.error('Error making reservation:', error);
+
+		} else {
 			Swal.fire({
-				title: 'Network Error',
-				text: 'There was a problem connecting to the server. Please check your internet connection and try again.',
-				icon: 'error',
-				confirmButtonText: 'OK',
+				title: 'Login or Sign Up',
+				html: 'You have to login or sign up before you can contact the host.',
+				icon: 'info',
+				confirmButtonText: 'Login',
+				showCancelButton: true,
+				cancelButtonText: 'Sign Up',
+				showCloseButton: true,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					navigate('/login', { state: { from: location.pathname } });  // Pass current page as state
+				} else if (result.isDismissed && result.dismiss !== Swal.DismissReason.close) {
+					navigate('/signup', { state: { from: location.pathname } });  // Pass current page as state
+				}
 			});
 		}
+
 	};
 
 	useEffect(() => {
@@ -637,6 +769,36 @@ function CardDetails() {
 				<div>
 					<p className="text-xl leading-none tracking-tight text-center text-gray-900">Reviews about this place</p>
 				</div>
+				<div className="">
+					<div>
+						<textarea
+							maxLength={300}
+							id="description"
+							rows="4"
+							className="block w-full p-2.5 py-5 mt-5 w-96 text-sm text-blue1 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+							placeholder="Write your Review about this place!"
+							value={newReview}
+							onChange={(e) => setNewReview(e.target.value)}
+						></textarea>
+						<p className="text-md leading-none text-gray-900">Your Rating</p>
+						<Rating
+							unratedColor="blue"
+							ratedColor="blue"
+							value={selectedRating}
+							onChange={(value) => setSelectedRating(value)}
+						/>
+
+						<button
+							className="block mt-2 bg-blue1 text-white px-4 py-2 rounded-lg hover:bg-blue2 focus:outline-none"
+							onClick={() => postReview(id)}
+						>
+							Post Review
+						</button>
+
+					</div>
+
+				</div>
+				{/* Reviews */}
 				<div className="md:grid md:grid-cols-2 md:gap-4">
 					{reviews.map(({ id, comment, date, hostId, listingId, rating, renterId }) => (
 						<div key={id} className=" flex items-center justify-center">

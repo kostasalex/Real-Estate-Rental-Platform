@@ -97,7 +97,6 @@ public class BookingImpl implements BookingInterface {
         return rowsAffected;
     }
 
-
     @Override
     public int insertBooking(Booking booking) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
@@ -202,6 +201,51 @@ public class BookingImpl implements BookingInterface {
         }
 
         return rowsAffected;
+    }
+
+    @Override
+    public List<Booking> checkAvailability(Integer listingsId, java.util.Date arrivalDate,
+            java.util.Date departureDate) {
+        List<Booking> overlappingBookings = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(
+                        "SELECT * FROM bookings WHERE listings_id = ? " +
+                                "AND ((arrival_date <= ? AND departure_date >= ?) " +
+                                "OR (arrival_date <= ? AND departure_date >= ?))")) {
+            stmt.setInt(1, listingsId);
+
+            // Convert java.util.Date to java.sql.Date here
+            stmt.setDate(2, new java.sql.Date(departureDate.getTime()));
+            stmt.setDate(3, new java.sql.Date(arrivalDate.getTime()));
+            stmt.setDate(4, new java.sql.Date(arrivalDate.getTime()));
+            stmt.setDate(5, new java.sql.Date(departureDate.getTime()));
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Booking booking = mapResultSetToBooking(rs);
+                    overlappingBookings.add(booking);
+                }
+            }
+
+            // Check if there are overlapping bookings
+            if (!overlappingBookings.isEmpty()) {
+                // There are overlapping bookings, take action to block the reservation.
+                // You can throw an exception, return an error message, or handle it as needed.
+                throw new ReservationBlockedException("Reservation is blocked due to overlapping bookings.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
+
+        return overlappingBookings;
+    }
+
+    public class ReservationBlockedException extends RuntimeException {
+        public ReservationBlockedException(String message) {
+            super(message);
+        }
     }
 
 }

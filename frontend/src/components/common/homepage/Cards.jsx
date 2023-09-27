@@ -21,7 +21,7 @@ const Cards = () => {
 			})
 			.catch((error) => console.error(error));
 	}, []);
-
+	console.log(listings)
 	useEffect(() => {
 		// Calculate the start and end indices for the current page
 		const start = (currentPage - 1) * MAX_RESULTS_PER_PAGE;

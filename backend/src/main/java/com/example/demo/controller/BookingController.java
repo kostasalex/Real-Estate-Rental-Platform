@@ -3,9 +3,14 @@ package com.example.demo.controller;
 import com.example.demo.dao.BookingInterface;
 import com.example.demo.model.Booking;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 @RestController
 @CrossOrigin(origins = "https://localhost:8443")
@@ -62,6 +67,38 @@ public class BookingController {
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting bookings.");
         }
+    }
+
+    @PostMapping("/api/v1/bookings/checkAvailability")
+    public List<Booking> checkAvailability(@RequestBody Map<String, Object> availabilityCheck) {
+        // Retrieve values as Strings
+        String listingsIdString = (String) availabilityCheck.get("listings_id");
+        String arrivalDateString = (String) availabilityCheck.get("arrival_date");
+        String departureDateString = (String) availabilityCheck.get("departure_date");
+
+        // Parse listings_id to Integer
+        Integer listingsId = null;
+        try {
+            listingsId = Integer.parseInt(listingsIdString);
+        } catch (NumberFormatException e) {
+            // Handle the parsing exception if needed
+            e.printStackTrace();
+        }
+
+        // Convert date strings to Date objects
+        Date arrivalDate = null;
+        Date departureDate = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            arrivalDate = dateFormat.parse(arrivalDateString);
+            departureDate = dateFormat.parse(departureDateString);
+        } catch (ParseException e) {
+            // Handle the parsing exception if needed
+            e.printStackTrace();
+        }
+
+        return bookingDao.checkAvailability(listingsId, arrivalDate, departureDate);
     }
 
 }

@@ -2,6 +2,8 @@ package com.example.demo.dao;
 
 import com.example.demo.model.Booking;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,4 +26,7 @@ public interface BookingInterface {
     int deleteBookingsByHostId(Integer hostsId, Integer trueBooking);
 
     int deleteBookingByListingId(Integer listingId);
+
+    List<Booking> checkAvailability(Integer listingId, Date arrivalDate, Date departureDate);
+
 }
