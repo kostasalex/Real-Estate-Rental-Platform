@@ -173,10 +173,49 @@ function CardDetails() {
 	};
 
 
-	const openDialogHost = () => {
-		if (localStorage.getItem('loggedInUserType'))
+	const openDialogHost = async () => {
+		if (localStorage.getItem('loggedInUserType')) {
 			setIsOpenHost(true);
-		else {
+			let user_id = parseInt(localStorage.getItem('loggedInUserId'));
+
+			try {
+				const response = await fetch(`https://localhost:8443/messages/user/${user_id}`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				});
+
+				if (response.ok) {
+					// Parse the response JSON
+					const responseData = await response.json();
+
+					// Extract the content from each message and update the questions state
+					const extractedQuestions = responseData.map(message => message.content);
+
+					setQuestions(extractedQuestions);
+					setQuestion('');
+				} else {
+					// Handle the case where the response is not OK (e.g., error handling)
+					console.error('Error sending message:', response.statusText);
+					Swal.fire({
+						title: 'Error',
+						text: 'Failed to send message. Please try again later.',
+						icon: 'error',
+						confirmButtonText: 'OK',
+					});
+				}
+			} catch (error) {
+				console.error('Error sending message:', error);
+				Swal.fire({
+					title: 'Error',
+					text: 'Failed to send message. Please try again later.',
+					icon: 'error',
+					confirmButtonText: 'OK',
+				});
+			}
+		} else {
+			// Handle the case where the user is not logged in
 			Swal.fire({
 				title: 'Login or Sign Up',
 				html: 'You have to login or sign up before you can contact the host.',
@@ -187,13 +226,14 @@ function CardDetails() {
 				showCloseButton: true,
 			}).then((result) => {
 				if (result.isConfirmed) {
-					navigate('/login', { state: { from: location.pathname } });  // Pass current page as state
+					navigate('/login', { state: { from: location.pathname } });
 				} else if (result.isDismissed && result.dismiss !== Swal.DismissReason.close) {
-					navigate('/signup', { state: { from: location.pathname } });  // Pass current page as state
+					navigate('/signup', { state: { from: location.pathname } });
 				}
 			});
 		}
 	};
+
 
 
 	const today = dayjs(); // Create a dayjs object for today's date
@@ -233,15 +273,22 @@ function CardDetails() {
 	const postHandler = async (arrival, departure, cardId) => {
 		if (localStorage.getItem('loggedInUserType')) {
 			let user_id = parseInt(localStorage.getItem('loggedInUserId'));
-			const isoArrivalDate = arrival.toISOString().split("T")[0];
-			const isoDepartureDate = departure.toISOString().split("T")[0];
+
+			const newArrival = new Date(arrival);
+			newArrival.setDate(newArrival.getDate() + 1); // Add one more day
+
+			const newDeparture = new Date(departure);
+			newDeparture.setDate(newDeparture.getDate() + 1); // Add one more day
+
+			const isoArrivalDate = newArrival.toISOString().split("T")[0];
+			const isoDepartureDate = newDeparture.toISOString().split("T")[0];
 			const availabilityCheck = {
 				listings_id: cardId,
 				arrival_date: isoArrivalDate,
 				departure_date: isoDepartureDate,
 			};
 			const numNights = dayjs(departure).diff(arrival, 'day');
-			console.log(numNights + " " + minimumNights);
+			console.log("departureDate " + departureDate + " isoDepartureDate " + isoDepartureDate);
 			if (numNights < minimumNights) {
 				Swal.fire({
 					title: 'Reservation failed!',
@@ -364,7 +411,7 @@ function CardDetails() {
 	const mediumUrls = cardProps.mediumUrl.split(',');
 	const [question, setQuestion] = useState('');
 	const [questions, setQuestions] = useState([]);
-
+	console.log(questions);
 	const handleSubmit = async (e) => {
 		//console.log(hostsId)
 		e.preventDefault();
@@ -373,7 +420,7 @@ function CardDetails() {
 			setQuestion('');
 		}
 		try {
-			const response = await fetch('https://localhost:8443/api/v1/messages', {
+			const response = await fetch('https://localhost:8443/messages', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -392,7 +439,7 @@ function CardDetails() {
 					icon: 'success',
 					confirmButtonText: 'OK',
 				}).then(() => {
-					//navigate('/');
+					window.location.reload()
 				});
 			} else {
 				throw new Error('Failed to send message');
@@ -566,7 +613,7 @@ function CardDetails() {
 							</button>
 							{isOpenHost && (
 								<Dialog onClose={closeDialogHost}> {/* Pass closeDialogHost as onClose prop */}
-									<div className="block sm:grid sm:grid-cols-2 gap-2">
+									<div className="block">
 										<div className="md:flex-shrink-0">
 											<img
 												className="h-full w-full object-cover "
@@ -645,6 +692,7 @@ function CardDetails() {
 									<span className="font-semibold text-xl text-gray-900 ml-1">{price}</span>
 								</div>
 								<p className="mt-4 text-gray-500">{accommodates} guests · {bedrooms} bedroom(s) · {beds} bed(s) · {bathrooms} bathroom(s)</p>
+								<p className="mt-4 text-gray-500">Minimum Nights: {minimumNights}</p>
 
 								<div className="mt-4">
 									{/* Accommodates */}

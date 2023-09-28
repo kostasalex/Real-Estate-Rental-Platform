@@ -194,7 +194,7 @@ function Card(props) {
 
 							<div className="p-4">
 								<div className="pb-6">
-									<p className="overflow-hidden text-lg hover:text-blue-600 font-medium duration-500 ease-in-out">{props.street}</p>
+									<p className="overflow-hidden text-lg hover:text-blue-600 font-medium duration-500 ease-in-out">{props.name}</p>
 								</div>
 
 								<ul className="box-border flex list-none items-center border-t border-b border-solid border-gray-200 px-0 py-6">

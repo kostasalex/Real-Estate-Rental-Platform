@@ -52,29 +52,38 @@ const Cards = () => {
 		<div className="flex flex-col justify-center">
 			<Recommendation />
 
-			<div className="flex flex-col items-center border-t bg-white px-5 py-5 sm:flex-row sm:justify-between">
-				<span className="text-xs text-gray-600 sm:text-sm">
-					Showing {(currentPage - 1) * MAX_RESULTS_PER_PAGE + 1} to {Math.min(listings.length, currentPage * MAX_RESULTS_PER_PAGE)} of {listings.length} Entries
-				</span>
-				<div className="mt-2 inline-flex sm:mt-0">
-					{currentPage > 1 && (
-						<button
-							className="mr-2 h-12 w-12 rounded-full border text-sm font-semibold text-gray-600 transition duration-150 hover:bg-blue0"
-							onClick={prevPageHandle}
-						>
-							Prev
-						</button>
-					)}
-					{totalPages() > currentPage && (
-						<button
-							onClick={nextPageHandle}
-							className="h-12 w-12 rounded-full border text-sm font-semibold text-gray-600 transition duration-150 hover:bg-blue0"
-						>
-							Next
-						</button>
-					)}
-				</div>
-			</div>
+			{totalPages() > 0 && (
+				<div className="mt-6 sm:flex flex-col sm:items-center sm:justify-between ">
+					<div className="text-sm text-gray-500 mb-5 mr-2">
+						Page <span className="font-medium text-gray-700 ">
+							{currentPage} from {totalPages()}</span>
+					</div>
+					<div className="flex justify-center items-center mt-4 gap-x-4 sm:mt-0">
+						{currentPage > 1 && (<div
+							onClick={() => prevPageHandle()}
+							className="cursor-pointer bg-cyan1 hover:bg-blue1 hover:text-white flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2 ">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5 rtl:-scale-x-100">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+							</svg>
+
+							<span>
+								Previous
+							</span>
+						</div>)}
+
+						{totalPages() > currentPage && (<div
+							onClick={() => nextPageHandle()}
+							className="cursor-pointer bg-cyan1 hover:bg-blue1 hover:text-white flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2">
+							<span>
+								Next
+							</span>
+
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5 rtl:-scale-x-100">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+							</svg>
+						</div>)}
+					</div>
+				</div>)}
 
 			{/* Listings */}
 			<div className="flex flex-wrap">
@@ -108,29 +117,38 @@ const Cards = () => {
 					/>
 				))}
 			</div>
-			<div className="flex flex-col items-center border-t bg-white px-5 py-5 sm:flex-row sm:justify-between">
-				<span className="text-xs text-gray-600 sm:text-sm">
-					Showing {(currentPage - 1) * MAX_RESULTS_PER_PAGE + 1} to {Math.min(listings.length, currentPage * MAX_RESULTS_PER_PAGE)} of {listings.length} Entries
-				</span>
-				<div className="mt-2 inline-flex sm:mt-0">
-					{currentPage > 1 && (
-						<button
-							className="mr-2 h-12 w-12 rounded-full border text-sm font-semibold text-gray-600 transition duration-150 hover:bg-blue0"
-							onClick={prevPageHandle}
-						>
-							Prev
-						</button>
-					)}
-					{totalPages() > currentPage && (
-						<button
-							onClick={nextPageHandle}
-							className="h-12 w-12 rounded-full border text-sm font-semibold text-gray-600 transition duration-150 hover:bg-blue0"
-						>
-							Next
-						</button>
-					)}
-				</div>
-			</div>
+			{totalPages() > 0 && (
+				<div className="mt-6 sm:flex flex-col sm:items-center sm:justify-between ">
+					<div className="text-sm text-gray-500 mb-5 mr-2">
+						Page <span className="font-medium text-gray-700 ">
+							{currentPage} from {totalPages()}</span>
+					</div>
+					<div className="flex justify-center items-center mt-4 gap-x-4 sm:mt-0">
+						{currentPage > 1 && (<div
+							onClick={() => prevPageHandle()}
+							className="cursor-pointer bg-cyan1 hover:bg-blue1 hover:text-white flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2 ">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5 rtl:-scale-x-100">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+							</svg>
+
+							<span>
+								Previous
+							</span>
+						</div>)}
+
+						{totalPages() > currentPage && (<div
+							onClick={() => nextPageHandle()}
+							className="cursor-pointer bg-cyan1 hover:bg-blue1 hover:text-white flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2">
+							<span>
+								Next
+							</span>
+
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5 rtl:-scale-x-100">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+							</svg>
+						</div>)}
+					</div>
+				</div>)}
 		</div>
 	);
 };
