@@ -100,73 +100,103 @@ function CardDetails() {
 	};
 
 	const [selectedRating, setSelectedRating] = useState(0); // Initialize with 0 stars
+
 	const postReview = async (cardId) => {
-		// Check if the review is not empty
-		if (newReview.trim() === '') {
+		// Check if the user has a booking for the listing
+		const user_id = parseInt(localStorage.getItem('loggedInUserId'));
+		console.log(cardId);
+		const response = await fetch(`https://localhost:8443/api/v1/bookings/byListing/${cardId}?trueBooking=0`)
+
+		if (!response.ok) {
+			// Handle the case where the request to check bookings failed
+			console.error('Error checking bookings:', response.statusText);
 			Swal.fire({
-				title: 'Review must not be empty',
-				html: 'You have to write a review before posting it.',
-				icon: 'info',
-				confirmButtonText: 'Review',
-				showCancelButton: false,
-				cancelButtonText: 'Close',
-				showCloseButton: true,
-			})
+				title: 'Error',
+				text: 'There was an error checking your bookings. Please try again later.',
+				icon: 'error',
+				confirmButtonText: 'OK',
+			});
 			return;
 		}
-		const currentDate = new Date();
-		const year = currentDate.getFullYear();
-		// Add 1 to the month because getMonth() returns 0-based month (0 = January)
-		const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Ensure 2 digits
-		const day = currentDate.getDate().toString().padStart(2, '0'); // Ensure 2 digits
 
-		const formattedDate = `${year}-${month}-${day}`;
+		const data = await response.json();
 
-		let user_id = parseInt(localStorage.getItem('loggedInUserId'));
-		const review = {
-			hostId: hostsId,
-			comment: newReview,
-			renterId: user_id,
-			listingId: cardId,
-			date: formattedDate,
-			rating: selectedRating
-		};
-		console.log("review: ", review);
-		try {
-			const response = await fetch('https://localhost:8443/reviews', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(review),
-			});
-
-			if (response.ok) {
-				// Handle a successful response here, e.g., show a success message and navigate to a confirmation page.
+		if (data.hasBooking) {
+			// User has a booking for the listing, proceed with posting the review
+			if (newReview.trim() === '') {
 				Swal.fire({
-					title: 'Review posted successfuly!',
-					text: 'The host is notified about your review.',
-					icon: 'success',
-					confirmButtonText: 'OK',
-				}).then(() => {
-					window.location.reload()
+					title: 'Review must not be empty',
+					html: 'You have to write a review before posting it.',
+					icon: 'info',
+					confirmButtonText: 'Review',
+					showCancelButton: false,
+					cancelButtonText: 'Close',
+					showCloseButton: true,
 				});
-			} else {
-				// Handle errors from the backend API, e.g., show an error message.
+				return;
+			}
+			const currentDate = new Date();
+			const year = currentDate.getFullYear();
+			// Add 1 to the month because getMonth() returns 0-based month (0 = January)
+			const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Ensure 2 digits
+			const day = currentDate.getDate().toString().padStart(2, '0'); // Ensure 2 digits
+
+			const formattedDate = `${year}-${month}-${day}`;
+
+			let user_id = parseInt(localStorage.getItem('loggedInUserId'));
+			const review = {
+				hostId: hostsId,
+				comment: newReview,
+				renterId: user_id,
+				listingId: cardId,
+				date: formattedDate,
+				rating: selectedRating
+			};
+
+			try {
+				const response = await fetch('https://localhost:8443/reviews', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(review),
+				});
+
+				if (response.ok) {
+					// Handle a successful response here, e.g., show a success message and navigate to a confirmation page.
+					Swal.fire({
+						title: 'Review posted successfuly!',
+						text: 'The host is notified about your review.',
+						icon: 'success',
+						confirmButtonText: 'OK',
+					}).then(() => {
+						window.location.reload()
+					});
+				} else {
+					// Handle errors from the backend API, e.g., show an error message.
+					Swal.fire({
+						title: 'Review failed!',
+						text: 'There was an error processing your review. Please try again later.',
+						icon: 'error',
+						confirmButtonText: 'OK',
+					});
+				}
+			} catch (error) {
+				// Handle network errors, e.g., show a generic error message.
+				console.error('Error making review:', error);
 				Swal.fire({
-					title: 'Review failed!',
-					text: 'There was an error processing your review. Please try again later.',
+					title: 'Network Error',
+					text: 'There was a problem connecting to the server. Please check your internet connection and try again.',
 					icon: 'error',
 					confirmButtonText: 'OK',
 				});
 			}
-		} catch (error) {
-			// Handle network errors, e.g., show a generic error message.
-			console.error('Error making review:', error);
+		} else {
+			// User does not have a booking for the listing, show an error message
 			Swal.fire({
-				title: 'Network Error',
-				text: 'There was a problem connecting to the server. Please check your internet connection and try again.',
-				icon: 'error',
+				title: 'Cannot Post Review',
+				text: 'You need to have a booking for this listing to post a review.',
+				icon: 'info',
 				confirmButtonText: 'OK',
 			});
 		}
