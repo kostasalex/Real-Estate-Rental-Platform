@@ -416,4 +416,7 @@ public class CardImpl implements CardInterface {
 		return listings;
 	}
 
+	public List<Card> getListingsByUser(int id) {
+		return null;
+	}
 }

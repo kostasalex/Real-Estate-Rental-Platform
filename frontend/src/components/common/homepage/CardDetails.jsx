@@ -20,7 +20,6 @@ function CardDetails() {
 	const [departureDate, setDepartureDate] = useState(null);
 	const [numDaysStayed, setNumDaysStayed] = useState(0);
 	const [newReview, setNewReview] = useState(null)
-
 	useEffect(() => {
 		if (arrivalDate && departureDate) {
 			const oneDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day

@@ -16,19 +16,15 @@ const Login = (props) => {
 
 	const onSubmit = async (values, actions) => {
 		// Check if the user is trying to log in as an admin
-		if (values.email === 'admin@example.com' && values.password === 'Admin1234') {
-			// Admin login credentials, perform admin login
-			handleAdmin();
-		} else {
 			// Attempt a regular user login
-			try {
-				const response = await fetch('https://localhost:8443/login', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(values),
-				});
+		try {
+			const response = await fetch('https://localhost:8443/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(values),
+			});
 
 				if (response.ok) {
 					// User login successful
@@ -37,6 +33,7 @@ const Login = (props) => {
 						...userData,
 						email: values.email
 					};
+					//console.log(userData2);
 					/* Navigate previous paths */
 					props.handleLogin(userData2);
 					navigate(location.state?.from || '/');
@@ -47,29 +44,19 @@ const Login = (props) => {
 						timer: 3000
 					}).then(() => {
 
-						props.handleLogin(userData);
-					});
-				} else if (response.status === 401) {
-					// User not found or incorrect credentials
-					Swal.fire({
-						title: 'Login Failed',
-						text: 'Invalid email or password',
-						icon: 'error',
-						confirmButtonText: 'OK',
-						showCloseButton: true
-					});
-				} else {
-					// Other server errors
-					Swal.fire({
-						title: 'Login Failed',
-						text: 'An error occurred while logging in',
-						icon: 'error',
-						confirmButtonText: 'OK',
-					});
-				}
-			} catch (error) {
-				// Network or other error occurred
-				console.error('Login error:', error);
+					props.handleLogin(userData);
+				});
+			} else if (response.status === 401) {
+				// User not found or incorrect credentials
+				Swal.fire({
+					title: 'Login Failed',
+					text: 'Invalid email or password',
+					icon: 'error',
+					confirmButtonText: 'OK',
+					showCloseButton: true
+				});
+			} else {
+				// Other server errors
 				Swal.fire({
 					title: 'Login Failed',
 					text: 'An error occurred while logging in',
@@ -77,7 +64,17 @@ const Login = (props) => {
 					confirmButtonText: 'OK',
 				});
 			}
+		} catch (error) {
+			// Network or other error occurred
+			console.error('Login error:', error);
+			Swal.fire({
+				title: 'Login Failed',
+				text: 'An error occurred while logging in',
+				icon: 'error',
+				confirmButtonText: 'OK',
+			});
 		}
+		
 	};
 
 	const handleAdmin = () => {

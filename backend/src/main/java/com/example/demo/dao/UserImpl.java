@@ -158,6 +158,9 @@ public class UserImpl implements UserInterface {
                     String firstName = rs.getString("first_name");
                     int hostApplication = rs.getInt("host_application");
                     String userType = (hostApplication == 2) ? "Host" : "Seeker";
+                    int isAdmin = rs.getInt("is_admin");
+                    if (isAdmin == 1)
+                        userType = "Admin";
                     if (hostApplication == 1)
                         userType = "PendingHost";
                     // Create a map to hold the user information
