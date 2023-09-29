@@ -23,7 +23,6 @@ const BookingsTable = ({ bookings, iconStyle, onDelete }) => {
                 // If the deletion was successful, call the onDelete callback
                 onDelete(bookingToDelete);
             } else {
-                // Handle error, show a message, etc.
                 console.error('Error deleting booking');
             }
         } catch (error) {

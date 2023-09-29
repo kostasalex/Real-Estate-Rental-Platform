@@ -30,7 +30,7 @@ public class ReviewImpl implements ReviewInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
+
         }
 
         return reviews;
@@ -49,7 +49,6 @@ public class ReviewImpl implements ReviewInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return Optional.empty();
@@ -68,7 +67,6 @@ public class ReviewImpl implements ReviewInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return Optional.empty();
@@ -93,7 +91,6 @@ public class ReviewImpl implements ReviewInterface {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return rowsAffected;
@@ -113,7 +110,6 @@ public class ReviewImpl implements ReviewInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return false; // Invalid credentials
@@ -138,7 +134,6 @@ public class ReviewImpl implements ReviewInterface {
             return stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return 0;
@@ -156,7 +151,6 @@ public class ReviewImpl implements ReviewInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return null; // Return null if the review is not found
@@ -177,7 +171,6 @@ public class ReviewImpl implements ReviewInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return reviews;
@@ -194,7 +187,6 @@ public class ReviewImpl implements ReviewInterface {
             rowsAffected = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return rowsAffected;
@@ -211,7 +203,6 @@ public class ReviewImpl implements ReviewInterface {
             rowsAffected = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return rowsAffected;

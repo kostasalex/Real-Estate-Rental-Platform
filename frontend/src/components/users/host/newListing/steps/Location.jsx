@@ -8,7 +8,6 @@ const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstree
 	const [isSaved, setIsSaved] = useState(false);
 
 	const streetHandler = (address) => {
-		//console.log(address);
 		setstreet(address);
 	};
 
@@ -43,8 +42,8 @@ const Location = ({ latitude,setLatitude,longitude,setLongitude,street, setstree
 					<Map
 						streetHandler={streetHandler}
 						street={street}
-						latitude={latitude} // Pass latitude as prop
-						longitude={longitude} // Pass longitude as prop
+						latitude={latitude} 
+						longitude={longitude} 
 						handleLatLon = {handleLatLon}
 						country = {country}
 						setCountry = {setCountry} // Default to Athens, Greece

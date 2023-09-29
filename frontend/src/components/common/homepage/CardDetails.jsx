@@ -7,7 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import Swal from "sweetalert2";
 import { FaUser } from "react-icons/fa";
 import { useNavigate, useLocation } from 'react-router-dom';
-import dayjs from 'dayjs'; // Import dayjs
+import dayjs from 'dayjs'; 
 import { Rating } from "@material-tailwind/react";
 
 function CardDetails() {
@@ -104,7 +104,6 @@ function CardDetails() {
 	const postReview = async (cardId) => {
 		// Check if the user has a booking for the listing
 		const user_id = parseInt(localStorage.getItem('loggedInUserId'));
-		console.log(cardId);
 		const response = await fetch(`https://localhost:8443/api/v1/bookings/byListing/${cardId}?trueBooking=0`)
 
 		if (!response.ok) {
@@ -120,8 +119,7 @@ function CardDetails() {
 		}
 
 		const data = await response.json();
-
-		if (data.hasBooking) {
+		if (data[0] != undefined  && data[0].renters_id == user_id) {
 			// User has a booking for the listing, proceed with posting the review
 			if (newReview.trim() === '') {
 				Swal.fire({
@@ -163,7 +161,7 @@ function CardDetails() {
 				});
 
 				if (response.ok) {
-					// Handle a successful response here, e.g., show a success message and navigate to a confirmation page.
+					// Handle a successful response here
 					Swal.fire({
 						title: 'Review posted successfuly!',
 						text: 'The host is notified about your review.',
@@ -173,7 +171,7 @@ function CardDetails() {
 						window.location.reload()
 					});
 				} else {
-					// Handle errors from the backend API, e.g., show an error message.
+					// Handle errors from the backend API
 					Swal.fire({
 						title: 'Review failed!',
 						text: 'There was an error processing your review. Please try again later.',
@@ -182,7 +180,7 @@ function CardDetails() {
 					});
 				}
 			} catch (error) {
-				// Handle network errors, e.g., show a generic error message.
+				// Handle network errors
 				console.error('Error making review:', error);
 				Swal.fire({
 					title: 'Network Error',
@@ -192,7 +190,7 @@ function CardDetails() {
 				});
 			}
 		} else {
-			// User does not have a booking for the listing, show an error message
+			// User does not have a booking for the listing
 			Swal.fire({
 				title: 'Cannot Post Review',
 				text: 'You need to have a booking for this listing to post a review.',
@@ -207,9 +205,9 @@ function CardDetails() {
 		if (localStorage.getItem('loggedInUserType')) {
 			setIsOpenHost(true);
 			let user_id = parseInt(localStorage.getItem('loggedInUserId'));
-
+			console.log(user_id +" " + hostsId)
 			try {
-				const response = await fetch(`https://localhost:8443/messages/user/${user_id}`, {
+				const response = await fetch(`https://localhost:8443/api/v1/getRecipientMessages/${user_id}/${hostsId}`, {
 					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json',
@@ -219,14 +217,14 @@ function CardDetails() {
 				if (response.ok) {
 					// Parse the response JSON
 					const responseData = await response.json();
-
+					console.log(responseData);
 					// Extract the content from each message and update the questions state
 					const extractedQuestions = responseData.map(message => message.content);
 
 					setQuestions(extractedQuestions);
 					setQuestion('');
 				} else {
-					// Handle the case where the response is not OK (e.g., error handling)
+					// Handle the case where the response is not OK
 					console.error('Error sending message:', response.statusText);
 					Swal.fire({
 						title: 'Error',
@@ -266,7 +264,6 @@ function CardDetails() {
 
 
 
-	const today = dayjs(); // Create a dayjs object for today's date
 	const closeDialogHost = () => {
 		setIsOpenHost(false);
 	};
@@ -278,12 +275,14 @@ function CardDetails() {
 			if (people === 1) {
 				setTotalPrice((numDaysStayed * basePrice).toFixed(2));
 			} else {
-
-				setTotalPrice(((numDaysStayed * basePrice) + pricePerAdditionalGuest).toFixed(2));
+				
+				setTotalPrice(((numDaysStayed * basePrice) + (pricePerAdditionalGuest * (people-1))).toFixed(2));
 			}
+			console.log(cardProps);
 		}
 	}, [arrivalDate, departureDate, people, price]);
 
+	
 	const handleIncrease = () => {
 		if (accommodates != null && people < accommodates) {
 			setPeople(people + 1);
@@ -318,7 +317,6 @@ function CardDetails() {
 				departure_date: isoDepartureDate,
 			};
 			const numNights = dayjs(departure).diff(arrival, 'day');
-			console.log("departureDate " + departureDate + " isoDepartureDate " + isoDepartureDate);
 			if (numNights < minimumNights) {
 				Swal.fire({
 					title: 'Reservation failed!',
@@ -368,7 +366,7 @@ function CardDetails() {
 				});
 
 				if (response.ok) {
-					// Handle a successful response here, e.g., show a success message and navigate to a confirmation page.
+					// Handle a successful response here
 					Swal.fire({
 						title: 'Reservation successful!',
 						text: 'The host is notified about your booking.',
@@ -376,10 +374,10 @@ function CardDetails() {
 						confirmButtonText: 'OK',
 					}).then(() => {
 						// Navigate to a confirmation page or perform any other desired action.
-						//window.location.reload();
+						window.location.reload();
 					});
 				} else {
-					// Handle errors from the backend API, e.g., show an error message.
+					// Handle errors from the backend API
 					Swal.fire({
 						title: 'Reservation failed!',
 						text: 'There was an error processing your reservation. Please try again later.',
@@ -388,7 +386,7 @@ function CardDetails() {
 					});
 				}
 			} catch (error) {
-				// Handle network errors, e.g., show a generic error message.
+				// Handle network errors
 				console.error('Error making reservation:', error);
 				Swal.fire({
 					title: 'Network Error',
@@ -441,9 +439,7 @@ function CardDetails() {
 	const mediumUrls = cardProps.mediumUrl.split(',');
 	const [question, setQuestion] = useState('');
 	const [questions, setQuestions] = useState([]);
-	console.log(questions);
 	const handleSubmit = async (e) => {
-		//console.log(hostsId)
 		e.preventDefault();
 		if (question.trim() !== '') {
 			setQuestions([question, ...questions]);

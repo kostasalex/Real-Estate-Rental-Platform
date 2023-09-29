@@ -24,7 +24,7 @@ const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPost
 
     const selectSuggestion = (setter, suggestionsSetter, value, nextEnabledSetter) => {
         setter(value);
-        //if (nextEnabledSetter) nextEnabledSetter(true);
+
         suggestionsSetter([]);
     };
 
@@ -66,7 +66,6 @@ const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPost
 		  const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${inputValue}&limit=5`);
 		  const data = await response.json();
 		  const names = data.map(item => extractNameFromDisplayName(item.display_name, indexFromEnd));
-		  //console.log(data)
 		  setFunction(names);
 		} catch (error) {
 		  console.error('Error occurred during fetching data:', error);
@@ -114,8 +113,7 @@ const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPost
 		try {
 			const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(combined)}`);
 			const data = await response.json();
-			//console.log(data);
-			//console.log(combined);
+
 			setIsSaved(true);
 			if (data.length > 0) {
 				const { lat, lon } = data[0];
@@ -208,7 +206,6 @@ const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPost
 								}
 							}}
 							onFocus={() => setInputFocused(1)}  // Set focus to true when input gains focus
-							//onBlur={() => setInputFocused(0)}
 							placeholder="Greece"
 							className={'px-4 py-2 pr-10 border rounded-md ' + (isSaved && !country ? 'border-red-400' : 'border-gray-300')}
 						/>
@@ -231,16 +228,9 @@ const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPost
                             type="text"
                             value={postcode}
                             onChange={handlePostCodeChange}
-							/*onKeyDown={(e) => {
-								if (e.key === 'Enter') {
-									handleSuggestionClick("postcode", postcode)
-								}
-							}}*/
 							onFocus={() => setInputFocused(2)}  // Set focus to true when input gains focus
-							//onBlur={() => setInputFocused(0)}
                             placeholder="12461"
 							className={'px-4 py-2 pr-10 border rounded-md ' + (isSaved && !postcode ? 'border-red-400' : 'border-gray-300')}
-							//disabled={!isPostCodeEnabled}
                         />
 					{(postcodeSuggestions.length > 0 && inputFocused === 2) &&  (
 						<div className="absolute z-10 mt-16 bg-white border border-gray-200 rounded-md shadow-lg">
@@ -263,7 +253,6 @@ const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPost
                             value={city}
                             onChange={handleCityChange}
 							onFocus={() => setInputFocused(3)}  // Set focus to true when input gains focus
-							//onBlur={() => setInputFocused(0)}
                             placeholder="Athens"
 							className={'px-4 py-2 pr-10 border rounded-md ' + (isSaved && !city ? 'border-red-400' : 'border-gray-300')}
 
@@ -289,7 +278,6 @@ const Map = ({handleLatLon,streetHandler, country, setCountry, postcode, setPost
                             value={road}
                             onChange={handleRoadChange}
 							onFocus={() => setInputFocused(4)}  // Set focus to true when input gains focus
-							//onBlur={() => setInputFocused(0)}
                             placeholder="Patision"
 							className={'px-4 py-2 pr-10 border rounded-md ' + (isSaved && !road ? 'border-red-400' : 'border-gray-300')}
                         />

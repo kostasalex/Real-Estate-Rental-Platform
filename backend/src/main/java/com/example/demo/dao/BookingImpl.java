@@ -29,7 +29,6 @@ public class BookingImpl implements BookingInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return bookings;
@@ -48,7 +47,6 @@ public class BookingImpl implements BookingInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return Optional.empty();
@@ -67,7 +65,6 @@ public class BookingImpl implements BookingInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return Optional.empty();
@@ -91,7 +88,6 @@ public class BookingImpl implements BookingInterface {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return rowsAffected;
@@ -162,7 +158,6 @@ public class BookingImpl implements BookingInterface {
             rowsAffected = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return rowsAffected;
@@ -197,7 +192,6 @@ public class BookingImpl implements BookingInterface {
             rowsAffected = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return rowsAffected;
@@ -230,13 +224,11 @@ public class BookingImpl implements BookingInterface {
 
             // Check if there are overlapping bookings
             if (!overlappingBookings.isEmpty()) {
-                // There are overlapping bookings, take action to block the reservation.
-                // You can throw an exception, return an error message, or handle it as needed.
+                // There are overlapping bookings
                 throw new ReservationBlockedException("Reservation is blocked due to overlapping bookings.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return overlappingBookings;

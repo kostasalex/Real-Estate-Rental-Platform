@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.dao.MessageInterface;
 import com.example.demo.dao.UserInterface;
 import com.example.demo.model.Message;
-import com.example.demo.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -38,6 +37,16 @@ public class MessageController {
         List<Message> userMessages = messageDao.getUserMessages(userId);
         return ResponseEntity.ok(userMessages);
     }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/api/v1/getRecipientMessages/{senderId}/{recipientId}")
+    public ResponseEntity<List<Message>> getUserMessagesBySenderAndRecipient(
+        @PathVariable("senderId") Integer senderId,
+        @PathVariable("recipientId") Integer recipientId) {
+        List<Message> userMessages = messageDao.getUserMessagesBySenderAndRecipient(senderId, recipientId);
+        return ResponseEntity.ok(userMessages);
+    }
+    
+
 
     @GetMapping("/messages/users/{loggedInUserId}")
     public ResponseEntity<List<Map<String, Object>>> getUsers(@PathVariable("loggedInUserId") int loggedInUserId) {

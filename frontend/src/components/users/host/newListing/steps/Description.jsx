@@ -11,13 +11,10 @@ const Description = ({ title, description, roomType, rentalRules, setTitle, setd
 			title &&
 			description &&
 			roomType 
-			//photos.length > 0 &&
-			//rentalRules.size > 0
 		) {
 			setIsFormComplete(true);
 		} else {
 			setIsFormComplete(false);
-			//console.log(rentalRules.size +' '+photos.length+ ' ' +roomType+ ' ' +description+ ' ' +title);
 		}
 	}, [title, description, roomType, photos, rentalRules, setIsFormComplete]);
 

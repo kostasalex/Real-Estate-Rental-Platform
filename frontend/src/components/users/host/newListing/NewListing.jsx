@@ -54,8 +54,6 @@ const NewListing = ({ hosts_id }) => {
 	const [city, setCity] = useState(initialCity);
 	const [postcode, setPostCode] = useState(initialPostCode);
 	const [country, setCountry] = useState(initialCountry);
-	console.log("cardprops:")
-	console.log(cardProps)
 
 	// Description Step State
 	const [name, setName] = useState(editMode ? cardProps.name : '');
@@ -120,7 +118,7 @@ const NewListing = ({ hosts_id }) => {
 	
 	const [selectedDates, setSelectedDates] = useState(editMode ? [] : []);
 	const [minimum_nights, setminimum_nights] = useState(editMode ? cardProps.minimum_nights : 1);
-	console.log("Minimum nights from details: ", minimum_nights);
+
 
 	// Prices Step State
 	const [price, setprice] = useState(editMode ? cardProps.price : 0);
@@ -128,7 +126,7 @@ const NewListing = ({ hosts_id }) => {
 	const [accommodates, setaccommodates] = useState(editMode ? cardProps.accommodates : 1);
 
 	// Amenities Step State
-		// Extract rental rules from cardProps if in editMode
+	// Extract rental rules from cardProps if in editMode
 	let initialAmenities = new Set();
 
 	if (editMode && cardProps.amenities) {
@@ -176,7 +174,6 @@ const NewListing = ({ hosts_id }) => {
 			departure_date: new Date(departure),
 			trueBooking: 0
 		};
-		console.log("booking: " , booking);
 		const response = await fetch('https://localhost:8443/api/v1/insertBooking', {
 			method: 'POST',
 			headers: {
@@ -185,7 +182,6 @@ const NewListing = ({ hosts_id }) => {
 			body: JSON.stringify(booking)
 		});
 		if (!response.ok) {
-			// Handle error
 			console.error('Failed to insert booking');
 		}
 	};
@@ -240,7 +236,6 @@ const NewListing = ({ hosts_id }) => {
 				price_per_additional_guest : additionalGuestPrice,
 				id:cardId,
 			};
-			console.log(JSON.stringify(requestBody));
 
 			const response = await fetch(`https://localhost:8443/updateCard/${cardId}`, { // Assuming your update endpoint is like this
 				method: 'PUT', // Typically, updates use the PUT method
@@ -314,7 +309,6 @@ const NewListing = ({ hosts_id }) => {
 				price_per_additional_guest : additionalGuestPrice,
 			};
 
-			console.log('Request JSON:', JSON.stringify(requestBody, null, 2)); // Log the JSON that will be sent to the server
 
 			const response = await fetch('https://localhost:8443/insertCard', {
 				method: 'POST',
@@ -326,10 +320,7 @@ const NewListing = ({ hosts_id }) => {
 
 			if (response.ok) {
 				const responseData = await response.text(); // Get the response text
-				//console.log('Response Data:', responseData); // Log the response data
 				const cardId = JSON.parse(responseData).id; // Attempt to parse the JSON data
-				console.log("data:", responseData);
-				console.log("cardId: ", cardId);
 				//Insert unavailable dates as bookings
 				if(selectedDates){
 					values.selectedDates.forEach(dateString => {
@@ -344,29 +335,6 @@ const NewListing = ({ hosts_id }) => {
 					icon: 'success',
 					confirmButtonText: 'OK'
 				}).then(() => {
-					const cardData = {
-						/*id: cardId,
-						thumbnailUrl: values.photos,
-						mediumUrl: values.photos,
-						price: values.price,
-						accommodates: values.accommodates,
-						bathrooms: values.bathrooms,
-						bedrooms: values.bedrooms,
-						numberOfReviews: 2, //values.numberOfReviews,
-						reviewScoresRating: 2, // values.reviewScoresRating,
-						street: values.street,
-						description: values.description,
-						longitude: values.longitude,
-						latitude: values.latitude,
-						amenities: values.amenities,
-						hosts_id: hosts_id, // Include the hosts_id as hosts_id in the cardData object
-						beds: values.beds,
-						name: values.name,
-						roomType: values.roomType,*/
-					};
-
-					// Handle the cardData object as needed, e.g., store it in state or pass it to a parent component
-					//console.log(cardData);
 					navigate('/');
 				});
 			} else {
@@ -395,7 +363,6 @@ const NewListing = ({ hosts_id }) => {
 
 	useEffect(() => {
 		setIsFormComplete(false);
-		console.log(selectedDates)
 	}, [step]);
 
 

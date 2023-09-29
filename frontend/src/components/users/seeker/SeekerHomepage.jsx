@@ -12,7 +12,7 @@ const SeekerHomepage = (listings) => {
     const MAX_RESULTS_PER_PAGE = 10;
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [myListings, setMyListings] = useState([]); // Renamed the state variable
+    const [myListings, setMyListings] = useState([]); 
     const [filteredListings, setFilteredListings] = useState([]);
 
     useEffect(() => {

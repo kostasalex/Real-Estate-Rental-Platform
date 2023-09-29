@@ -5,17 +5,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate, 
 	setHostDepartureDate, selectedDates, setSelectedDates, setIsFormComplete, minimum_nights, setminimum_nights }) => {
 
-	console.log("dates:",selectedDates);
 	setIsFormComplete(true);
-
-	const [showButtons, setShowButtons] = useState(false);
-
 	const [errorMsg, setErrorMsg] = useState('')
-
 	const isDateInRange = (date, startDate, endDate) => {
 		return date >= startDate && date <= endDate;
 	}
-	
+
 	const doRangesOverlap = (start1, end1, start2, end2) => {
 		return isDateInRange(start1, start2, end2) || isDateInRange(end1, start2, end2);
 	}
@@ -27,7 +22,6 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate,
 	const handleDecrease = (setter) => {
 		setter((prevValue) => prevValue > 1 ? prevValue - 1 : 1);
 	};
-	
 	
 	const handleAddDates = () => {
 		if (hostArrivalDate && hostDepartureDate) {
@@ -58,13 +52,11 @@ const Dates = ({ hostArrivalDate, setHostArrivalDate, hostDepartureDate,
 		}
 	};
 
-
 	const handleDeleteDate = (index) => {
 		const updatedDates = [...selectedDates];
 		updatedDates.splice(index, 1);
 		setSelectedDates(updatedDates);
 	};
-
 
 	// Set default arrival and departure dates to the current date
 	const defaultArrivalDate = new Date();

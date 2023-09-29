@@ -75,7 +75,7 @@ const SignUp = (props) => {
             }).then(() => {
                 /* Navigate previous paths */
                 const userData = {
-                id: userId, // Use the correct ID here
+                id: userId, 
                 firstName: values.first_name,
                 userType: userType,
                 email: values.email

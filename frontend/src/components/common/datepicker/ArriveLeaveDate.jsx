@@ -12,7 +12,6 @@ const ArriveLeaveDate = ({ arrive, leave, handleDate }) => {
             setValidationError('Leave should be after Arrive');
         else setValidationError('');
 
-        //console.log("test");
     }, [tempLeave]);
 
     return (

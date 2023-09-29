@@ -11,4 +11,5 @@ public interface MessageInterface {
 
     public int deleteMessage(int messageId);
 
+    public List<Message> getUserMessagesBySenderAndRecipient(int senderId, int recipientId);
 }

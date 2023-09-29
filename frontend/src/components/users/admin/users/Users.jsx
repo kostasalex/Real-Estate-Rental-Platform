@@ -22,7 +22,7 @@ const Users = () => {
 
 	/* Read the data */
 	useEffect(() => {
-		fetch('https://localhost:8443/api/v1/users') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
+		fetch('https://localhost:8443/users') 
 			.then((response) => response.json())
 			.then((data) => {
 				const usersData = data
@@ -179,7 +179,7 @@ const Users = () => {
 
 		setIsOpenUser(false);
 
-		fetch('https://localhost:8443/users') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
+		fetch('https://localhost:8443/users') 
 			.then((response) => response.json())
 			.then((data) => {
 				const usersData = data;

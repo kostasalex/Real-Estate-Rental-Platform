@@ -3,7 +3,6 @@ import React from 'react';
 const Amenities = ({ amenities, setAmenities, setIsFormComplete, amenitiesList }) => {
 	setIsFormComplete(true);
 	
-	console.log(amenitiesList, amenities);
   const handleCheckboxChange = (event, amenity) => {
     setAmenities((prevAmenities) => {
       const updatedAmenities = new Set(prevAmenities);

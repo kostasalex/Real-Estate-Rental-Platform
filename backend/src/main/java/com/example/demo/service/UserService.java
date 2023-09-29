@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dao.UserInterface;
 import com.example.demo.model.User;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 @Service
 public class UserService {

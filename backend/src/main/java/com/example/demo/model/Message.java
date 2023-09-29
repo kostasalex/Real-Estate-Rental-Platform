@@ -9,8 +9,6 @@ public class Message {
     private String content;
     private LocalDateTime datetimeSent;
 
-    // Getters and setters
-
     public int getId() {
         return id;
     }

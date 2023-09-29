@@ -1,6 +1,5 @@
 package com.example.demo.model;
 
-import java.time.LocalDate;
 
 public class Card {
 
@@ -65,7 +64,6 @@ public class Card {
         return id;
     }
 
-    // Add a setter for the id field
     public void setId(String id) {
         this.id = id;
     }

@@ -12,7 +12,6 @@ public class FilterModel {
     private List<String> roomType;
     private List<String> amenities;
 
-    // Add getters and setters for the fields
 
     public String getLocation() {
         return location;

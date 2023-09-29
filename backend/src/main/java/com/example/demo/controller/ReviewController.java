@@ -44,16 +44,6 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-    // @DeleteMapping("/reviews/{reviewId}")
-    // public ResponseEntity<String> deleteReview(@PathVariable("reviewId") String reviewId) {
-    //     int rowsAffected = reviewDao.deleteReview(reviewId);
-
-    //     if (rowsAffected > 0) {
-    //         return ResponseEntity.ok("Review deleted successfully");
-    //     } else {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete review");
-    //     }
-    // }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/api/v1/deleteReview/{Id}")
     public ResponseEntity<String> deleteReview(@PathVariable("Id") String Id) {

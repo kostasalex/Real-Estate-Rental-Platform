@@ -66,7 +66,6 @@ const Results = () => {
 
   const searchListings = async () => {
     const allFilters = JSON.stringify({ ...searchBarFilters, ...filters });
-    //console.log(allFilters);
     try {
       const response = await fetch('https://localhost:8443/search', {
         method: 'POST',
@@ -78,7 +77,6 @@ const Results = () => {
   
       if (response.ok) {
         const data = await response.json();
-        //console.log(data);
         setListings(data);
       } else {
         throw new Error('Failed to retrieve search results');
@@ -131,7 +129,7 @@ const Results = () => {
   };  
   
   React.useEffect(() => {
-   // console.log("Updating filter URL")
+
     updateFilterURL()
   }, [filters]);
 
@@ -189,7 +187,6 @@ const Results = () => {
     ...listing,
     mediumUrl: listing.medium_url,
     thumbnailUrl: listing.thumbnail_url
-    // Optionally you can delete the old keys as well, but you'd need to handle that differently
 }));
 
   return (

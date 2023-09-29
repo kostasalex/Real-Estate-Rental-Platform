@@ -81,7 +81,6 @@ public class BookingController {
         try {
             listingsId = Integer.parseInt(listingsIdString);
         } catch (NumberFormatException e) {
-            // Handle the parsing exception if needed
             e.printStackTrace();
         }
 
@@ -94,7 +93,6 @@ public class BookingController {
             arrivalDate = dateFormat.parse(arrivalDateString);
             departureDate = dateFormat.parse(departureDateString);
         } catch (ParseException e) {
-            // Handle the parsing exception if needed
             e.printStackTrace();
         }
 

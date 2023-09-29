@@ -45,11 +45,9 @@ const ListingsTable = ({ listings, iconStyle, onDelete }) => {
 								// If the listing deletion was successful, call the onDelete callback
 								onDelete(listingToDelete);
 							} else {
-								// Handle error, show a message, etc.
 								console.error('Error deleting listing');
 							}
 						} else {
-							// Handle error, show a message, etc.
 							console.error('Error deleting associated reviews');
 						}
 					} else {
@@ -63,12 +61,10 @@ const ListingsTable = ({ listings, iconStyle, onDelete }) => {
 							// If the listing deletion was successful, call the onDelete callback
 							onDelete(listingToDelete);
 						} else {
-							// Handle error, show a message, etc.
 							console.error('Error deleting listing');
 						}
 					}
 				} else {
-					// Handle error, show a message, etc.
 					console.error('Error deleting associated bookings');
 				}
 			} else {
@@ -92,11 +88,9 @@ const ListingsTable = ({ listings, iconStyle, onDelete }) => {
 							// If the listing deletion was successful, call the onDelete callback
 							onDelete(listingToDelete);
 						} else {
-							// Handle error, show a message, etc.
 							console.error('Error deleting listing');
 						}
 					} else {
-						// Handle error, show a message, etc.
 						console.error('Error deleting associated reviews');
 					}
 				} else {
@@ -110,7 +104,6 @@ const ListingsTable = ({ listings, iconStyle, onDelete }) => {
 						// If the listing deletion was successful, call the onDelete callback
 						onDelete(listingToDelete);
 					} else {
-						// Handle error, show a message, etc.
 						console.error('Error deleting listing');
 					}
 				}

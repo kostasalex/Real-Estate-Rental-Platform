@@ -16,13 +16,11 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 			if (response.ok) {
 				const messages = await response.json();
 				setMessages(messages);
-				//console.log(messages);
 			} else {
 				throw new Error('Failed to fetch user messages');
 			}
 		} catch (error) {
 			console.error(error);
-			// Handle the error
 		}
 
 		try {
@@ -36,11 +34,7 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 			}
 		} catch (error) {
 			console.error(error);
-			// Handle the error
 		}
-		// console.log("users : ");
-		// console.log(users);
-		// console.log("endof users");
 
 	};
 
@@ -92,7 +86,7 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 			}
 		} catch (error) {
 			console.error(error);
-			// Handle the error
+
 		}
 	};
 
@@ -118,7 +112,6 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 			}
 		} catch (error) {
 			console.error(error);
-			// Handle the error
 		}
 	};
 

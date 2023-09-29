@@ -37,7 +37,6 @@ const Login = (props) => {
 						...userData,
 						email: values.email
 					};
-					//console.log(userData2);
 					/* Navigate previous paths */
 					props.handleLogin(userData2);
 					navigate(location.state?.from || '/');
@@ -84,7 +83,7 @@ const Login = (props) => {
 	const handleAdmin = () => {
 		let userType = 'Admin';
 		const userData = {
-			id: 'admin_id', // You can set a unique ID for the admin
+			id: 'admin_id',
 			firstName: 'Admin',
 			userType: userType,
 			email: 'admin@example.com',

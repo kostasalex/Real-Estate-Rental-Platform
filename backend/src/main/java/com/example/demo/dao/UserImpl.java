@@ -33,7 +33,6 @@ public class UserImpl implements UserInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return users;
@@ -52,7 +51,6 @@ public class UserImpl implements UserInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return Optional.empty();
@@ -71,7 +69,6 @@ public class UserImpl implements UserInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return Optional.empty();
@@ -127,7 +124,6 @@ public class UserImpl implements UserInterface {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return rowsAffected;
@@ -144,7 +140,6 @@ public class UserImpl implements UserInterface {
             rowsAffected = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return rowsAffected;
@@ -176,7 +171,6 @@ public class UserImpl implements UserInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return null; // Invalid credentials or user not found
@@ -212,7 +206,6 @@ public class UserImpl implements UserInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return 0; // Return 0 if the insertion fails
@@ -256,7 +249,6 @@ public class UserImpl implements UserInterface {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return rowsAffected;
@@ -288,7 +280,6 @@ public class UserImpl implements UserInterface {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.print(users);
         return users;
     }
 
@@ -307,7 +298,6 @@ public class UserImpl implements UserInterface {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return rowsAffected;

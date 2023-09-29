@@ -13,7 +13,6 @@ const Suggestions = ({ handleSelectSuggestion, location }) => {
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     let previousTab = parseInt(localStorage.getItem('selectedTab') || "0", 10);
     const [currentTab, setCurrentTab] = useState((previousTab && searchQuery) ? previousTab : 0);
-    //console.log(currentTab)
     const placeholders = {
         Country: 'Greece',
         City: 'Athens',

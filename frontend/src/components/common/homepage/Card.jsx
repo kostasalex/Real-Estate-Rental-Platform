@@ -22,10 +22,9 @@ function Card(props) {
 		  })
 		  .then(response => response.json())
 		  .then(data => {
-			console.log(data.message); // You can handle the success response here
 		  })
 		  .catch(error => {
-			console.error('Error updating visited listings:', error); // Handle errors here
+			console.error('Error updating visited listings:', error); 
 		  });
 		} else {
 		  // If user is a guest, store the card ID in local storage
@@ -89,11 +88,9 @@ function Card(props) {
 								// If the listing deletion was successful, call the onDelete callback
 								window.location.reload();
 							} else {
-								// Handle error, show a message, etc.
 								console.error('Error deleting listing');
 							}
 						} else {
-							// Handle error, show a message, etc.
 							console.error('Error deleting associated reviews');
 						}
 					} else {
@@ -107,12 +104,10 @@ function Card(props) {
 							// If the listing deletion was successful, call the onDelete callback
 							window.location.reload();
 						} else {
-							// Handle error, show a message, etc.
 							console.error('Error deleting listing');
 						}
 					}
 				} else {
-					// Handle error, show a message, etc.
 					console.error('Error deleting associated bookings');
 				}
 			} else {
@@ -136,11 +131,9 @@ function Card(props) {
 							// If the listing deletion was successful, call the onDelete callback
 							window.location.reload();
 						} else {
-							// Handle error, show a message, etc.
 							console.error('Error deleting listing');
 						}
 					} else {
-						// Handle error, show a message, etc.
 						console.error('Error deleting associated reviews');
 					}
 				} else {
@@ -154,7 +147,6 @@ function Card(props) {
 						// If the listing deletion was successful, call the onDelete callback
 						window.location.reload();
 					} else {
-						// Handle error, show a message, etc.
 						console.error('Error deleting listing');
 					}
 				}

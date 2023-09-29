@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaChartLine, ImUsers, BsHousesFill, BiCalendarCheck, MdRateReview } from 'react-icons/all'; // Import icons
+import { ImUsers, BsHousesFill, BiCalendarCheck, MdRateReview } from 'react-icons/all'; // Import icons
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 const Homepage = () => {
@@ -17,7 +17,7 @@ const Homepage = () => {
 
     /* Read the data */
     useEffect(() => {
-        fetch('https://localhost:8443/api/v1/users') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
+        fetch('https://localhost:8443/users') 
             .then((response) => response.json())
             .then((data) => {
                 const usersData = data
@@ -37,7 +37,7 @@ const Homepage = () => {
 
         /* Read the data */
         useEffect(() => {
-            fetch('https://localhost:8443/api/v1/bookings') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
+            fetch('https://localhost:8443/bookings') 
                 .then((response) => response.json())
                 .then((data) => {
                     const bookingsData = data
@@ -57,7 +57,7 @@ const Homepage = () => {
 
                 /* Read the data */
                 useEffect(() => {
-                    fetch('https://localhost:8443/api/v1/cards') // Replace '/api/users' with the appropriate backend API endpoint to fetch users
+                    fetch('https://localhost:8443/cards') 
                         .then((response) => response.json())
                         .then((data) => {
                             const listingsData = data

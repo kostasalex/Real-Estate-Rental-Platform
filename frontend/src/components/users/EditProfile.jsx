@@ -66,7 +66,6 @@ const EditProfile = (props) => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 let uploadedImageUrl = null
-                //console.log(photo)
                 if(photo && photo.length > 0){
                     if (photo[0] !== user.image_url) {
                         uploadedImageUrl = await handleUpload(photo);

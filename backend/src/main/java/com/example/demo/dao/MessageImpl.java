@@ -51,7 +51,7 @@ public class MessageImpl implements MessageInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
+
         }
 
         return -1; // Return -1 if the message insertion fails
@@ -74,7 +74,7 @@ public class MessageImpl implements MessageInterface {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
+
         }
 
         return userMessages;
@@ -83,11 +83,10 @@ public class MessageImpl implements MessageInterface {
     private Message mapResultSetToMessage(ResultSet rs) throws SQLException {
         Message message = new Message();
         message.setId(rs.getInt("id"));
-        message.setSenderId(rs.getInt("sender_id")); // Update the column name to "sender_id"
-        message.setRecipientId(rs.getInt("recipient_id")); // Update the column name to "recipient_id"
-        message.setContent(rs.getString("message")); // Update the column name to "message"
-        message.setDatetimeSent(rs.getTimestamp("datetime_sent").toLocalDateTime()); // Update the column name to
-                                                                                     // "datetime_sent"
+        message.setSenderId(rs.getInt("sender_id"));
+        message.setRecipientId(rs.getInt("recipient_id"));
+        message.setContent(rs.getString("message"));
+        message.setDatetimeSent(rs.getTimestamp("datetime_sent").toLocalDateTime());
         return message;
     }
 
@@ -101,10 +100,35 @@ public class MessageImpl implements MessageInterface {
             return rowsAffected;
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
 
         return 0; // Return 0 if the deletion fails
     }
+
+    @Override
+    public List<Message> getUserMessagesBySenderAndRecipient(int senderId, int recipientId) {
+    List<Message> userMessages = new ArrayList<>();
+
+    try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+            PreparedStatement stmt = conn
+                    .prepareStatement("SELECT * FROM messages WHERE (sender_id = ? AND recipient_id = ?) OR (sender_id = ? AND recipient_id = ?)")) {
+        stmt.setInt(1, senderId);
+        stmt.setInt(2, recipientId);
+        stmt.setInt(3, recipientId);
+        stmt.setInt(4, senderId);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Message message = mapResultSetToMessage(rs);
+                userMessages.add(message);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return userMessages;
+}
+
 
 }

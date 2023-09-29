@@ -4,13 +4,11 @@ import { filterCategories } from "/src/assets/constants";
 import ArriveLeaveDate from '/src/components/common/datepicker/ArriveLeaveDate';
 import Accommodates from '/src/components/common/inputs/Accommodates';
 import Suggestions from '/src/components/common/maps/Suggestions';
-import {BsFillArrowRightCircleFill} from 'react-icons/bs'
 import { FaTimes } from 'react-icons/fa';
 import { MdClear } from 'react-icons/md';
 
 function TabContent({ arrive, leave, activeTab, handleOptionSelect, location, guests }) {
 
-  //console.log(activeTab);
 
   const [accomError, setAccomError] = React.useState(false);
 
