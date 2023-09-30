@@ -4,6 +4,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -304,6 +305,30 @@ public class UserImpl implements UserInterface {
         }
 
         return rowsAffected;
+    }
+
+    @Override
+    public List<String> getUserVisitedListings(Integer userId) {
+        List<String> visitedListings = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement("SELECT visited_listings FROM users WHERE id = ?");) {
+
+            stmt.setInt(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String visitedListingsString = rs.getString("visited_listings");
+                    if (visitedListingsString != null && !visitedListingsString.trim().isEmpty()) {
+                        visitedListings = Arrays.asList(visitedListingsString.split(","));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return visitedListings;
     }
 
 }

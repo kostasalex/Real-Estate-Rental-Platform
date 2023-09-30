@@ -240,4 +240,52 @@ public class BookingImpl implements BookingInterface {
         }
     }
 
+    @Override
+    public List<Booking> getBookingsByRenterId(Integer renters_id) {
+        List<Booking> bookings = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn
+                        .prepareStatement("SELECT * FROM bookings WHERE renters_id = ? AND renters_id != hosts_id");) {
+
+            stmt.setInt(1, renters_id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Booking booking = mapResultSetToBooking(rs);
+                    bookings.add(booking);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return bookings;
+    }
+
+    public List<Integer> getMostBookedListingIds(int n) {
+        List<Integer> mostBookedListingIds = new ArrayList<>();
+
+        String sql = "SELECT listings_id, COUNT(*) as booking_count " +
+                "FROM bookings " +
+                "GROUP BY listings_id " +
+                "ORDER BY booking_count DESC " +
+                "LIMIT ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement stmt = conn.prepareStatement(sql);) {
+
+            stmt.setInt(1, n);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    mostBookedListingIds.add(rs.getInt("listings_id"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(mostBookedListingIds);
+        return mostBookedListingIds;
+    }
+
 }

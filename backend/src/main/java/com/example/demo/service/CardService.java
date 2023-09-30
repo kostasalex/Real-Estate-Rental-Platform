@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dao.BookingImpl;
 import com.example.demo.dao.CardInterface;
 import com.example.demo.model.Card;
 
@@ -13,6 +15,7 @@ import com.example.demo.model.Card;
 public class CardService {
 
     private CardInterface cardDao;
+    private BookingImpl bookingDao;
 
     public CardService(CardInterface cardDao) {
         this.cardDao = cardDao;

@@ -23,10 +23,14 @@ public interface BookingInterface {
 
     List<Booking> getBookings(Integer listingsId, Integer trueBooking);
 
+    List<Booking> getBookingsByRenterId(Integer rentersId);
+
     int deleteBookingsByHostId(Integer hostsId, Integer trueBooking);
 
     int deleteBookingByListingId(Integer listingId);
 
     List<Booking> checkAvailability(Integer listingId, Date arrivalDate, Date departureDate);
+
+    List<Integer> getMostBookedListingIds(int numberOfResults);
 
 }

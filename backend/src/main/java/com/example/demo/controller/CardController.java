@@ -5,6 +5,7 @@ import com.example.demo.model.Card;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
@@ -31,6 +32,7 @@ public class CardController {
     @PostMapping("/insertCard")
     public ResponseEntity<Map<String, Object>> insertCard(@RequestBody Card card) {
 
+        // System.out.println(card.toString());
         if (cardDao.selectCardByCardId(card.getId()).isPresent()) {
 
             return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -77,12 +79,6 @@ public class CardController {
     public ResponseEntity<List<Card>> getListingsByUserId(@PathVariable("userId") String userId) {
         List<Card> listings = cardDao.getListingsByUserId(userId);
         return ResponseEntity.ok(listings);
-    }
-
-    @PostMapping("/getRecommendations")
-    public ResponseEntity<List<Card>> getRecommendations(@RequestBody Map<String, List<String>> request) {
-        List<String> ids = request.get("ids");
-        return ResponseEntity.ok(cardDao.getListingsByIds(ids));
     }
 
 }

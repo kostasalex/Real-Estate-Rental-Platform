@@ -28,4 +28,6 @@ public interface UserInterface {
     int updateHostApplication(String userId, int hostApplication);
 
     int updateUserVisitedListings(Integer userId, String visitedListings);
+
+    List<String> getUserVisitedListings(Integer userId);
 }

@@ -66,7 +66,7 @@ const SeekerHomepage = (listings) => {
 
 
     return (
-        <div className='flex flex-col space-y-16'>
+        <div className='flex flex-col items-center space-y-16'>
             <div className='m-t-2 '>
                 <Recommendation />
             </div>

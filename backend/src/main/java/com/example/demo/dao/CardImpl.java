@@ -6,16 +6,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.example.demo.model.Booking;
 import com.example.demo.model.Card;
 
 @Component
 public class CardImpl implements CardInterface {
 
+	@Autowired
+	private BookingImpl bookingDao;
 	// Database connection details
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/airbnbdb";
 	private static final String DB_USERNAME = "root";
@@ -34,7 +40,7 @@ public class CardImpl implements CardInterface {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-
+			// Handle the exception as needed
 		}
 
 		return cards;
@@ -54,7 +60,7 @@ public class CardImpl implements CardInterface {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-
+			// Handle the exception as needed
 		}
 
 		return Optional.empty();
@@ -116,6 +122,7 @@ public class CardImpl implements CardInterface {
 			rowsAffected = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			// Handle the exception as needed
 		}
 
 		return rowsAffected;
@@ -165,6 +172,7 @@ public class CardImpl implements CardInterface {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			// Handle the exception as needed
 		}
 
 		return generatedId;
@@ -234,6 +242,7 @@ public class CardImpl implements CardInterface {
 			}
 
 			String query = queryBuilder.toString();
+			// System.out.println(query);
 
 			try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 					Statement stmt = conn.createStatement();
@@ -244,11 +253,12 @@ public class CardImpl implements CardInterface {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-
+				// Handle the exception as needed
 			}
 
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
+			// Handle the exception as needed
 		}
 
 		return cards;
@@ -277,6 +287,7 @@ public class CardImpl implements CardInterface {
 		} else if (amenity.equalsIgnoreCase("Elevator")) {
 			return "Elevator";
 		}
+		// Add more mappings as needed
 
 		// If no mapping is found, return the original amenity
 		return amenity;
@@ -337,6 +348,7 @@ public class CardImpl implements CardInterface {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			// Handle the exception as needed
 		}
 		return countries;
 	}
@@ -352,6 +364,7 @@ public class CardImpl implements CardInterface {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			// Handle the exception as needed
 		}
 		return cities;
 	}
@@ -367,6 +380,7 @@ public class CardImpl implements CardInterface {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			// Handle the exception as needed
 		}
 		return streets;
 	}
@@ -386,37 +400,8 @@ public class CardImpl implements CardInterface {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-
-		return listings;
-	}
-
-	@Override
-	public List<Card> getListingsByIds(List<String> ids) {
-		List<Card> listings = new ArrayList<>();
-		String query = "SELECT * FROM listings WHERE id IN (" + String.join(", ", Collections.nCopies(ids.size(), "?"))
-				+ ")";
-
-		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-				PreparedStatement stmt = conn.prepareStatement(query)) {
-
-			for (int i = 0; i < ids.size(); i++) {
-				stmt.setString(i + 1, ids.get(i));
-			}
-
-			try (ResultSet rs = stmt.executeQuery()) {
-				while (rs.next()) {
-					Card card = mapResultSetToCard(rs);
-					listings.add(card);
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+			// Handle the exception as needed
 		}
 		return listings;
-	}
-
-	public List<Card> getListingsByUser(int id) {
-		return null;
 	}
 }

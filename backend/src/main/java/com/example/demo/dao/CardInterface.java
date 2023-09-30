@@ -28,8 +28,4 @@ public interface CardInterface {
     List<String> getDistinctStreets();
 
     List<Card> getListingsByUserId(String userId);
-
-    List<Card> getListingsByIds(List<String> ids);
-
-    List<Card> getListingsByUser(int id);
 }

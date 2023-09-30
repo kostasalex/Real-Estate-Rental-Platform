@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Card from '/src/components/common/homepage/Card'
+import BlueSpinner from '../loader/BlueSpinner';
 
 const Recommendation = () => {
     const [listings, setListings] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const userId = localStorage.getItem('loggedInUserId') // Assume some way to get this (maybe a prop, context, etc.)
     const isGuest = !userId
@@ -17,13 +19,13 @@ const Recommendation = () => {
           const storedListings = localStorage.getItem('visitedListings');
           if (storedListings) {
               visitedListings = JSON.parse(storedListings);
-              getRecommendations(visitedListings); // For guests
+              getRecommendationsGuest(visitedListings); // For guests
           }
       } else {
           axios.get(`https://localhost:8443/visitedListings/${userId}`)
           .then(response => {
               visitedListings = response.data.split(",");
-              getRecommendations(visitedListings); // For logged-in users
+              getRecommendationsUser(userId); // For logged-in users
           })
           .catch(error => {
               console.error("Error fetching visited listings:", error);
@@ -31,23 +33,45 @@ const Recommendation = () => {
       }
     }, [isGuest, userId]);
     
-    const getRecommendations = (visitedListings) => {
-        if (visitedListings.length > 0) {
-            axios.post('https://localhost:8443/getRecommendations', { ids: visitedListings })
-            .then(res => {
-                setListings(res.data); // assuming the response has the listings data.
-            })
-            .catch(error => {
-                console.error("Error fetching listing details:", error);
-            });
-        }
+    const getRecommendationsGuest = (visitedListings) => {
+
+        axios.post('https://localhost:8443/getRecommendationsForGuest', { ids: visitedListings })
+        .then(res => {
+            setListings(res.data); // assuming the response has the listings data.
+            setLoading(false); // Data has been fetched
+            console.log("From guest rec: ", res.data);
+        })
+        .catch(error => {
+            console.error("Error fetching listing details:", error);
+            setLoading(false); // Data has been fetched
+        });
+
     }
+
+    const getRecommendationsUser = (userId) => {
+
+      axios.post(`https://localhost:8443/getRecommendationsForUser?userId=${userId}`)
+      .then(res => {
+          setListings(res.data); // assuming the response has the listings data.
+          setLoading(false); // Data has been fetched
+          console.log("From user rec: ", res.data);
+      })
+      .catch(error => {
+          console.error("Error fetching listing details:", error);
+          setLoading(false); // Data has been fetched
+      });
+      
+
+  }
   
 
   return (
     <div  >
-      <div className='flex justify-center text-3xl font-bold '>Visited Listings</div>
-      <div className="flex opacity-80 flex-wrap">
+      {listings && (
+      <div>
+      <div className='flex justify-center text-gray-600  text-3xl font-bold '>Recommeded Listings Just For You</div>
+      {loading && <div className='flex justify-center items-center h-screen'><BlueSpinner/></div>}
+      {!loading && listings && <div className="flex opacity-80 flex-wrap">
         {listings.map((listing, index) => (
           <Card
             key={index}
@@ -73,12 +97,14 @@ const Recommendation = () => {
             accessing_info = {listing.accessing_info}
             rentalRules = {listing.rentalRules}
             size = {listing.size}
-            minimum_nights = {listings.minimum_nights}
+            minimum_nights = {listing.minimum_nights}
             price_per_additional_guest = {listing.price_per_additional_guest}
           />
         ))}
-      </div>
-      <div className='flex justify-center text-3xl font-bold '>End Of Visited Listings</div>
+      </div>}
+      <div className='flex justify-center text-3xl font-bold '>End Of Recommendation</div>
+      </div>)}
+      {!loading && !listings && <div className='text-red-500 justify-center flex text-xl'>Recommendations to display</div>}
     </div>
 
   );
