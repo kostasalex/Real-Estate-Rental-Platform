@@ -4,16 +4,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
+import java.text.ParseException;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.dao.BookingImpl.ReservationBlockedException;
 import com.example.demo.model.Booking;
 import com.example.demo.model.Card;
 
@@ -247,18 +251,66 @@ public class CardImpl implements CardInterface {
 			try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 					Statement stmt = conn.createStatement();
 					ResultSet rs = stmt.executeQuery(query)) {
+
 				while (rs.next()) {
 					Card card = mapResultSetToCard(rs);
-					cards.add(card);
+
+					// Extract the arrival and departure dates from the filters JSON if they exist
+					String arrivalDateStr = filtersJson.get("arrive").asText();
+					String departureDateStr = filtersJson.get("leave").asText();
+
+					java.util.Date utilArrivalDate = null;
+					java.util.Date utilDepartureDate = null;
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+
+					if (!arrivalDateStr.isEmpty()) {
+						utilArrivalDate = dateFormat.parse(arrivalDateStr);
+					}
+
+					if (!departureDateStr.isEmpty()) {
+						utilDepartureDate = dateFormat.parse(departureDateStr);
+					}
+
+					// Only check for availability if the dates are not null
+					if (utilArrivalDate != null && utilDepartureDate != null) {
+
+						// Calculate the days difference between the arrival and departure dates
+						long difference = utilDepartureDate.getTime() - utilArrivalDate.getTime();
+						long daysDifference = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS);
+
+						// If the minimum_nights condition is not met, continue to the next iteration
+						if (card.getminimum_nights() > daysDifference) {
+							continue;
+						}
+
+						try {
+							List<Booking> overlappingBookings = bookingDao.checkAvailability(
+									Integer.parseInt(card.getId()), utilArrivalDate, utilDepartureDate);
+
+							// If there are no overlapping bookings, add the card to the results
+							if (overlappingBookings.isEmpty()) {
+								cards.add(card);
+							}
+						} catch (ReservationBlockedException e) {
+							// Simply continue to the next card without adding this one to the results
+							continue;
+						}
+					} else {
+						cards.add(card);
+					}
 				}
+
 			} catch (SQLException e) {
 				e.printStackTrace();
-				// Handle the exception as needed
+				// Handle the SQL exception as needed
 			}
 
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-			// Handle the exception as needed
+			// Handle the JSON parsing exception as needed
+		} catch (ParseException e) {
+			e.printStackTrace();
+			// Handle the date parsing exception as needed
 		}
 
 		return cards;

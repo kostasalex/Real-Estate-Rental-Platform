@@ -3,10 +3,10 @@ import axios from 'axios';
 import Card from '/src/components/common/homepage/Card'
 import BlueSpinner from '../loader/BlueSpinner';
 
+
 const Recommendation = () => {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
-
     const userId = localStorage.getItem('loggedInUserId') // Assume some way to get this (maybe a prop, context, etc.)
     const isGuest = !userId
     const visited =  localStorage.getItem('visitedListings')

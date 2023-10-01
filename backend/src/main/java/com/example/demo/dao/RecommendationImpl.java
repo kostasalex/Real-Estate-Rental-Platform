@@ -29,7 +29,7 @@ public class RecommendationImpl implements RecommendationInterface {
     private UserImpl userDao;
 
     int topNUsers = 3;
-    int maxListings = 8;
+    int maxListings = 10;
     // Database connection details
     private static final String DB_URL = "jdbc:mysql://localhost:3306/airbnbdb";
     private static final String DB_USERNAME = "root";
@@ -42,6 +42,9 @@ public class RecommendationImpl implements RecommendationInterface {
 
         Map<Integer, List<Integer>> allUsersListings = getAllUsersPreferableListings();
         allUsersListings.remove(userId);
+
+        // Print all users and their listings
+        // System.out.println("All users and their listings: " + allUsersListings);
 
         Set<Integer> allListingIds = new HashSet<>();
         for (List<Integer> listings : allUsersListings.values()) {
@@ -62,6 +65,13 @@ public class RecommendationImpl implements RecommendationInterface {
                 .sorted(Map.Entry.<Integer, Double>comparingByValue().reversed())
                 .collect(Collectors.toList());
 
+        // Print top n users and their listings
+        System.out.println("Top " + n + " users and their listings:");
+        for (int i = 0; i < n && i < sortedUsers.size(); i++) {
+            System.out.println("User ID: " + sortedUsers.get(i).getKey() + ", Listings: "
+                    + allUsersListings.get(sortedUsers.get(i).getKey()));
+        }
+
         Set<Integer> recommendedListings = new HashSet<>();
         int count = 0;
         for (Map.Entry<Integer, Double> user : sortedUsers) {
@@ -72,6 +82,8 @@ public class RecommendationImpl implements RecommendationInterface {
             count++;
         }
 
+        // Don't suggest listings that user allready interacted with.
+        recommendedListings.removeAll(userPreferableListings);
         // Convert the set to a list and get the first 8 elements
         List<Integer> finalRecommendations = new ArrayList<>(recommendedListings);
         if (finalRecommendations.size() > maxListings) {

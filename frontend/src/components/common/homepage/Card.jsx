@@ -3,10 +3,30 @@ import { useNavigate } from 'react-router-dom';
 
 function Card(props) {
 
+	const queryParams = new URLSearchParams(window.location.search);
+
+    // Extract dates and guests from the URL, if available.
+    const arriveFromURL = queryParams.get('arrive');
+    const leaveFromURL = queryParams.get('leave');
+	const guestsFromURL = queryParams.get('guests');
+
+    // Create an object to store in local storage.
+
+
 	const loggedInUserId = localStorage.getItem('loggedInUserId')
 
 	const handleClick = () => {
-		localStorage.setItem("cardProps", JSON.stringify(props));
+
+		const cardData = {
+			cardId: props.id,
+			...props, // Spread existing props
+			...(arriveFromURL && { arrive: arriveFromURL }),
+			...(leaveFromURL && { leave: leaveFromURL }),
+			...(guestsFromURL && { guests: Number(guestsFromURL) }),
+		};
+		console.log("from card: ",cardData);
+		// Store the card's properties in local storage.
+		localStorage.setItem("cardProps", JSON.stringify(cardData))
 	  
 		if (loggedInUserId) {
 		  // If user is logged in, send the card ID to backend
