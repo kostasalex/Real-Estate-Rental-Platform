@@ -7,11 +7,6 @@ export default {
   },
   server: {
     fs: {
-      allow: [
-        'C:/Users/mpamp/OneDrive/ThisPC/AirbnbClone/airbnb_clone/frontend',
-        'C:/Users/mpamp/OneDrive/ThisPC/AirbnbClone/airbnb_clone/node_modules/vite/dist/client',
-        'C:/Users/mpamp/OneDrive/ThisPC/AirbnbClone/airbnb_clone/node_modules/leaflet/dist/images'
-      ],
     },
   },
 };

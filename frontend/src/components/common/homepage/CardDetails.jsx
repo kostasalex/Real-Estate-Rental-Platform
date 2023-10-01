@@ -7,7 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import Swal from "sweetalert2";
 import { FaUser } from "react-icons/fa";
 import { useNavigate, useLocation } from 'react-router-dom';
-import dayjs from 'dayjs'; 
+import dayjs from 'dayjs';
 import { Rating } from "@material-tailwind/react";
 
 function CardDetails() {
@@ -118,7 +118,7 @@ function CardDetails() {
 		}
 
 		const data = await response.json();
-		if (data[0] != undefined  && data[0].renters_id == user_id) {
+		if (data[0] != undefined && data[0].renters_id == user_id) {
 			// User has a booking for the listing, proceed with posting the review
 			if (newReview.trim() === '') {
 				Swal.fire({
@@ -204,7 +204,7 @@ function CardDetails() {
 		if (localStorage.getItem('loggedInUserType')) {
 			setIsOpenHost(true);
 			let user_id = parseInt(localStorage.getItem('loggedInUserId'));
-			console.log(user_id +" " + hostsId)
+			console.log(user_id + " " + hostsId)
 			try {
 				const response = await fetch(`https://localhost:8443/api/v1/getRecipientMessages/${user_id}/${hostsId}`, {
 					method: 'GET',
@@ -274,14 +274,14 @@ function CardDetails() {
 			if (people === 1) {
 				setTotalPrice((numDaysStayed * basePrice).toFixed(2));
 			} else {
-				
-				setTotalPrice(((numDaysStayed * basePrice) + (pricePerAdditionalGuest * (people-1))).toFixed(2));
+
+				setTotalPrice(((numDaysStayed * basePrice) + (pricePerAdditionalGuest * (people - 1))).toFixed(2));
 			}
 			console.log(cardProps);
 		}
 	}, [arrivalDate, departureDate, people, price]);
 
-	
+
 	const handleIncrease = () => {
 		if (accommodates != null && people < accommodates) {
 			setPeople(people + 1);
@@ -479,6 +479,27 @@ function CardDetails() {
 			});
 		}
 	};
+
+	//Reviews filtering
+	const MAX_REVIEWS_PER_PAGE = 10;
+	const [currentPage, setCurrentPage] = useState(1);
+
+	// Assuming 'reviews' is the array of all reviews
+	const [displayedReviews, setDisplayedReviews] = useState([]);
+	const updateDisplayedReviews = () => {
+		const start = (currentPage - 1) * MAX_REVIEWS_PER_PAGE;
+		const end = start + MAX_REVIEWS_PER_PAGE;
+
+		const reviewsToDisplay = reviews.slice(start, end);
+		setDisplayedReviews(reviewsToDisplay);
+	};
+	useEffect(() => {
+		updateDisplayedReviews();
+	}, [currentPage, reviews]);
+	const totalPages = () => {
+		return Math.ceil(reviews.length / MAX_REVIEWS_PER_PAGE);
+	};
+
 
 
 	return (
@@ -872,8 +893,64 @@ function CardDetails() {
 
 				</div>
 				{/* Reviews */}
+				{reviews.length > MAX_REVIEWS_PER_PAGE && (
+					<div className="mt-6 sm:flex flex-col sm:items-center sm:justify-between ">
+						<div className="text-sm text-gray-500 mb-5 mr-2">
+							Page <span className="font-medium text-gray-700 ">
+								{currentPage} from {totalPages()}
+							</span>
+						</div>
+						<div className="flex justify-center items-center mt-4 gap-x-4 sm:mt-0">
+							{currentPage > 1 && (
+								<div
+									onClick={() => setCurrentPage(currentPage - 1)}
+									className="cursor-pointer bg-cyan1 hover:bg-blue1 hover:text-white flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2 "
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										className="w-5 h-5 rtl:-scale-x-100"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+										/>
+									</svg>
+									<span>Previous</span>
+								</div>
+							)}
+
+							{totalPages() > currentPage && (
+								<div
+									onClick={() => setCurrentPage(currentPage + 1)}
+									className="cursor-pointer bg-cyan1 hover:bg-blue1 hover:text-white flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2"
+								>
+									<span>Next</span>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										className="w-5 h-5 rtl:-scale-x-100"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+										/>
+									</svg>
+								</div>
+							)}
+						</div>
+					</div>
+				)}
 				<div className="md:grid md:grid-cols-2 md:gap-4">
-					{reviews.map(({ id, comment, date, hostId, listingId, rating, renterId }) => (
+					{displayedReviews.map(({ id, comment, date, hostId, listingId, rating, renterId }) => (
 						<div key={id} className=" flex items-center justify-center">
 							<div className="">
 								<div className="bg-white max-w-xl rounded-2xl px-10 py-8 shadow-lg hover:shadow-2xl transition duration-500">
@@ -895,6 +972,64 @@ function CardDetails() {
 						</div>
 					))}
 				</div>
+				{reviews.length > MAX_REVIEWS_PER_PAGE && (
+					<div className="mt-6 sm:flex flex-col sm:items-center sm:justify-between ">
+						<div className="text-sm text-gray-500 mb-5 mr-2">
+							Page <span className="font-medium text-gray-700 ">
+								{currentPage} from {totalPages()}
+							</span>
+						</div>
+						<div className="flex justify-center items-center mt-4 gap-x-4 sm:mt-0">
+							{currentPage > 1 && (
+								<div
+									onClick={() => setCurrentPage(currentPage - 1)}
+									className="cursor-pointer bg-cyan1 hover:bg-blue1 hover:text-white flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2 "
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										className="w-5 h-5 rtl:-scale-x-100"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+										/>
+									</svg>
+									<span>Previous</span>
+								</div>
+							)}
+
+							{totalPages() > currentPage && (
+								<div
+									onClick={() => setCurrentPage(currentPage + 1)}
+									className="cursor-pointer bg-cyan1 hover:bg-blue1 hover:text-white flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200  border rounded-md sm:w-auto gap-x-2"
+								>
+									<span>Next</span>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										className="w-5 h-5 rtl:-scale-x-100"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+										/>
+									</svg>
+								</div>
+							)}
+						</div>
+					</div>
+				)}
+
+
 			</div>
 		</div >
 

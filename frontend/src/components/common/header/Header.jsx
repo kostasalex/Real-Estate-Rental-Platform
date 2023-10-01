@@ -73,7 +73,7 @@ const Header = (props) => {
         <div>
             <nav className=" bg-white z-10 top-0 w-full fixed shadow-md flex  justify-between  mx-auto px-8">
                 {/*Logo*/}
-                <div className="hidden sm:block lg:ml-12 mt-2 inline-flex">
+                <div className=" sm:block lg:ml-12 mt-2 inline-flex">
                     <Link className="_o6689fn" to="/"
                         ><div className="hidden md:block">
                             <img src={Logo} alt="My logo" className="block" />

@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import { BsChatSquareTextFill, BsFillTrashFill } from 'react-icons/bs';
 import { TbSend } from 'react-icons/tb';
 
-
 const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 	const [users, setUsers] = useState([]);
-
 	const [selectedUser, setSelectedUser] = useState();
 	const [newMessage, setNewMessage] = useState('');
 	const [messages, setMessages] = useState([]);
+	const [currentConversation, setCurrentConversation] = useState(null); // Track current conversation
 
 	const fetchUserMessages = async (userId) => {
 		try {
@@ -28,32 +27,32 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 			if (response.ok) {
 				const users = await response.json();
 				setUsers(users);
-				setSelectedUser(users[0]);
+				// Only set the selected user if it's not already set
+				if (!selectedUser) {
+					setSelectedUser(users[0]);
+					setCurrentConversation(users[0]); // Initialize current conversation
+				}
 			} else {
 				throw new Error('Failed to fetch users');
 			}
 		} catch (error) {
 			console.error(error);
 		}
-
 	};
-
 	React.useEffect(() => {
 		fetchUserMessages(loggedInUserId);
-	}, []);
-
+	}, [loggedInUserId, selectedUser]); // Add selectedUser to dependencies
 
 	const handleUserClick = (user) => {
 		setSelectedUser(user);
+		setCurrentConversation(user); // Update current conversation
 	};
 
 	const getUserMessages = (userId) => {
 		return messages.filter(
-			(message) =>
-				message.senderId === userId || message.recipientId === userId
+			(message) => message.senderId === userId || message.recipientId === userId
 		);
 	};
-
 
 	const handleInputChange = (event) => {
 		setNewMessage(event.target.value);
@@ -86,13 +85,11 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 			}
 		} catch (error) {
 			console.error(error);
-
 		}
 	};
 
-
 	const handleKeyDown = (event) => {
-		if (event.key === 'Enter') {
+		if (event.key === 'Enter' && !event.shiftKey) {
 			event.preventDefault();
 			handleSendMessage();
 		}
@@ -100,21 +97,32 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 
 	const handleDeleteMessage = async (messageId) => {
 		try {
-			const response = await fetch(`https://localhost:8443/messages/${messageId}`, {
-				method: 'DELETE',
-			});
+			const messageToDelete = messages.find((message) => message.id === messageId);
 
-			if (response.ok) {
-				// Message deleted successfully, update the state or fetch the updated messages
-				fetchUserMessages(loggedInUserId);
+			if (!messageToDelete) {
+				console.error(`Message with ID ${messageId} not found.`);
+				return;
+			}
+
+			// Check if the message belongs to the logged-in user
+			if (messageToDelete.senderId === loggedInUserId) {
+				const response = await fetch(`https://localhost:8443/messages/${messageId}`, {
+					method: 'DELETE',
+				});
+
+				if (response.ok) {
+					// Message deleted successfully, update the state or fetch the updated messages
+					fetchUserMessages(loggedInUserId);
+				} else {
+					throw new Error('Failed to delete message');
+				}
 			} else {
-				throw new Error('Failed to delete message');
+				console.error('You can only delete your own messages.');
 			}
 		} catch (error) {
 			console.error(error);
 		}
 	};
-
 
 	return (
 		<div className="container mx-auto min-h-screen bg-gray-100 shadow-lg pt-10 rounded-lg">
@@ -123,8 +131,8 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 				Messages
 			</div>
 			<div className="flex h-screen antialiased text-gray-800">
-				<div className="flex flex-row h-full w-full overflow-x-auto">
-					<div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
+				<div className="flex flex-col md:flex-row h-full w-full overflow-x-auto">
+					<div className="flex flex-col py-8 pl-6 pr-2 md:w-1/4 bg-white flex-shrink-0">
 						<div className="flex flex-col mt-8">
 							<div className="flex flex-row items-center justify-between text-sm">
 								<div className="ml-2 font-bold text-2xl">Conversations</div>
@@ -132,7 +140,7 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 									{users.length ? users.length : 0}
 								</span>
 							</div>
-							<div className="flex flex-col space-y-1 mt-4 -mx-2 h-full overflow-auto">
+							<div className={`grid ${users.length > 4 ? 'grid-cols-2' : 'grid-cols-1'} gap-2 mt-4 -mx-2 h-full overflow-auto`}>
 								{users.map((user) =>
 									user.id !== loggedInUserId && (
 										<button
@@ -154,10 +162,10 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 					<div className="flex flex-col flex-auto h-full p-6">
 						<div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
 							<div className="flex flex-col h-full overflow-auto mb-4">
-								{selectedUser ? (
+								{currentConversation ? (
 									<>
-										<div className="font-bold mb-2">{selectedUser.name}</div>
-										{getUserMessages(selectedUser.id).map((message) => (
+										<div className="font-bold mb-2">{currentConversation.name}</div>
+										{getUserMessages(currentConversation.id).map((message) => (
 											<div
 												key={message.id}
 												className={`flex gap-2 ${message.senderId === loggedInUserId ? 'justify-end' : 'justify-start'
@@ -165,7 +173,7 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 											>
 												{message.senderId !== loggedInUserId && (
 													<div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-200">
-														{selectedUser.name.charAt(0)}
+														{currentConversation.name.charAt(0)}
 													</div>
 												)}
 												<div
@@ -179,7 +187,7 @@ const Messages = ({ loggedInUserId, loggedInFirstName }) => {
 														{loggedInFirstName.charAt(0)}
 													</div>
 												)}
-												{(message.senderId === loggedInUserId || message.senderId !== loggedInUserId) && (
+												{message.senderId === loggedInUserId && (
 													<button className="text-red-500" onClick={() => handleDeleteMessage(message.id)}>
 														<BsFillTrashFill />
 													</button>
