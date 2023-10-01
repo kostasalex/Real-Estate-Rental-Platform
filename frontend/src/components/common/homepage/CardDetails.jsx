@@ -16,7 +16,8 @@ function CardDetails() {
 	const navigate = useNavigate();
 
 	const cardProps = JSON.parse(localStorage.getItem("cardProps"));
-	const [arrivalDate, setArrivalDate] = useState(null);
+	console.log(cardProps);
+    const [arrivalDate, setArrivalDate] = useState(null);
 	const [departureDate, setDepartureDate] = useState(null);
 	const [numDaysStayed, setNumDaysStayed] = useState(0);
 	const [newReview, setNewReview] = useState(null)
@@ -67,7 +68,7 @@ function CardDetails() {
 	const [lng] = useState(cardProps.longitude);
 	const [lat] = useState(cardProps.latitude);
 
-	const [people, setPeople] = useState(1);
+	const [people, setPeople] = useState(cardProps.guests ?  cardProps.guests : 1);
 	const [isOpen, setIsOpen] = useState(false);
 	const [isOpenHost, setIsOpenHost] = useState(false);
 	const [isFormComplete, setIsFormComplete] = useState(false);
