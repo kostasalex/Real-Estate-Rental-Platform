@@ -9,7 +9,7 @@ const Listings = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [listings, setListings] = useState([]);
 	const [filteredListings, setFilteredListings] = useState([]);
-
+	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 	useEffect(() => {
 		// Fetch listings data
 		const fetchListings = async () => {
@@ -112,15 +112,15 @@ const Listings = () => {
 		setListings(updatedListings);
 	};
 
-
+	const smallScreenBreakpoint = 768;
 	return (
-		<div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
-			<div className="flex items-center justify-between pb-6">
-				<div>
+		<div className="float-right w-3/4 bg-white pr-10">
+			<div className={`flex flex-col pb-6 ${screenWidth <= smallScreenBreakpoint ? 'items-center' : ''}`}>
+				<div className={`p-2 pb-10 ${screenWidth <= smallScreenBreakpoint ? 'text-center' : 'items-start'}`}>
 					<h2 className="font-semibold text-gray-700">Listings</h2>
 					<span className="text-sm text-gray-500">View listings being currently booked</span>
 				</div>
-				<div className="ml-10 space-x-8 flex flex-rows lg:ml-40">
+				<div className={`flex justify-end space-x-4 ${screenWidth <= smallScreenBreakpoint ? '' : ''}`}>
 					<button
 						className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700"
 						onClick={downloadCSV}

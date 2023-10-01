@@ -40,17 +40,18 @@ const BookingsTable = ({ bookings, iconStyle, onDelete }) => {
         setBookingToDelete(null);
     };
 
-
+console.log(bookings);
     return (
         <div>
             <table className="w-full">
                 <thead>
                     <tr className="bg-blue-600 text-left text-xs font-semibold uppercase tracking-widest text-white border-2 border-blue-600">
                         <th className="px-5 py-3">ID</th>
+                        <th className="px-5 py-3 hidden sm:table-cell">Photo</th>
                         <th className="px-5 py-3">Name</th>
-                        <th className="px-5 py-3">Location</th>
-                        <th className="px-5 py-3">Host Name</th>
-                        <th className="px-5 py-3">Delete</th> {/* New column for actions */}
+                        <th className="px-5 py-3 hidden sm:table-cell">Location</th>
+                        <th className="px-5 py-3 hidden sm:table-cell">Host Name</th>
+                        <th className="px-5 py-3">Delete</th>
                     </tr>
                 </thead>
                 <tbody className="text-gray-500">
@@ -61,25 +62,26 @@ const BookingsTable = ({ bookings, iconStyle, onDelete }) => {
                                 <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                                     <p className="whitespace-no-wrap">{booking.id}</p>
                                 </td>
-                                <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                    <div className="flex items-center">
-                                        <div className="h-10 w-10 flex-shrink-0">
-                                            <img
-                                                className={iconStyle}
-                                                src={`${booking.thumbnail_url}`}
-                                                alt="Apartment image"
-                                            />
-                                        </div>
-                                        <div className="ml-3">
-                                            <p className="whitespace-no-wrap">{booking.name}</p>
-                                        </div>
+                                <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm hidden sm:table-cell">
+                                    <div className="h-10 w-10 flex-shrink-0">
+                                        <img
+                                            className={iconStyle}
+                                            src={`${booking.thumbnail_url}`}
+                                            alt="Apartment image"
+                                        />
                                     </div>
                                 </td>
                                 <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+
+                                    <div className="ml-3">
+                                        <p className="whitespace-no-wrap">{booking.name}</p>
+                                    </div>
+                                </td>
+                                <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm hidden sm:table-cell">
                                     <p className="whitespace-no-wrap">{booking.location}</p>
                                 </td>
-                                <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                    <p className="whitespace-no-wrap">{booking.hosts_id}</p>
+                                <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm hidden sm:table-cell">
+                                    <p className="whitespace-no-wrap">{booking.host_name}</p>
                                 </td>
 
                                 <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">

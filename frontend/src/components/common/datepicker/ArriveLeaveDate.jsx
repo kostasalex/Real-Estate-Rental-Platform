@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers';
-
+import dayjs from 'dayjs';
 const ArriveLeaveDate = ({ arrive, leave, handleDate }) => {
 
     const [validationError, setValidationError] = useState('');
@@ -20,6 +20,8 @@ const ArriveLeaveDate = ({ arrive, leave, handleDate }) => {
             <DatePicker
             label="Arrive"
             value={arrive}
+            minDate={dayjs()} // To allow picking dates only after today
+            maxDate={leave}
             onChange={(newArrive) => {
                 handleDate('Arrive', newArrive);
             }}
@@ -29,6 +31,7 @@ const ArriveLeaveDate = ({ arrive, leave, handleDate }) => {
             <DatePicker
             label="Leave"
             value={leave}
+            minDate={arrive || dayjs()} // To ensure departure date is after arrival
             onChange={(newLeave) => {
                 setTempLeave(newLeave);
                 if (newLeave > arrive) {

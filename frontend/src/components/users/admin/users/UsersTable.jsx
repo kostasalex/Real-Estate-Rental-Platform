@@ -163,13 +163,12 @@ const UsersTable = ({ users, rowClickHandler, iconStyle, userIcon, onDelete, clo
 				<thead>
 					<tr className="bg-blue-600 text-left text-xs font-semibold uppercase tracking-widest text-white border-2 border-blue-600">
 						<th className="px-5 py-3">ID</th>
-						<th className="px-5 py-3">Photo</th>
-						<th className="px-5 py-3">Name</th>
-						<th className="px-5 py-3">Email</th>
-						<th className="px-5 py-3">Location</th>
+						<th className="px-5 py-3 hidden sm:table-cell">Photo</th>
+						<th className="px-5 py-3 hidden sm:table-cell">Email</th>
+						<th className="px-5 py-3 hidden sm:table-cell">Location</th>
+						<th className="px-5 py-3 hidden sm:table-cell">Name</th>
 						<th className="px-5 py-3">Host Application</th>
 						<th className="px-5 py-3 actions-column">Delete</th>
-
 					</tr>
 				</thead>
 				<tbody>
@@ -178,7 +177,7 @@ const UsersTable = ({ users, rowClickHandler, iconStyle, userIcon, onDelete, clo
 							<td className="px-6 py-4 whitespace-no-wrap">
 								<div className="text-sm leading-5 font-medium text-gray-900">{user.id}</div>
 							</td>
-							<td className="px-6 py-4 whitespace-no-wrap">
+							<td className="px-6 py-4 whitespace-no-wrap hidden sm:table-cell">
 								<div className="flex items-center">
 									<div className="flex-shrink-0 h-10 w-10">
 										<img
@@ -193,16 +192,16 @@ const UsersTable = ({ users, rowClickHandler, iconStyle, userIcon, onDelete, clo
 									</div>
 								</div>
 							</td>
-							<td className="px-6 py-4 whitespace-no-wrap">
+							<td className="px-6 py-4 whitespace-no-wrap hidden sm:table-cell">
+								<div className="text-sm leading-5 font-medium text-gray-900">{user.email}</div>
+							</td>
+							<td className="px-6 py-4 whitespace-no-wrap hidden sm:table-cell">
+								<div className="text-sm leading-5 font-medium text-gray-900">{user.address}</div>
+							</td>
+							<td className="px-6 py-4 whitespace-no-wrap hidden sm:table-cell">
 								<div className="text-sm leading-5 font-medium text-gray-900">
 									{user.firstName} {user.lastName}
 								</div>
-							</td>
-							<td className="px-6 py-4 whitespace-no-wrap">
-								<div className="text-sm leading-5 font-medium text-gray-900">{user.email}</div>
-							</td>
-							<td className="px-6 py-4 whitespace-no-wrap">
-								<div className="text-sm leading-5 font-medium text-gray-900">{user.address}</div>
 							</td>
 							<td className="px-6 py-4 whitespace-no-wrap">
 								<div className="text-sm leading-5 font-medium justify-center flex text-gray-900">
@@ -223,15 +222,9 @@ const UsersTable = ({ users, rowClickHandler, iconStyle, userIcon, onDelete, clo
 										stroke="currentColor"
 										className="h-5 w-5"
 									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth="2"
-											d="M6 18L18 6M6 6l12 12"
-										/>
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
 									</svg>
 								</button>
-
 							</td>
 						</tr>
 					))}

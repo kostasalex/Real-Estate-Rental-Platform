@@ -132,9 +132,10 @@ const ListingsTable = ({ listings, iconStyle, onDelete }) => {
 				<thead>
 					<tr className="bg-blue-600 text-left text-xs font-semibold uppercase tracking-widest text-white border-2 border-blue-600">
 						<th className="px-5 py-3">ID</th>
+						<th className="px-5 py-3 hidden sm:table-cell">Photo</th>
 						<th className="px-5 py-3">Name</th>
-						<th className="px-5 py-3">Location</th>
-						<th className="px-5 py-3">Host Name</th>
+						<th className="px-5 py-3 hidden sm:table-cell">Location</th>
+						<th className="px-5 py-3 hidden sm:table-cell">Host Name</th>
 						<th className="px-5 py-3">Delete</th> {/* New column for actions */}
 					</tr>
 				</thead>
@@ -145,20 +146,28 @@ const ListingsTable = ({ listings, iconStyle, onDelete }) => {
 								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
 									<p className="whitespace-no-wrap">{listing.id}</p>
 								</td>
+								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm hidden sm:table-cell">
+									<div className="h-10 w-10 flex-shrink-0">
+										<img
+											className={`${iconStyle} rounded-full`} // Add the 'rounded-full' class for a circular shape
+											src={listing.thumbnail_url}
+											alt="Apartment image"
+											style={{ width: '100%', height: '100%' }} // Set width and height to 100%
+										/>
+									</div>
+
+
+								</td>
 								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-									<div className="flex items-center">
-										<div className="h-10 w-10 flex-shrink-0">
-											<img className={iconStyle} src={listing.thumbnail_url} alt="Apartment image" />
-										</div>
-										<div className="ml-3">
-											<p className="whitespace-no-wrap">{listing.name}</p>
-										</div>
+									<div className="ml-3">
+										<p className="whitespace-no-wrap">{listing.name}</p>
 									</div>
 								</td>
-								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+								{/* Show Location and Host Name columns on small screens */}
+								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm hidden sm:table-cell">
 									<p className="whitespace-no-wrap">{listing.host_location}</p>
 								</td>
-								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm hidden sm:table-cell">
 									<p className="whitespace-no-wrap">{listing.host_name}</p>
 								</td>
 								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
@@ -173,15 +182,9 @@ const ListingsTable = ({ listings, iconStyle, onDelete }) => {
 											stroke="currentColor"
 											className="h-5 w-5"
 										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth="2"
-												d="M6 18L18 6M6 6l12 12"
-											/>
+											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
 										</svg>
 									</button>
-
 								</td>
 							</tr>
 						))}

@@ -39,13 +39,13 @@ const ReviewsTable = ({ reviews, iconStyle, onDelete }) => {
 				<thead>
 					<tr className="bg-blue-600 text-left text-xs font-semibold uppercase tracking-widest text-white border-2 border-blue-600">
 						<th className="px-5 py-3">ID</th>
-						<th className="px-5 py-3">Comment</th>
-						<th className="px-5 py-3">Date</th>
-						<th className="px-5 py-3">Host ID</th>
+						<th className="px-5 py-3 hidden sm:table-cell">Comment</th>
+						<th className="px-5 py-3 hidden sm:table-cell">Date</th>
+						<th className="px-5 py-3 hidden sm:table-cell">Host ID</th>
 						<th className="px-5 py-3">Listing ID</th>
-						<th className="px-5 py-3">Rating</th>
-						<th className="px-5 py-3">Renter ID</th>
-						<th className="px-5 py-3">Delete</th> {/* New column for actions */}
+						<th className="px-5 py-3 hidden sm:table-cell">Rating</th>
+						<th className="px-5 py-3 hidden sm:table-cell">Renter ID</th>
+						<th className="px-5 py-3">Delete</th> 
 					</tr>
 				</thead>
 				<tbody className="text-gray-500">
@@ -55,24 +55,24 @@ const ReviewsTable = ({ reviews, iconStyle, onDelete }) => {
 								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
 									<p className="whitespace-no-wrap">{review.id}</p>
 								</td>
-								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm hidden sm:table-cell">
 									<div className="flex items-center">
 										<p className="whitespace-no-wrap">{review.comment}</p>
 									</div>
 								</td>
-								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm hidden sm:table-cell">
 									<p className="whitespace-no-wrap">{review.date}</p>
 								</td>
-								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm hidden sm:table-cell">
 									<p className="whitespace-no-wrap">{review.hostId}</p>
 								</td>
 								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
 									<p className="whitespace-no-wrap">{review.listingId}</p>
 								</td>
-								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm hidden sm:table-cell">
 									<p className="whitespace-no-wrap">{review.rating}</p>
 								</td>
-								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm hidden sm:table-cell">
 									<p className="whitespace-no-wrap">{review.renterId}</p>
 								</td>
 								<td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">

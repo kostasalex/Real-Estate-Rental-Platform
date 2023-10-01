@@ -19,10 +19,10 @@ const Users = () => {
 	const [filteredUsers, setFilteredUsers] = useState([]);
 	const [num_results, setNum_Results] = useState(0);
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
+	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 	/* Read the data */
 	useEffect(() => {
-		fetch('https://localhost:8443/users') 
+		fetch('https://localhost:8443/users')
 			.then((response) => response.json())
 			.then((data) => {
 				const usersData = data
@@ -40,6 +40,21 @@ const Users = () => {
 			});
 	}, []);
 
+
+	// Function to update the screen width state
+	const updateScreenWidth = () => {
+		setScreenWidth(window.innerWidth);
+	};
+
+	useEffect(() => {
+		window.addEventListener('resize', updateScreenWidth);
+		return () => {
+			window.removeEventListener('resize', updateScreenWidth);
+		};
+	}, []);
+
+
+	const smallScreenBreakpoint = 768;
 	/** Users details **/
 	const openDialogUser = (user) => {
 		setSelectedUser(user);
@@ -179,7 +194,7 @@ const Users = () => {
 
 		setIsOpenUser(false);
 
-		fetch('https://localhost:8443/users') 
+		fetch('https://localhost:8443/users')
 			.then((response) => response.json())
 			.then((data) => {
 				const usersData = data;
@@ -208,15 +223,14 @@ const Users = () => {
 	};
 
 	return (
-		<div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
-			<div className="flex flex-col  pb-6">
-				<div className='p-2 pb-10 items-start'>
+		<div className="float-right w-3/4 bg-white pr-10">
+			<div className={`flex flex-col pb-6 ${screenWidth <= smallScreenBreakpoint ? 'items-center' : ''}`}>
+				<div className={`p-2 pb-10 ${screenWidth <= smallScreenBreakpoint ? 'text-center' : 'items-start'}`}>
 					<h2 className="font-semibold text-gray-700">User Accounts</h2>
 					<span className="text-sm text-gray-500">View accounts of registered users and approve applications</span>
 				</div>
-				<div className='flex justify-between'>
-
-					<div className="flex space-x-2 ml-2 bg-gray-200 rounded-full">
+				<div className={`flex ${screenWidth <= smallScreenBreakpoint ? 'flex-col' : 'justify-between'}`}>
+					<div className={`flex space-x-2 ml-2 bg-gray-200 rounded-full ${screenWidth <= smallScreenBreakpoint ? 'mb-2' : ''}`}>
 						<button
 							onClick={showAllUsers}
 							className={`px-4 py-2 rounded-2xl ${showAll ? "bg-blue-600 text-white" : "bg-gray-200 text-black"}`}
@@ -236,8 +250,7 @@ const Users = () => {
 							Approved
 						</button>
 					</div>
-
-					<div className='flex justify-end space-x-4 '>
+					<div className={`flex justify-end space-x-4 ${screenWidth <= smallScreenBreakpoint ? '' : ''}`}>
 						<button
 							className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700"
 							onClick={downloadCSV}
@@ -272,7 +285,6 @@ const Users = () => {
 						</button>
 					</div>
 				</div>
-
 			</div>
 			<div className="overflow-y-hidden rounded-lg border">
 				<div className="overflow-x-auto">

@@ -11,7 +11,7 @@ const Bookings = () => {
 
 	const [bookings, setBookings] = useState([]);
 	const [filteredBookings, setFiltereBookings] = useState([]);
-
+	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 	useEffect(() => {
 
 		const fetchListings = async () => {
@@ -21,7 +21,7 @@ const Bookings = () => {
 		};
 
 		const fetchBookings = async () => {
-			const response = await fetch('https://localhost:8443/api/v1/bookings');
+			const response = await fetch('https://localhost:8443/bookings');
 			const data = await response.json();
 			setNumResults(data.length);
 			return data;
@@ -44,16 +44,15 @@ const Bookings = () => {
 
 				const processedBookings = bookingsData.map((booking) => {
 					// Find the corresponding user for each listing
-					const host = usersData.find((u) => Number(u.id) === Number(booking.hostsId));
+					const host = usersData.find((u) => Number(u.id) === Number(booking.hosts_id));
 					const listing = listingsData.find((l) => Number(l.id) === Number(booking.listings_id));
-
 					return {
 						id: booking.id,
 						name: listing.name,
 						location: listing.street,
 						host_name: host ? host.firstName : 'N/A',
 						thumbnail_url: listing.thumbnail_url,
-						renders_id: booking.rentersId,
+						renders_id: booking.renters_id,
 					};
 				});
 
@@ -126,23 +125,24 @@ const Bookings = () => {
 	const iconStyle = 'h-10 w-10 rounded-full object-cover';
 
 	const handleDeleteBooking = (id) => {
-        // Send a DELETE request to the backend in the BookingsTable component
+		// Send a DELETE request to the backend in the BookingsTable component
 
-        // Filter out the booking with the provided id from the state
-        const updatedBookings = bookings.filter((booking) => booking.id !== id);
+		// Filter out the booking with the provided id from the state
+		const updatedBookings = bookings.filter((booking) => booking.id !== id);
 
-        // Set the updated state
-        setBookings(updatedBookings);
-    };
+		// Set the updated state
+		setBookings(updatedBookings);
+	};
 
+	const smallScreenBreakpoint = 768;
 	return (
-		<div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
-			<div className="flex items-center justify-between pb-6">
-				<div>
+		<div className="float-right w-3/4 bg-white pr-10">
+			<div className={`flex flex-col pb-6 ${screenWidth <= smallScreenBreakpoint ? 'items-center' : ''}`}>
+				<div className={`p-2 pb-10 ${screenWidth <= smallScreenBreakpoint ? 'text-center' : 'items-start'}`}>
 					<h2 className="font-semibold text-gray-700">Bookings</h2>
 					<span className="text-sm text-gray-500">View listings being currently booked</span>
 				</div>
-				<div className="ml-10 space-x-8 flex flex-rows lg:ml-40">
+				<div className={`flex justify-end space-x-4 ${screenWidth <= smallScreenBreakpoint ? '' : ''}`}>
 					<button
 						className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700"
 						onClick={downloadCSV}
@@ -164,13 +164,13 @@ const Bookings = () => {
 				</div>
 			</div>
 			<div className="overflow-y-hidden rounded-lg border">
-			<div className="overflow-x-auto">
-                    <BookingsTable
-                        bookings={filteredBookings}
-                        iconStyle={iconStyle}
-                        onDelete={handleDeleteBooking} // Pass the deletion function to the BookingsTable
-                    />
-                </div>
+				<div className="overflow-x-auto">
+					<BookingsTable
+						bookings={filteredBookings}
+						iconStyle={iconStyle}
+						onDelete={handleDeleteBooking} // Pass the deletion function to the BookingsTable
+					/>
+				</div>
 				<div className="flex flex-col items-center border-t bg-white px-5 py-5 sm:flex-row sm:justify-between">
 					<span className="text-xs text-gray-600 sm:text-sm">
 						Showing {(currentPage - 1) * MAX_RESULTS_PER_PAGE + 1} to {Math.min(bookings.length, currentPage * MAX_RESULTS_PER_PAGE)} of {numResults} Entries
